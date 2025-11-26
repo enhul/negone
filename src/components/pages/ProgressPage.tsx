@@ -240,7 +240,7 @@ export default function ProgressPage() {
                   </div>
                   
                   <div className="text-center text-xs font-paragraph text-foreground/60">
-                    +250мл товчийг дарж нэмэх
+                    +200мл товчийг дарж нэмэх
                   </div>
                 </CardContent>
               </Card>
