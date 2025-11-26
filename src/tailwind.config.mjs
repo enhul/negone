@@ -23,15 +23,15 @@ export default {
                 paragraph: "lato-light"
             },
             colors: {
-                'soft-light-green': '#DCEDC8',
-                destructive: '#F44336',
-                'destructive-foreground': '#FFFFFF',
-                background: '#FFFFFF',
-                secondary: '#E1BEE7',
-                foreground: '#424242',
-                'secondary-foreground': '#212121',
-                'primary-foreground': '#212121',
-                primary: '#FCE4EC'
+                primary: "#ffd1dc",
+                "primary-foreground": "#212121",
+                secondary: "#dbade3",
+                "secondary-foreground": "#212121",
+                background: "#fbfbfb",
+                "soft-light-green": "#b3ca98",
+                destructive: "#F44336",
+                "destructive-foreground": "#FFFFFF",
+                foreground: "#424242"
             },
         },
     },
