@@ -130,7 +130,7 @@ export default function HomePage() {
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1, transition: { duration: 0.8, delay: 0.4, ease: "easeOut" } }}
             >
-              AI-д суурилсан фитнес, сэтгэлзүй, эрүүл амьдралын хэв маягийн таны хувийн туслах.
+              AI-д суурилсан сэтгэлзүй, эрүүл амьдралын хэв маягийн таны хувийн туслах.
             </motion.p>
             <motion.div
               className="flex flex-col sm:flex-row gap-4 justify-center"
