@@ -61,7 +61,7 @@ export default function AboutPage() {
                 <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-primary/10">
                   <h3 className="text-2xl font-heading text-primary mb-4">Нэг зорилго</h3>
                   <p className="text-foreground/80 font-paragraph">
-                    <strong>Neg = 1 (монгол)</strong> + <strong>One = 1 (англи)</strong> = Нэг зорилго тэмүүлэл, нэг зүрх сэтгэл, нэг хамт олон
+                    <strong>Neg = 1 (монгол)</strong> + <strong>One = 1 (англи)</strong> = Нэг зорилго тэмүүлэл, нэг зүрх сэтгэл, нэг хамт олон 
                   </p>
                 </div>
                 <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-secondary/10">

@@ -186,7 +186,7 @@ export default function ProgressPage() {
                       className="bg-soft-light-green/10 rounded-xl p-4"
                     >
                       <p className="text-soft-light-green font-paragraph text-sm text-center">
-                        🎉 Сайхан байна! Өнөөдөр дасгал хийсэндээ баяр хүргэе!
+                        🎉 Сайн байна! Өнөөдөрийнхөө дасгалыг хийж чадлаа!
                       </p>
                     </motion.div>
                   )}
