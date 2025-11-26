@@ -123,7 +123,7 @@ export default function HomePage() {
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1, transition: { duration: 0.8, delay: 0.2, ease: "easeOut" } }}
             >
-              NegOne: Нэгдмэл Нэг Аялал
+              NegOne
             </motion.h1>
             <motion.p 
               className="text-lg md:text-xl text-foreground/80 mb-10 max-w-3xl mx-auto text-balance"
