@@ -258,14 +258,6 @@ export default function ProgressPage() {
                       <span>{profile.dailyWater || 2000}мл</span>
                     </div>
                   </div>
-                  
-                  <div>
-                    <div className="flex justify-between text-sm font-paragraph text-foreground/80 mb-2">
-                      <span>Ахиц дэвшил</span>
-                      <span>{Math.round(waterProgress)}%</span>
-                    </div>
-                    <Progress value={waterProgress} className="h-3" />
-                  </div>
 
                   {todayEntry.waterCompleted && (
                     <motion.div
