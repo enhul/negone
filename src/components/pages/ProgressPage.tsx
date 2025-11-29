@@ -10,8 +10,9 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { Progress } from '@/components/ui/progress';
+import { Slider } from '@/components/ui/slider';
 import { Badge } from '@/components/ui/badge';
-import { Calendar, Droplets, Activity, Weight, MessageSquare, Plus, Minus, ExternalLink, Play } from 'lucide-react';
+import { Calendar, Droplets, Activity, Weight, MessageSquare, ExternalLink, Play } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 interface DailyEntry {
@@ -102,11 +103,8 @@ export default function ProgressPage() {
     }
   }, [exercises, profile]);
 
-  const handleWaterChange = (increment: boolean) => {
-    const amount = 250; // 250ml increments
-    const newAmount = increment 
-      ? todayEntry.waterIntake + amount 
-      : Math.max(0, todayEntry.waterIntake - amount);
+  const handleWaterChange = (value: number[]) => {
+    const newAmount = value[0];
     
     // Check if water goal is reached
     const waterCompleted = newAmount >= (profile.dailyWater || 2000);
@@ -237,33 +235,28 @@ export default function ProgressPage() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleWaterChange(false)}
-                      className="rounded-full border-blue-500/30 text-blue-500 hover:bg-blue-500/10"
-                    >
-                      <Minus className="w-4 h-4" />
-                    </Button>
-                    
-                    <div className="text-center">
-                      <div className="text-3xl font-heading text-blue-500 mb-1">
-                        {todayEntry.waterIntake}мл
-                      </div>
-                      <div className="text-sm font-paragraph text-foreground/60">
-                        / {profile.dailyWater || 2000}мл
-                      </div>
+                  <div className="text-center">
+                    <div className="text-3xl font-heading text-blue-500 mb-1">
+                      {todayEntry.waterIntake}мл
                     </div>
-                    
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleWaterChange(true)}
-                      className="rounded-full border-blue-500/30 text-blue-500 hover:bg-blue-500/10"
-                    >
-                      <Plus className="w-4 h-4" />
-                    </Button>
+                    <div className="text-sm font-paragraph text-foreground/60">
+                      / {profile.dailyWater || 2000}мл
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-3">
+                    <Slider
+                      value={[todayEntry.waterIntake]}
+                      onValueChange={handleWaterChange}
+                      min={0}
+                      max={profile.dailyWater ? profile.dailyWater * 1.5 : 3000}
+                      step={50}
+                      className="w-full"
+                    />
+                    <div className="flex justify-between text-xs font-paragraph text-foreground/60">
+                      <span>0мл</span>
+                      <span>{profile.dailyWater || 2000}мл</span>
+                    </div>
                   </div>
                   
                   <div>
@@ -285,10 +278,6 @@ export default function ProgressPage() {
                       </p>
                     </motion.div>
                   )}
-                  
-                  <div className="text-center text-xs font-paragraph text-foreground/60">
-                    +250мл товчийг дарж нэмэх
-                  </div>
                 </CardContent>
               </Card>
 
