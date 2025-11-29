@@ -8,11 +8,17 @@ The NegOne chatbot has been integrated with OpenAI's ChatGPT API to provide real
 ### 1. **Chatbot Component** (`/src/components/Chatbot.tsx`)
 - Floating chat button in the bottom-right corner
 - Real-time messaging interface with smooth animations
-- Integration with OpenAI's GPT-3.5-turbo model
+- Integration with OpenAI's GPT-3.5-turbo model via secure backend API
 - Mongolian language support
 - Loading states and error handling
 
-### 2. **Features**
+### 2. **Backend API Route** (`/src/pages/api/chat.ts`)
+- Secure server-side API endpoint
+- Handles all OpenAI API calls
+- Protects API key from exposure
+- Error handling and rate limiting
+
+### 3. **Features**
 - ✅ Real-time responses from ChatGPT
 - ✅ Empathetic, supportive tone
 - ✅ Personalized health and wellness advice
@@ -20,6 +26,7 @@ The NegOne chatbot has been integrated with OpenAI's ChatGPT API to provide real
 - ✅ Beautiful UI with animations
 - ✅ Mobile responsive
 - ✅ Message history during session
+- ✅ Secure API key handling
 
 ## Setup Instructions
 
@@ -33,13 +40,19 @@ The NegOne chatbot has been integrated with OpenAI's ChatGPT API to provide real
 
 ### Step 2: Add Environment Variable
 
+**For Local Development:**
 Create a `.env.local` file in the root of your project (same level as `package.json`):
 
 ```env
-VITE_OPENAI_API_KEY=sk-your-api-key-here
+OPENAI_API_KEY=sk-your-api-key-here
 ```
 
 Replace `sk-your-api-key-here` with your actual OpenAI API key.
+
+**For Production (Wix Deployment):**
+1. Go to **Settings > Environment Variables** in Wix Dashboard
+2. Add `OPENAI_API_KEY` with your API key value
+3. The API key will be securely stored and available to your backend
 
 ### Step 3: Verify Setup
 
@@ -48,17 +61,37 @@ The chatbot should now be:
 2. ✅ Responding with real ChatGPT responses
 3. ✅ Speaking in Mongolian
 4. ✅ Providing health and wellness advice
+5. ✅ API key is secure (never exposed to frontend)
 
 ## How It Works
+
+### Architecture
+The chatbot uses a **secure backend API pattern**:
+
+```
+Frontend (Chatbot.tsx)
+    ↓
+    POST /api/chat
+    ↓
+Backend API (pages/api/chat.ts)
+    ↓
+    OpenAI API
+    ↓
+Backend API (returns response)
+    ↓
+Frontend (displays response)
+```
 
 ### User Flow
 1. User clicks the floating chat button (💬 icon)
 2. Chat window opens with greeting message
 3. User types a question
-4. Message is sent to OpenAI API
-5. ChatGPT generates a response
-6. Response appears in the chat window
-7. User can continue the conversation
+4. Message is sent to `/api/chat` endpoint
+5. Backend API calls OpenAI with secure API key
+6. ChatGPT generates a response
+7. Backend returns response to frontend
+8. Response appears in the chat window
+9. User can continue the conversation
 
 ### System Prompt
 The chatbot uses a system prompt that defines its personality:
@@ -71,7 +104,8 @@ The chatbot uses a system prompt that defines its personality:
 - **Model**: GPT-3.5-turbo (fast and cost-effective)
 - **Temperature**: 0.7 (balanced creativity and consistency)
 - **Max Tokens**: 500 (concise responses)
-- **Endpoint**: `https://api.openai.com/v1/chat/completions`
+- **Endpoint**: `/api/chat` (backend route)
+- **OpenAI Endpoint**: `https://api.openai.com/v1/chat/completions` (server-side only)
 
 ## Cost Considerations
 
@@ -87,62 +121,81 @@ The chatbot uses a system prompt that defines its personality:
 
 ## Troubleshooting
 
-### Issue: "API key not found"
+### Issue: "API key not found" or "API key not configured"
 **Solution**: 
 - Verify `.env.local` file exists in project root
-- Check that `VITE_OPENAI_API_KEY` is set correctly
+- Check that `OPENAI_API_KEY` is set correctly (not `VITE_OPENAI_API_KEY`)
 - Restart the development server
+- Check that the environment variable is being read by the backend
 
 ### Issue: "401 Unauthorized"
 **Solution**:
-- Verify API key is correct
-- Check that API key hasn't been revoked
-- Ensure API key has proper permissions
+- Verify API key is correct in `.env.local`
+- Check that API key hasn't been revoked in OpenAI dashboard
+- Ensure API key has proper permissions (should have chat completion access)
+- Try regenerating a new API key
 
 ### Issue: "Rate limit exceeded"
 **Solution**:
 - Wait a few minutes before retrying
-- Consider implementing request throttling
 - Check OpenAI dashboard for usage limits
+- Consider implementing request throttling on the frontend
+- Upgrade your OpenAI plan if needed
 
 ### Issue: Responses in English instead of Mongolian
 **Solution**:
 - The system prompt specifies Mongolian
 - If still happening, try asking in Mongolian first
-- Check OpenAI API status
+- Check OpenAI API status at https://status.openai.com/
+
+### Issue: Chatbot not responding at all
+**Solution**:
+- Check browser console for errors (F12 > Console)
+- Check server logs for API errors
+- Verify `/api/chat` endpoint is accessible
+- Ensure `OPENAI_API_KEY` environment variable is set
+- Try a simple test message like "Сайн байна уу"
+
+### Issue: CORS errors
+**Solution**:
+- This should not happen as the API call is server-side
+- If you see CORS errors, the frontend is trying to call OpenAI directly
+- Ensure the frontend is calling `/api/chat` endpoint, not OpenAI API directly
 
 ## Customization
 
 ### Change the System Prompt
-Edit the `SYSTEM_PROMPT` in `/src/components/Chatbot.tsx`:
+Edit the `SYSTEM_PROMPT` in `/src/pages/api/chat.ts`:
 
 ```typescript
 const SYSTEM_PROMPT = `Your custom prompt here...`;
 ```
 
 ### Change the Model
-Replace `'gpt-3.5-turbo'` with:
+Replace `'gpt-3.5-turbo'` with in `/src/pages/api/chat.ts`:
 - `'gpt-4'` (more powerful, more expensive)
 - `'gpt-4-turbo'` (faster GPT-4)
 - `'gpt-3.5-turbo-16k'` (longer context)
 
 ### Adjust Response Length
-Change `max_tokens` value (default: 500):
+Change `max_tokens` value in `/src/pages/api/chat.ts` (default: 500):
 ```typescript
 max_tokens: 300, // Shorter responses
 max_tokens: 1000, // Longer responses
 ```
 
 ### Adjust Creativity
-Change `temperature` value (default: 0.7):
+Change `temperature` value in `/src/pages/api/chat.ts` (default: 0.7):
 - `0.0` = Deterministic, factual
 - `0.7` = Balanced (default)
 - `1.0` = Creative, varied
 
 ## Security Best Practices
 
-1. **Never commit API key to git**
-   - Use `.env.local` (already in `.gitignore`)
+1. **API Key Protection** ✅
+   - API key is stored on the backend only
+   - Never exposed to frontend/browser
+   - Use `.env.local` for local development (already in `.gitignore`)
    - Use environment variables in production
 
 2. **Rotate API keys regularly**
@@ -152,17 +205,24 @@ Change `temperature` value (default: 0.7):
 3. **Monitor usage**
    - Check OpenAI dashboard daily
    - Set up billing alerts
+   - Monitor API usage in backend logs
 
 4. **Rate limiting**
+   - Backend API handles rate limiting from OpenAI
    - Consider implementing per-user rate limits
    - Prevent abuse and excessive costs
+
+5. **Input Validation**
+   - Backend validates all incoming messages
+   - Prevents injection attacks
+   - Sanitizes user input before sending to OpenAI
 
 ## Production Deployment
 
 ### For Wix Deployment
 1. Add environment variable in Wix dashboard:
    - Go to **Settings > Environment Variables**
-   - Add `VITE_OPENAI_API_KEY` with your API key
+   - Add `OPENAI_API_KEY` with your API key
    
 2. Ensure `.env.local` is in `.gitignore`
 
@@ -170,10 +230,17 @@ Change `temperature` value (default: 0.7):
 
 ### Environment Variables in Different Environments
 ```
-Development: .env.local
-Production: Wix Dashboard > Environment Variables
-Staging: Wix Dashboard > Environment Variables (staging)
+Development: .env.local (OPENAI_API_KEY=sk-...)
+Production: Wix Dashboard > Environment Variables (OPENAI_API_KEY=sk-...)
+Staging: Wix Dashboard > Environment Variables (staging) (OPENAI_API_KEY=sk-...)
 ```
+
+### Important Notes for Production
+- The API key is stored securely on the server
+- The frontend never has access to the API key
+- All OpenAI API calls happen on the backend
+- The backend validates and sanitizes all requests
+- Rate limiting is handled by OpenAI's API
 
 ## Testing
 
@@ -210,11 +277,45 @@ Staging: Wix Dashboard > Environment Variables (staging)
 ## File Locations
 
 - **Chatbot Component**: `/src/components/Chatbot.tsx`
+- **Backend API Route**: `/src/pages/api/chat.ts` ⭐ **NEW**
 - **Layout Integration**: `/src/components/Layout.tsx`
 - **Environment Setup**: `/src/env.d.ts`
 - **This Guide**: `/src/CHATBOT_SETUP.md`
+
+## Quick Start Checklist
+
+- [ ] Get OpenAI API key from https://platform.openai.com/api-keys
+- [ ] Create `.env.local` file in project root
+- [ ] Add `OPENAI_API_KEY=sk-your-key-here` to `.env.local`
+- [ ] Restart development server
+- [ ] Test chatbot by clicking the floating button
+- [ ] Ask a question in Mongolian
+- [ ] Verify response appears in real-time
+- [ ] Check browser console for any errors
+- [ ] Monitor OpenAI dashboard for usage
+
+## Common Questions
+
+**Q: Is my API key safe?**
+A: Yes! The API key is stored on the backend server only and never exposed to the frontend. All API calls happen server-side.
+
+**Q: How much will this cost?**
+A: GPT-3.5-turbo costs ~$0.001-0.002 per user message. For testing, costs are minimal.
+
+**Q: Can I use GPT-4 instead?**
+A: Yes, change the model in `/src/pages/api/chat.ts` from `'gpt-3.5-turbo'` to `'gpt-4'`. Note: GPT-4 is more expensive.
+
+**Q: What if the API key is wrong?**
+A: You'll get a 401 error. Check your API key in the OpenAI dashboard and update `.env.local`.
+
+**Q: Can users see my API key?**
+A: No, the API key is only on the server. Users cannot access it through the browser.
+
+**Q: How do I monitor costs?**
+A: Check your OpenAI dashboard at https://platform.openai.com/account/billing/overview
 
 ---
 
 **Last Updated**: November 29, 2025
 **Status**: ✅ Ready for Production
+**Architecture**: Secure Backend API Pattern

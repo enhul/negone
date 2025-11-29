@@ -13,68 +13,38 @@ interface Message {
   timestamp: Date;
 }
 
-const SYSTEM_PROMPT = `You are NegOne AI, a supportive and empathetic health and wellness assistant for women. You provide personalized advice on fitness, nutrition, mental health, and self-love. 
-
-Your characteristics:
-- Empathetic, encouraging, and informative tone
-- Supportive and empowering
-- Knowledgeable about fitness, nutrition, mental health, and wellness
-- Always respond in Mongolian language
-- Provide practical, actionable advice
-- Be warm and friendly
-- Focus on women's health and wellness
-- Encourage self-love and body positivity
-
-When users ask about:
-- Fitness: Provide exercise tips, workout recommendations, and motivation
-- Nutrition: Offer healthy eating advice, calorie information, and recipe suggestions
-- Mental Health: Provide stress management tips, self-care advice, and emotional support
-- General Wellness: Give holistic health guidance
-
-Always be supportive and never judgmental.`;
-
 async function getChatGPTResponse(userMessage: string): Promise<string> {
   try {
-    const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
-    
-    if (!apiKey) {
-      console.error('OpenAI API key not found');
-      return 'Уучлаарай, API түлхүүр олдсонгүй. Админтай холбогдоорой.';
-    }
-
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+    // Call the backend API route instead of directly calling OpenAI
+    const response = await fetch('/api/chat', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        model: 'gpt-3.5-turbo',
-        messages: [
-          {
-            role: 'system',
-            content: SYSTEM_PROMPT,
-          },
-          {
-            role: 'user',
-            content: userMessage,
-          },
-        ],
-        temperature: 0.7,
-        max_tokens: 500,
+        message: userMessage,
       }),
     });
 
     if (!response.ok) {
       const error = await response.json();
-      console.error('OpenAI API error:', error);
+      console.error('Chat API error:', error);
+      
+      if (response.status === 401) {
+        return 'Уучлаарай, API түлхүүр олдсонгүй. Админтай холбогдоорой.';
+      }
+      
+      if (response.status === 429) {
+        return 'Уучлаарай, хэтэрхий олон асуулт ирлээ. Хэсэг хугацаа хүлээнэ үү.';
+      }
+      
       return 'Уучлаарай, хариулт авахад алдаа гарлаа. Дахин оролдоорой.';
     }
 
     const data = await response.json();
-    return data.choices[0].message.content || 'Хариулт авахад алдаа гарлаа.';
+    return data.message || 'Хариулт авахад алдаа гарлаа.';
   } catch (error) {
-    console.error('Error calling OpenAI API:', error);
+    console.error('Error calling chat API:', error);
     return 'Уучлаарай, сүлжээний алдаа гарлаа. Дахин оролдоорой.';
   }
 }
