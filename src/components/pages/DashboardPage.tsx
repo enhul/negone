@@ -25,6 +25,7 @@ interface UserProfile {
   dailyWater?: number;
   bmi?: number;
   bmiCategory?: string;
+  exerciseDays?: number;
 }
 
 export default function DashboardPage() {
@@ -72,8 +73,9 @@ export default function DashboardPage() {
 
     const exerciseCount = weekEntries.filter(entry => entry?.exerciseCompleted).length;
     const avgWater = weekEntries.reduce((sum, entry) => sum + (entry?.waterIntake || 0), 0) / 7;
+    const targetExerciseDays = profile.exerciseDays || 7;
 
-    return { exerciseCount, avgWater };
+    return { exerciseCount, avgWater, targetExerciseDays };
   };
 
   const getWeightData = () => {
@@ -96,7 +98,7 @@ export default function DashboardPage() {
   };
 
   const todayEntry = getTodayEntry();
-  const { exerciseCount, avgWater } = getWeeklyProgress();
+  const { exerciseCount, avgWater, targetExerciseDays } = getWeeklyProgress();
   const weightData = getWeightData();
 
   if (!profile.height || !profile.weight) {
@@ -178,7 +180,7 @@ export default function DashboardPage() {
             <Card className="bg-white/70 backdrop-blur-sm border-primary/20 shadow-lg">
               <CardContent className="p-4 text-center">
                 <div className="text-2xl font-heading text-primary mb-1">
-                  {exerciseCount}/7
+                  {exerciseCount}/{targetExerciseDays}
                 </div>
                 <div className="text-sm font-paragraph text-foreground/80">Долоо хоногийн дасгал</div>
               </CardContent>
