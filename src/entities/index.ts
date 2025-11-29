@@ -64,6 +64,8 @@ export interface TeamMembers {
   _createdDate?: Date;
   _updatedDate?: Date;
   /** @wixFieldType text */
+  school?: string;
+  /** @wixFieldType text */
   name?: string;
   /** @wixFieldType text */
   role?: string;
@@ -73,6 +75,4 @@ export interface TeamMembers {
   photo?: string;
   /** @wixFieldType url */
   socialLink?: string;
-  /** @wixFieldType text */
-  school?: string;
 }

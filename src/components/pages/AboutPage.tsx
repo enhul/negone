@@ -12,7 +12,10 @@ export default function AboutPage() {
     const fetchTeamMembers = async () => {
       try {
         const { items } = await BaseCrudService.getAll<TeamMembers>('teammembers');
-        setTeamMembers(items);
+        // Filter out specific team members
+        const excludedNames = ['Ариунзаяа Батбаяр', 'Уранчимэг Дорж', 'Нарантуяа Ганбаатар', 'Энхтуул Цэрэндорж'];
+        const filteredMembers = items.filter(member => !excludedNames.includes(member.name || ''));
+        setTeamMembers(filteredMembers);
       } catch (error) {
         console.error('Error fetching team members:', error);
       } finally {
