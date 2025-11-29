@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { BaseCrudService } from '@/integrations';
 import { TeamMembers } from '@/entities';
 import { Image } from '@/components/ui/image';
+import UpdateTeamMember from '@/components/UpdateTeamMember';
 
 export default function AboutPage() {
   const [teamMembers, setTeamMembers] = useState<TeamMembers[]>([]);
@@ -28,6 +29,7 @@ export default function AboutPage() {
 
   return (
     <div className="min-h-screen bg-background">
+      <UpdateTeamMember />
       {/* Header */}
       <motion.section 
         className="py-20 px-8 max-w-[100rem] mx-auto"
