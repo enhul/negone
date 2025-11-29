@@ -122,8 +122,7 @@ export default function ProgressPage() {
       setDailyEntries(updatedEntries);
 
       toast({
-        title: 'Амжилттай хадгалагдлаа',
-        description: 'Өнөөдрийн ахиц дэвшил хадгалагдлаа',
+        title: 'Хадгалагдсан',
       });
     } catch (error) {
       toast({
