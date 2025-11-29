@@ -308,18 +308,18 @@ export default function ProgressPage() {
                 <CardContent>
                   <div>
                     <Label htmlFor="mental-note" className="font-paragraph text-foreground">
-                      Өнөөдрийн мэдрэмж, бодол (140 тэмдэгт)
+                      Өнөөдрийн мэдрэмж, бодол (500 тэмдэгт)
                     </Label>
                     <Textarea
                       id="mental-note"
                       value={todayEntry.mentalNote}
-                      onChange={(e) => setTodayEntry({ ...todayEntry, mentalNote: e.target.value.slice(0, 140) })}
+                      onChange={(e) => setTodayEntry({ ...todayEntry, mentalNote: e.target.value.slice(0, 500) })}
                       className="mt-1 rounded-xl border-primary/20 resize-none"
                       rows={3}
                       placeholder="Өнөөдөр ямар мэдрэмжтэй байсан, юу бодож байсан талаар бичээрэй..."
                     />
                     <div className="text-right text-xs font-paragraph text-foreground/60 mt-1">
-                      {todayEntry.mentalNote.length}/140
+                      {todayEntry.mentalNote.length}/500
                     </div>
                   </div>
                 </CardContent>
