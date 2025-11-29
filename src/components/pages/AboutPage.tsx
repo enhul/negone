@@ -63,21 +63,21 @@ export default function AboutPage() {
               </h2>
               <div className="space-y-6">
                 <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-primary/10">
-                  <h3 className="text-2xl font-heading text-primary mb-4">Нэг зорилго</h3>
+                  <h3 className="text-2xl font-heading text-primary mb-4">Нэгэн бүхэл</h3>
                   <p className="text-foreground/80 font-paragraph">
-                    <strong>Neg = 1 (монгол)</strong> + <strong>One = 1 (англи)</strong> = Нэг зорилго тэмүүлэл, нэг зүрх сэтгэл, нэг хамт олон 
+                    <strong>Neg = 1 (монгол)</strong> + <strong>One = 1 (англи)</strong> = Нэг зорилго тэмүүлэл, нэг зүрх сэтгэл, нэг хамт олон байх.
                   </p>
                 </div>
                 <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-secondary/10">
-                  <h3 className="text-2xl font-heading text-secondary mb-4">Ногоон өнгийн символизм</h3>
+                  <h3 className="text-2xl font-heading text-secondary mb-4">Ногоон өнгийн утга</h3>
                   <p className="text-foreground/80 font-paragraph">
-                    "Нэгон" дуудлага нь "ногоон" гэсэнтэй төстэй бөгөөд энэ нь тайвшрал, эерэг сэтгэлзүй, байгалийн эрүүл мэндийн символизмийг агуулдаг.
+                    "Нэгон" дуудлага нь "Ногоон" гэсэнтэй өнгөтнй төстэй дуудагдаж, сонсогдох бөгөөд энэ нь тайвшрал, эерэг сэтгэлзүй, байгалийн өнгийг агуулна.
                   </p>
                 </div>
                 <div className="bg-white/70 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-soft-light-green/30">
                   <h3 className="text-2xl font-heading text-soft-light-green mb-4">Манай эрхэм зорилго</h3>
                   <p className="text-foreground/80 font-paragraph">
-                    Эмэгтэйчүүдийн эрүүл мэнд, сэтгэлзүй, өөрийгөө хайрлах чадварыг нэг платформд нэгтгэж, AI технологийн тусламжтайгаар хувийн зөвлөгөө өгөх.
+                    Охид, эмэгтэйчүүдийн эрүүл мэнд, сэтгэлзүй, өөрийгөө хайрлах боломжийг нэг платформд нэгтгэж, AI технологийн тусламжтайгаар хувийн зөвлөгөө өгөх.
                   </p>
                 </div>
               </div>
