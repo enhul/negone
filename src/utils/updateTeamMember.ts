@@ -6,26 +6,26 @@ export async function updateTeamMemberInfo() {
     // Fetch all team members to find the ones we need to update
     const { items } = await BaseCrudService.getAll<TeamMembers>('teammembers');
     
-    // Update Цэвээнсүрэн Мишээл
-    const member1 = items.find(member => member.name === 'Цэвээнсүрэн Мишээл');
+    // Update Сансарбаяр Хулан
+    const member1 = items.find(member => member.name === 'Сансарбаяр Хулан');
     if (member1) {
       await BaseCrudService.update<TeamMembers>('teammembers', {
         _id: member1._id,
-        role: 'төслийн санаа боловсруулагч, хөгжүүлэгч',
-        school: 'Олула ТомЁ сургуулийн 12А ангийн сурагч'
+        role: 'хөгжүүлэгч, ux/ui designer',
+        school: 'Төгсдэлгэрэх бүрэн дунд сургууль 10а анги'
       });
-      console.log('Цэвээнсүрэн Мишээл updated successfully');
+      console.log('Сансарбаяр Хулан updated successfully');
     }
     
-    // Update Амардалай Содбилэг
-    const member2 = items.find(member => member.name === 'Амардалай Содбилэг');
+    // Update Эрдэнэболд Энхцэцэг
+    const member2 = items.find(member => member.name === 'Эрдэнэболд Энхцэцэг');
     if (member2) {
       await BaseCrudService.update<TeamMembers>('teammembers', {
         _id: member2._id,
-        role: 'Судалгаа хариуцсан мэргэжилтэн, хөгжүүлэгч',
-        school: 'Хо-Ши-Мин-ийн нэрэмжит 14 дүгээр сургуулийн 11А ангийн сурагч'
+        role: 'дизайнер, хөгжүүлэгч',
+        school: 'Улсын Тэргүүний 48 дугаар сургуулийн 10А ангийн сурагч'
       });
-      console.log('Амардалай Содбилэг updated successfully');
+      console.log('Эрдэнэболд Энхцэцэг updated successfully');
     }
     
     return true;
