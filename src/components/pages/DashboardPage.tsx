@@ -37,16 +37,26 @@ export default function DashboardPage() {
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
 
   useEffect(() => {
+    if (!member?.loginEmail) return;
+    
     // Load profile data
-    const savedProfile = localStorage.getItem(`profile_${member?.loginEmail}`);
+    const savedProfile = localStorage.getItem(`profile_${member.loginEmail}`);
     if (savedProfile) {
-      setProfile(JSON.parse(savedProfile));
+      try {
+        setProfile(JSON.parse(savedProfile));
+      } catch (error) {
+        console.error('Error parsing saved profile:', error);
+      }
     }
 
     // Load daily entries
-    const savedEntries = localStorage.getItem(`dailyEntries_${member?.loginEmail}`);
+    const savedEntries = localStorage.getItem(`dailyEntries_${member.loginEmail}`);
     if (savedEntries) {
-      setDailyEntries(JSON.parse(savedEntries));
+      try {
+        setDailyEntries(JSON.parse(savedEntries));
+      } catch (error) {
+        console.error('Error parsing saved entries:', error);
+      }
     }
 
     // Generate current week dates
@@ -58,7 +68,7 @@ export default function DashboardPage() {
       week.push(date);
     }
     setCurrentWeek(week);
-  }, [member]);
+  }, [member?.loginEmail]);
 
   const getTodayEntry = () => {
     const today = new Date().toISOString().split('T')[0];

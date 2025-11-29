@@ -55,12 +55,18 @@ export default function ProfilePage() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    if (!member?.loginEmail) return;
+    
     // Load existing profile data if available
-    const savedProfile = localStorage.getItem(`profile_${member?.loginEmail}`);
+    const savedProfile = localStorage.getItem(`profile_${member.loginEmail}`);
     if (savedProfile) {
-      setProfile(JSON.parse(savedProfile));
+      try {
+        setProfile(JSON.parse(savedProfile));
+      } catch (error) {
+        console.error('Error parsing saved profile:', error);
+      }
     }
-  }, [member]);
+  }, [member?.loginEmail]);
 
   const calculateBMI = (height: number, weight: number) => {
     const heightInMeters = height / 100;

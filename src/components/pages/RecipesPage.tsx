@@ -26,10 +26,16 @@ export default function RecipesPage() {
   const [profile, setProfile] = useState<UserProfile>({});
 
   useEffect(() => {
+    if (!member?.loginEmail) return;
+    
     // Load user profile
-    const savedProfile = localStorage.getItem(`profile_${member?.loginEmail}`);
+    const savedProfile = localStorage.getItem(`profile_${member.loginEmail}`);
     if (savedProfile) {
-      setProfile(JSON.parse(savedProfile));
+      try {
+        setProfile(JSON.parse(savedProfile));
+      } catch (error) {
+        console.error('Error parsing saved profile:', error);
+      }
     }
 
     // Fetch recipes
@@ -46,7 +52,7 @@ export default function RecipesPage() {
     };
 
     fetchRecipes();
-  }, [member]);
+  }, [member?.loginEmail]);
 
   useEffect(() => {
     let filtered = recipes;

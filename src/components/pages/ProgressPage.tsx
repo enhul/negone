@@ -53,23 +53,33 @@ export default function ProgressPage() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    if (!member?.loginEmail) return;
+    
     // Load profile data
-    const savedProfile = localStorage.getItem(`profile_${member?.loginEmail}`);
+    const savedProfile = localStorage.getItem(`profile_${member.loginEmail}`);
     if (savedProfile) {
-      setProfile(JSON.parse(savedProfile));
+      try {
+        setProfile(JSON.parse(savedProfile));
+      } catch (error) {
+        console.error('Error parsing saved profile:', error);
+      }
     }
 
     // Load daily entries
-    const savedEntries = localStorage.getItem(`dailyEntries_${member?.loginEmail}`);
+    const savedEntries = localStorage.getItem(`dailyEntries_${member.loginEmail}`);
     if (savedEntries) {
-      const entries = JSON.parse(savedEntries);
-      setDailyEntries(entries);
-      
-      // Check if today's entry exists
-      const today = new Date().toISOString().split('T')[0];
-      const existingEntry = entries.find((entry: DailyEntry) => entry.date === today);
-      if (existingEntry) {
-        setTodayEntry(existingEntry);
+      try {
+        const entries = JSON.parse(savedEntries);
+        setDailyEntries(entries);
+        
+        // Check if today's entry exists
+        const today = new Date().toISOString().split('T')[0];
+        const existingEntry = entries.find((entry: DailyEntry) => entry.date === today);
+        if (existingEntry) {
+          setTodayEntry(existingEntry);
+        }
+      } catch (error) {
+        console.error('Error parsing saved entries:', error);
       }
     }
 
@@ -84,7 +94,7 @@ export default function ProgressPage() {
     };
 
     fetchExercises();
-  }, [member]);
+  }, [member?.loginEmail]);
 
   useEffect(() => {
     // Filter recommended exercises based on user profile
