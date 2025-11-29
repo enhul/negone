@@ -142,12 +142,13 @@ export default function ProgressPage() {
 
   const waterProgress = profile.dailyWater ? (todayEntry.waterIntake / profile.dailyWater) * 100 : 0;
   
-  // Check if all progress fields are filled
+  // Check if all progress fields are filled AND water goal is reached
   const allFieldsFilled = 
     todayEntry.exerciseCompleted && 
     todayEntry.waterIntake > 0 && 
     todayEntry.weight > 0 && 
-    todayEntry.mentalNote.trim().length > 0;
+    todayEntry.mentalNote.trim().length > 0 &&
+    todayEntry.waterCompleted;
 
   return (
     <div className="min-h-screen bg-background py-8">
