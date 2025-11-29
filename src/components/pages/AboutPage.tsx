@@ -154,7 +154,7 @@ export default function AboutPage() {
             </div>
             <h3 className="text-xl font-heading text-foreground mb-3">Өөрийгөө хайрлах</h3>
             <p className="text-foreground/80 font-paragraph text-sm">
-              Өөртөө итгэх итгэл, хайр энхрийг олох
+              Өөртөө итгэх итгэл, өөрийгөө хайрлах
             </p>
           </motion.div>
 
