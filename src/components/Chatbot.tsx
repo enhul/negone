@@ -13,45 +13,70 @@ interface Message {
   timestamp: Date;
 }
 
-const HEALTH_RESPONSES = {
-  fitness: [
-    "Фитнесийн хувьд сайн сонголт! Өдөр бүр 30 минут нэвтрүүлэх дасгал хийх нь сайн байдаг. Та ямар төрлийн дасгал сонирхож байна вэ?",
-    "Дасгал хийх нь таны эрүүл мэндийн үндэс юм. Сарын 150 минут дунд зэргийн дасгал эсвэл 75 минут эрчимтэй дасгал хийхийг зөвлөж байна.",
-    "Фитнесийн зорилгодоо хүрэхийн тулд тогтмол байх нь чухал юм. Өдөр бүр ижил цагт дасгал хийх нь сайн дассан юм."
-  ],
-  nutrition: [
-    "Эрүүл хооллолт нь эрүүл мэндийн 80% юм! Өдөр бүр 5 төрлийн ногоо, жимс идэх нь сайн байдаг.",
-    "Усны хэрэглээ маш чухал юм. Өдөр бүр 2-3 литр ус ууж байх нь зөвлөмжтэй байдаг.",
-    "Протеин, нүүрс, өөхөн гэсэн гурван үндсэн хүнсний бүрэлдэхүүн байдаг. Тэнцвэртэй хооллолт нь чухал юм."
-  ],
-  mental: [
-    "Сэтгэлзүйн эрүүл мэнд нь физик эрүүл мэндтэй адил чухал юм. Өдөр бүр 10 минут медитаци хийх нь сайн байдаг.",
-    "Стресс бага болгохын тулд гүнзгий амьсгал хийх, йога хийх эсвэл байгальд явах нь сайн байдаг.",
-    "Өөрийгөө хайрлах нь эхлэл юм. Өдөр бүр өөртөө сайн үг хэлэх нь сэтгэлзүйн эрүүл мэндэд тусалдаг."
-  ],
-  general: [
-    "Сайн асуулт! NegOne платформ нь таны эрүүл мэнд, сэтгэлзүй, өөрийгөө хайрлахад туслах зорилготой байдаг.",
-    "Та ямар сэдвээр асуулт байна вэ? Фитнес, хооллолт, сэтгэлзүй эсвэл өөр зүйл?",
-    "Таны эрүүл мэндийн аялалд бид хамтдаа явахад сайн сонирхож байна!"
-  ]
-};
+const SYSTEM_PROMPT = `You are NegOne AI, a supportive and empathetic health and wellness assistant for women. You provide personalized advice on fitness, nutrition, mental health, and self-love. 
 
-function getRelevantResponse(message: string): string {
-  const lowerMessage = message.toLowerCase();
-  
-  if (lowerMessage.includes('дасгал') || lowerMessage.includes('фитнес') || lowerMessage.includes('спорт') || lowerMessage.includes('биеийн')) {
-    return HEALTH_RESPONSES.fitness[Math.floor(Math.random() * HEALTH_RESPONSES.fitness.length)];
+Your characteristics:
+- Empathetic, encouraging, and informative tone
+- Supportive and empowering
+- Knowledgeable about fitness, nutrition, mental health, and wellness
+- Always respond in Mongolian language
+- Provide practical, actionable advice
+- Be warm and friendly
+- Focus on women's health and wellness
+- Encourage self-love and body positivity
+
+When users ask about:
+- Fitness: Provide exercise tips, workout recommendations, and motivation
+- Nutrition: Offer healthy eating advice, calorie information, and recipe suggestions
+- Mental Health: Provide stress management tips, self-care advice, and emotional support
+- General Wellness: Give holistic health guidance
+
+Always be supportive and never judgmental.`;
+
+async function getChatGPTResponse(userMessage: string): Promise<string> {
+  try {
+    const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
+    
+    if (!apiKey) {
+      console.error('OpenAI API key not found');
+      return 'Уучлаарай, API түлхүүр олдсонгүй. Админтай холбогдоорой.';
+    }
+
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        model: 'gpt-3.5-turbo',
+        messages: [
+          {
+            role: 'system',
+            content: SYSTEM_PROMPT,
+          },
+          {
+            role: 'user',
+            content: userMessage,
+          },
+        ],
+        temperature: 0.7,
+        max_tokens: 500,
+      }),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      console.error('OpenAI API error:', error);
+      return 'Уучлаарай, хариулт авахад алдаа гарлаа. Дахин оролдоорой.';
+    }
+
+    const data = await response.json();
+    return data.choices[0].message.content || 'Хариулт авахад алдаа гарлаа.';
+  } catch (error) {
+    console.error('Error calling OpenAI API:', error);
+    return 'Уучлаарай, сүлжээний алдаа гарлаа. Дахин оролдоорой.';
   }
-  
-  if (lowerMessage.includes('хоол') || lowerMessage.includes('хүнс') || lowerMessage.includes('ус') || lowerMessage.includes('калори') || lowerMessage.includes('жор')) {
-    return HEALTH_RESPONSES.nutrition[Math.floor(Math.random() * HEALTH_RESPONSES.nutrition.length)];
-  }
-  
-  if (lowerMessage.includes('сэтгэл') || lowerMessage.includes('стресс') || lowerMessage.includes('сэтгэлзүй') || lowerMessage.includes('сэтгэлийн')) {
-    return HEALTH_RESPONSES.mental[Math.floor(Math.random() * HEALTH_RESPONSES.mental.length)];
-  }
-  
-  return HEALTH_RESPONSES.general[Math.floor(Math.random() * HEALTH_RESPONSES.general.length)];
 }
 
 export default function Chatbot() {
@@ -80,10 +105,12 @@ export default function Chatbot() {
   const handleSendMessage = async () => {
     if (!inputValue.trim()) return;
 
+    const userMessageText = inputValue;
+
     // Add user message
     const userMessage: Message = {
       id: Date.now().toString(),
-      text: inputValue,
+      text: userMessageText,
       sender: 'user',
       timestamp: new Date(),
     };
@@ -92,17 +119,18 @@ export default function Chatbot() {
     setInputValue('');
     setIsLoading(true);
 
-    // Simulate bot response delay
-    setTimeout(() => {
-      const botResponse: Message = {
-        id: (Date.now() + 1).toString(),
-        text: getRelevantResponse(inputValue),
-        sender: 'bot',
-        timestamp: new Date(),
-      };
-      setMessages(prev => [...prev, botResponse]);
-      setIsLoading(false);
-    }, 800);
+    // Get response from ChatGPT
+    const botResponseText = await getChatGPTResponse(userMessageText);
+    
+    const botResponse: Message = {
+      id: (Date.now() + 1).toString(),
+      text: botResponseText,
+      sender: 'bot',
+      timestamp: new Date(),
+    };
+    
+    setMessages(prev => [...prev, botResponse]);
+    setIsLoading(false);
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
