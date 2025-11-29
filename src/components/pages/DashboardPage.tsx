@@ -221,17 +221,6 @@ export default function DashboardPage() {
                     </div>
                   </div>
 
-                  <div className="mt-4">
-                    <div className="flex justify-between text-sm font-paragraph text-foreground/80 mb-2">
-                      <span>Усны ахиц дэвшил</span>
-                      <span>{Math.round(((todayEntry?.waterIntake || 0) / (profile.dailyWater || 1)) * 100)}%</span>
-                    </div>
-                    <Progress 
-                      value={((todayEntry?.waterIntake || 0) / (profile.dailyWater || 1)) * 100} 
-                      className="h-2"
-                    />
-                  </div>
-
                   {todayEntry?.mentalNote && (
                     <div className="bg-primary/10 rounded-xl p-4">
                       <h4 className="font-paragraph font-medium text-foreground mb-2">Өнөөдрийн тэмдэглэл:</h4>
