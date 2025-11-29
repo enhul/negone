@@ -73,4 +73,6 @@ export interface TeamMembers {
   photo?: string;
   /** @wixFieldType url */
   socialLink?: string;
+  /** @wixFieldType text */
+  school?: string;
 }

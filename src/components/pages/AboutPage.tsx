@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react';
 import { BaseCrudService } from '@/integrations';
 import { TeamMembers } from '@/entities';
 import { Image } from '@/components/ui/image';
-import { ExternalLink } from 'lucide-react';
 
 export default function AboutPage() {
   const [teamMembers, setTeamMembers] = useState<TeamMembers[]>([]);
@@ -13,10 +12,7 @@ export default function AboutPage() {
     const fetchTeamMembers = async () => {
       try {
         const { items } = await BaseCrudService.getAll<TeamMembers>('teammembers');
-        // Filter out specific team members
-        const excludedNames = ['Энхтуул Цэрэндорж', 'Уранчимэг Дорж', 'Нарантуяа Ганбаатар', 'Ариунзаяа Батбаяр'];
-        const filteredMembers = items.filter(member => !excludedNames.includes(member.name || ''));
-        setTeamMembers(filteredMembers);
+        setTeamMembers(items);
       } catch (error) {
         console.error('Error fetching team members:', error);
       } finally {
@@ -226,22 +222,13 @@ export default function AboutPage() {
                   <h3 className="text-2xl font-heading text-foreground mb-2">
                     {member.name}
                   </h3>
-                  <p className="text-primary font-paragraph font-medium mb-4">
+                  <p className="text-primary font-paragraph font-medium mb-3">
                     {member.role}
                   </p>
-                  <p className="text-foreground/80 font-paragraph text-sm mb-4">
-                    {member.bio}
-                  </p>
-                  {member.socialLink && (
-                    <a 
-                      href={member.socialLink}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 text-secondary hover:text-secondary/80 transition-colors"
-                    >
-                      <ExternalLink className="w-4 h-4" />
-                      <span className="font-paragraph text-sm">Холбоос</span>
-                    </a>
+                  {member.school && (
+                    <p className="text-foreground/70 font-paragraph text-sm">
+                      {member.school}
+                    </p>
                   )}
                 </motion.div>
               ))}
