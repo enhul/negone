@@ -42,7 +42,7 @@ export default function AboutPage() {
             NegOne-ийн тухай
           </h1>
           <p className="text-xl text-foreground/80 font-paragraph max-w-4xl mx-auto">
-            Эмэгтэйчүүдийн эрүүл мэнд, сэтгэлзүй, өөрийгөө хайрлахад зориулсан цогц платформ
+            Охид, эмэгтэйчүүдийн эрүүл мэнд, сэтгэлзүй, өөрийгөө хайрлахад зориулсан цогц платформ
           </p>
         </div>
       </motion.section>
