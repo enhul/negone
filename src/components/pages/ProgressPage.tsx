@@ -140,28 +140,13 @@ export default function ProgressPage() {
 
   const waterProgress = profile.dailyWater ? (todayEntry.waterIntake / profile.dailyWater) * 100 : 0;
   
-  // Check if all progress fields are filled (without water requirement)
+  // Check if all progress fields are filled AND water goal is reached
   const allFieldsFilled = 
     todayEntry.exerciseCompleted && 
+    todayEntry.waterIntake > 0 && 
     todayEntry.weight > 0 && 
-    todayEntry.mentalNote.trim().length > 0;
-
-  // Calculate weekly workout progress
-  const getWeeklyWorkoutProgress = () => {
-    const today = new Date();
-    const weekStart = new Date(today);
-    weekStart.setDate(today.getDate() - today.getDay()); // Start of week (Sunday)
-    
-    const weekEntries = dailyEntries.filter(entry => {
-      const entryDate = new Date(entry.date);
-      return entryDate >= weekStart && entryDate <= today && entry.exerciseCompleted;
-    });
-    
-    return {
-      completed: weekEntries.length,
-      target: profile.exerciseDays || 0,
-    };
-  };
+    todayEntry.mentalNote.trim().length > 0 &&
+    todayEntry.waterCompleted;
 
   return (
     <div className="min-h-screen bg-background py-8">
@@ -241,61 +226,49 @@ export default function ProgressPage() {
                 </CardContent>
               </Card>
 
-              {/* Weekly Workout Progress */}
+              {/* Water Intake */}
               <Card className="bg-white/70 backdrop-blur-sm border-secondary/20 shadow-lg">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 text-2xl font-heading text-foreground">
-                    <Activity className="w-6 h-6 text-secondary" />
-                    Долоо хоногийн дасгал
+                    <Droplets className="w-6 h-6 text-blue-500" />
+                    Усны хэрэглээ
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  {profile.exerciseDays && profile.exerciseDays > 0 ? (
-                    <>
-                      <div className="text-center">
-                        <div className="text-3xl font-heading text-secondary mb-1">
-                          {getWeeklyWorkoutProgress().completed}/{getWeeklyWorkoutProgress().target}
-                        </div>
-                        <div className="text-sm font-paragraph text-foreground/60">
-                          Энэ долоо хоногт хийсэн дасгал
-                        </div>
-                      </div>
-                      
-                      <div className="space-y-2">
-                        <Progress 
-                          value={(getWeeklyWorkoutProgress().completed / getWeeklyWorkoutProgress().target) * 100} 
-                          className="h-3"
-                        />
-                        <div className="text-xs font-paragraph text-foreground/60 text-center">
-                          {Math.round((getWeeklyWorkoutProgress().completed / getWeeklyWorkoutProgress().target) * 100)}% хүрсэн
-                        </div>
-                      </div>
-
-                      {getWeeklyWorkoutProgress().completed === getWeeklyWorkoutProgress().target && getWeeklyWorkoutProgress().target > 0 && (
-                        <motion.div
-                          initial={{ opacity: 0, scale: 0.9 }}
-                          animate={{ opacity: 1, scale: 1 }}
-                          className="bg-secondary/10 rounded-xl p-3 text-center"
-                        >
-                          <p className="text-secondary font-paragraph text-sm">
-                            ✓ Энэ долоо хоногийн дасгалын зорилго биелүүлсэн!
-                          </p>
-                        </motion.div>
-                      )}
-                    </>
-                  ) : (
-                    <div className="text-center py-6">
-                      <p className="text-foreground/60 font-paragraph text-sm mb-4">
-                        Долоо хоногт хэдэн өдөр дасгал хийх гэж төлөвлөж байгаагаа профайлдаа оруулна уу
-                      </p>
-                      <Button
-                        asChild
-                        variant="outline"
-                        className="border-secondary/30 text-secondary hover:bg-secondary/10 rounded-[20px] font-paragraph"
-                      >
-                        <a href="/profile">Профайл бөглөх</a>
-                      </Button>
+                  <div className="text-center">
+                    <div className="text-3xl font-heading text-blue-500 mb-1">
+                      {todayEntry.waterIntake}мл
                     </div>
+                    <div className="text-sm font-paragraph text-foreground/60">
+                      / {profile.dailyWater || 2000}мл
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-3">
+                    <Slider
+                      value={[todayEntry.waterIntake]}
+                      onValueChange={handleWaterChange}
+                      min={0}
+                      max={profile.dailyWater ? profile.dailyWater * 1.5 : 3000}
+                      step={50}
+                      className="w-full"
+                    />
+                    <div className="flex justify-between text-xs font-paragraph text-foreground/60">
+                      <span>0мл</span>
+                      <span>{profile.dailyWater || 2000}мл</span>
+                    </div>
+                  </div>
+
+                  {todayEntry.waterCompleted && (
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      className="bg-blue-500/10 rounded-xl p-3 text-center"
+                    >
+                      <p className="text-blue-500 font-paragraph text-sm">
+                        ✓ Өнөөдрийн усны зорилго биелүүлсэн!
+                      </p>
+                    </motion.div>
                   )}
                 </CardContent>
               </Card>
