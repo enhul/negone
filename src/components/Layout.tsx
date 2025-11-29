@@ -54,13 +54,13 @@ export default function Layout() {
                   <Link
                     key={item.name}
                     to={item.href}
-                    className={`flex items-center gap-2 px-3 py-2 rounded-xl text-base font-bold font-paragraph transition-colors ${
+                    className={`flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-paragraph transition-colors ${
                       isActive
                         ? 'bg-primary/20 text-primary'
                         : 'text-foreground/70 hover:text-primary hover:bg-primary/10'
                     }`}
                   >
-                    <Icon className="w-5 h-5" />
+                    <Icon className="w-4 h-4" />
                     {item.name}
                   </Link>
                 );
@@ -130,7 +130,7 @@ export default function Layout() {
                       key={item.name}
                       to={item.href}
                       onClick={() => setMobileMenuOpen(false)}
-                      className={`flex items-center gap-3 px-4 py-3 rounded-xl text-base font-bold font-paragraph transition-colors ${
+                      className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-paragraph transition-colors ${
                         isActive
                           ? 'bg-primary/20 text-primary'
                           : 'text-foreground/70 hover:text-primary hover:bg-primary/10'
