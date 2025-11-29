@@ -18,6 +18,7 @@ interface DailyEntry {
   date: string;
   exerciseCompleted: boolean;
   waterIntake: number;
+  waterCompleted: boolean;
   mentalNote: string;
   weight: number;
 }
@@ -42,6 +43,7 @@ export default function ProgressPage() {
     date: new Date().toISOString().split('T')[0],
     exerciseCompleted: false,
     waterIntake: 0,
+    waterCompleted: false,
     mentalNote: '',
     weight: 0,
   });
@@ -106,7 +108,10 @@ export default function ProgressPage() {
       ? todayEntry.waterIntake + amount 
       : Math.max(0, todayEntry.waterIntake - amount);
     
-    setTodayEntry({ ...todayEntry, waterIntake: newAmount });
+    // Check if water goal is reached
+    const waterCompleted = newAmount >= (profile.dailyWater || 2000);
+    
+    setTodayEntry({ ...todayEntry, waterIntake: newAmount, waterCompleted });
   };
 
   const handleSave = async () => {
@@ -267,6 +272,18 @@ export default function ProgressPage() {
                     </div>
                     <Progress value={waterProgress} className="h-3" />
                   </div>
+
+                  {todayEntry.waterCompleted && (
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      className="bg-blue-500/10 rounded-xl p-3 text-center"
+                    >
+                      <p className="text-blue-500 font-paragraph text-sm">
+                        ✓ Өнөөдрийн усны зорилго биелүүлсэн!
+                      </p>
+                    </motion.div>
+                  )}
                   
                   <div className="text-center text-xs font-paragraph text-foreground/60">
                     +250мл товчийг дарж нэмэх
