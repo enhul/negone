@@ -137,6 +137,13 @@ export default function ProgressPage() {
   };
 
   const waterProgress = profile.dailyWater ? (todayEntry.waterIntake / profile.dailyWater) * 100 : 0;
+  
+  // Check if all progress fields are filled
+  const allFieldsFilled = 
+    todayEntry.exerciseCompleted && 
+    todayEntry.waterIntake > 0 && 
+    todayEntry.weight > 0 && 
+    todayEntry.mentalNote.trim().length > 0;
 
   return (
     <div className="min-h-screen bg-background py-8">
@@ -155,6 +162,29 @@ export default function ProgressPage() {
               Өнөөдрийн дасгал, усны хэрэглээ, сэтгэлзүйн байдлыг бүртгээрэй
             </p>
           </div>
+
+          {/* Congratulatory Message */}
+          {allFieldsFilled && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: -20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              transition={{ duration: 0.5, type: 'spring', stiffness: 100 }}
+              className="mb-8"
+            >
+              <Card className="bg-gradient-to-r from-soft-light-green/20 to-secondary/20 border-soft-light-green/50 shadow-lg overflow-hidden">
+                <CardContent className="p-8 text-center">
+                  <div className="text-5xl mb-4">🎉</div>
+                  <h2 className="text-3xl font-heading text-foreground mb-2">Сайн байна!</h2>
+                  <p className="text-lg font-paragraph text-foreground/80 mb-4">
+                    Өнөөдрийн бүх зорилгоо биелүүлсэн байна! 💪
+                  </p>
+                  <p className="text-sm font-paragraph text-foreground/60">
+                    Дасгал ✓ | Ус ✓ | Жин ✓ | Тэмдэглэл ✓
+                  </p>
+                </CardContent>
+              </Card>
+            </motion.div>
+          )}
 
           <div className="grid lg:grid-cols-3 gap-8">
             {/* Daily Progress Form */}
