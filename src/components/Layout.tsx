@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
 import { Home, User, BarChart3, BookOpen, Utensils, Menu, X } from 'lucide-react';
 import { useState } from 'react';
+import Chatbot from '@/components/Chatbot';
 
 export default function Layout() {
   const { member, isAuthenticated, isLoading, actions } = useMember();
@@ -193,6 +194,9 @@ export default function Layout() {
       <main>
         <Outlet />
       </main>
+
+      {/* Chatbot */}
+      <Chatbot />
 
       {/* Footer */}
       <motion.footer 
