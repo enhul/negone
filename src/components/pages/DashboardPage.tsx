@@ -4,7 +4,8 @@ import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { Calendar, Target, Droplets, Activity, TrendingUp, Plus } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Calendar, Target, Droplets, Activity, TrendingUp, Plus, MessageSquare } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
@@ -31,6 +32,8 @@ export default function DashboardPage() {
   const [profile, setProfile] = useState<UserProfile>({});
   const [dailyEntries, setDailyEntries] = useState<DailyEntry[]>([]);
   const [currentWeek, setCurrentWeek] = useState<Date[]>([]);
+  const [selectedDay, setSelectedDay] = useState<DailyEntry | null>(null);
+  const [selectedDate, setSelectedDate] = useState<string | null>(null);
 
   useEffect(() => {
     // Load profile data
@@ -79,8 +82,17 @@ export default function DashboardPage() {
       .slice(-30) // Last 30 entries
       .map(entry => ({
         date: new Date(entry.date).toLocaleDateString('mn-MN', { month: 'short', day: 'numeric' }),
-        weight: entry.weight
+        weight: entry.weight,
+        fullDate: entry.date
       }));
+  };
+
+  const handleDayClick = (fullDate: string) => {
+    const entry = dailyEntries.find(e => e.date === fullDate);
+    if (entry) {
+      setSelectedDay(entry);
+      setSelectedDate(fullDate);
+    }
   };
 
   const todayEntry = getTodayEntry();
@@ -244,6 +256,7 @@ export default function DashboardPage() {
                       <TrendingUp className="w-6 h-6 text-secondary" />
                       Жингийн өөрчлөлт
                     </CardTitle>
+                    <p className="text-sm font-paragraph text-foreground/60 mt-2">Өдрийн цэг дээр дарж дэлгэрэнгүй мэдээлэл үзээрэй</p>
                   </CardHeader>
                   <CardContent>
                     <div className="h-64">
@@ -272,8 +285,18 @@ export default function DashboardPage() {
                             dataKey="weight" 
                             stroke="#E1BEE7" 
                             strokeWidth={3}
-                            dot={{ fill: '#E1BEE7', strokeWidth: 2, r: 4 }}
-                            activeDot={{ r: 6, fill: '#FCE4EC' }}
+                            dot={{ 
+                              fill: '#E1BEE7', 
+                              strokeWidth: 2, 
+                              r: 5, 
+                              cursor: 'pointer',
+                              onClick: (_e: any, payload: any) => {
+                                if (payload && payload.payload && payload.payload.fullDate) {
+                                  handleDayClick(payload.payload.fullDate);
+                                }
+                              }
+                            }}
+                            activeDot={{ r: 7, fill: '#FCE4EC' }}
                           />
                         </LineChart>
                       </ResponsiveContainer>
@@ -291,6 +314,7 @@ export default function DashboardPage() {
                     <Calendar className="w-5 h-5 text-soft-light-green" />
                     7 хоногийн календарь
                   </CardTitle>
+                  <p className="text-sm font-paragraph text-foreground/60 mt-2">Өдрийг дарж дэлгэрэнгүй үзээрэй</p>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-2">
@@ -300,15 +324,16 @@ export default function DashboardPage() {
                       const isToday = dateStr === new Date().toISOString().split('T')[0];
                       
                       return (
-                        <div 
+                        <button
                           key={index}
-                          className={`flex items-center justify-between p-3 rounded-xl border ${
+                          onClick={() => handleDayClick(dateStr)}
+                          className={`w-full flex items-center justify-between p-3 rounded-xl border transition-all hover:shadow-md ${
                             isToday 
                               ? 'bg-primary/20 border-primary/30' 
-                              : 'bg-white/50 border-gray-200'
+                              : 'bg-white/50 border-gray-200 hover:border-primary/30'
                           }`}
                         >
-                          <div>
+                          <div className="text-left">
                             <div className="font-paragraph font-medium text-foreground">
                               {date.toLocaleDateString('mn-MN', { weekday: 'short' })}
                             </div>
@@ -328,7 +353,7 @@ export default function DashboardPage() {
                               entry?.mentalNote ? 'bg-secondary' : 'bg-gray-300'
                             }`} title="Тэмдэглэл" />
                           </div>
-                        </div>
+                        </button>
                       );
                     })}
                   </div>
@@ -379,6 +404,97 @@ export default function DashboardPage() {
               </Card>
             </div>
           </div>
+
+          {/* Day Details Modal */}
+          <Dialog open={!!selectedDay} onOpenChange={(open) => {
+            if (!open) {
+              setSelectedDay(null);
+              setSelectedDate(null);
+            }
+          }}>
+            <DialogContent className="max-w-md">
+              <DialogHeader>
+                <DialogTitle className="text-2xl font-heading text-foreground">
+                  {selectedDate && new Date(selectedDate).toLocaleDateString('mn-MN', { 
+                    weekday: 'long', 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                  })}
+                </DialogTitle>
+              </DialogHeader>
+              
+              {selectedDay && (
+                <div className="space-y-4">
+                  {/* Exercise Status */}
+                  <div className="bg-soft-light-green/10 rounded-xl p-4 border border-soft-light-green/20">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Activity className="w-5 h-5 text-soft-light-green" />
+                      <h3 className="font-heading text-foreground">Дасгал</h3>
+                    </div>
+                    <p className={`font-paragraph text-sm ${
+                      selectedDay.exerciseCompleted 
+                        ? 'text-soft-light-green font-medium' 
+                        : 'text-foreground/60'
+                    }`}>
+                      {selectedDay.exerciseCompleted ? '✓ Хийсэн' : '✗ Хийгээгүй'}
+                    </p>
+                  </div>
+
+                  {/* Water Intake */}
+                  <div className="bg-blue-500/10 rounded-xl p-4 border border-blue-500/20">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Droplets className="w-5 h-5 text-blue-500" />
+                      <h3 className="font-heading text-foreground">Усны хэрэглээ</h3>
+                    </div>
+                    <div className="space-y-2">
+                      <p className="font-heading text-lg text-blue-500">
+                        {selectedDay.waterIntake}мл
+                      </p>
+                      <Progress 
+                        value={Math.min(100, (selectedDay.waterIntake / (profile.dailyWater || 2000)) * 100)} 
+                        className="h-2"
+                      />
+                      <p className="font-paragraph text-xs text-foreground/60">
+                        Зорилго: {profile.dailyWater || 2000}мл
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Weight */}
+                  {selectedDay.weight > 0 && (
+                    <div className="bg-secondary/10 rounded-xl p-4 border border-secondary/20">
+                      <h3 className="font-heading text-foreground mb-2">Жин</h3>
+                      <p className="font-heading text-lg text-secondary">
+                        {selectedDay.weight}кг
+                      </p>
+                    </div>
+                  )}
+
+                  {/* Mental Note */}
+                  {selectedDay.mentalNote && (
+                    <div className="bg-primary/10 rounded-xl p-4 border border-primary/20">
+                      <div className="flex items-center gap-2 mb-2">
+                        <MessageSquare className="w-5 h-5 text-primary" />
+                        <h3 className="font-heading text-foreground">Сэтгэлзүйн тэмдэглэл</h3>
+                      </div>
+                      <p className="font-paragraph text-sm text-foreground/80">
+                        {selectedDay.mentalNote}
+                      </p>
+                    </div>
+                  )}
+
+                  {!selectedDay.mentalNote && !selectedDay.weight && selectedDay.waterIntake === 0 && !selectedDay.exerciseCompleted && (
+                    <div className="text-center py-6">
+                      <p className="font-paragraph text-foreground/60">
+                        Энэ өдрийн мэдээлэл бүртгэгдээгүй байна
+                      </p>
+                    </div>
+                  )}
+                </div>
+              )}
+            </DialogContent>
+          </Dialog>
         </motion.div>
       </div>
     </div>
