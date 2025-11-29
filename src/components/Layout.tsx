@@ -2,7 +2,6 @@ import { useMember } from '@/integrations';
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Button } from '@/components/ui/button';
-import { Image } from '@/components/ui/image';
 import { motion } from 'framer-motion';
 import { Home, User, BarChart3, BookOpen, Utensils, Menu, X } from 'lucide-react';
 import { useState } from 'react';
@@ -35,17 +34,10 @@ export default function Layout() {
       >
         <div className="max-w-[120rem] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            {/* Logo and Brand */}
-            <Link to="/" className="flex items-center gap-3">
-              <Image 
-                src="https://static.wixstatic.com/media/906313_1895ad8ca7854acd99e331a9cfe095c5~mv2.jpg"
-                alt="NegOne Logo"
-                width={40}
-                height={40}
-                className="rounded-lg"
-              />
+            {/* Logo */}
+            <Link to="/" className="flex items-center">
               <motion.div 
-                className="text-2xl font-heading text-primary border-2 border-primary rounded-lg px-3 py-1"
+                className="text-2xl font-heading text-primary"
                 whileHover={{ scale: 1.05 }}
                 transition={{ duration: 0.2 }}
               >
