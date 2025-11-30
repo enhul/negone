@@ -244,6 +244,21 @@ export default function HomePage() {
           </div>
         </section>
 
+        {/* About Teaser Section */}
+        <section className="py-24 md:py-32 bg-white">
+          <div className="max-w-6xl mx-auto px-6 text-center">
+            <AnimatedElement>
+              <h2 className="text-4xl md:text-5xl font-heading text-foreground mb-6">NegOne гэж юу вэ?</h2>
+              <p className="text-lg text-foreground/70 max-w-3xl mx-auto mb-10 text-balance">
+                <span className="font-semibold text-foreground">Neg</span> (Монгол) + <span className="font-semibold text-foreground">One</span> (Англи) =  Нэг зорилго тэмүүлэл, нэг зүрх сэтгэл, нэг хамт олон, нэгэн бүхэл байх гэсэн утгатай.
+              </p>
+              <Button asChild size="lg" className="bg-soft-light-green/80 text-primary-foreground hover:bg-soft-light-green rounded-full px-8 py-6 text-lg font-semibold transition-transform duration-300 hover:scale-105">
+                <Link to="/about">Багтай танилцах</Link>
+              </Button>
+            </AnimatedElement>
+          </div>
+        </section>
+
         {/* CTA Section */}
         {!isAuthenticated && (
           <section className="py-24 md:py-32 bg-gradient-to-br from-primary/20 to-secondary/20">
