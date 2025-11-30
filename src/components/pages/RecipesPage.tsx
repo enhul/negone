@@ -9,6 +9,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Image } from '@/components/ui/image';
 import { BaseCrudService } from '@/integrations';
 import { HealthyRecipesandSnacks } from '@/entities';
+import UpdateRecipeImage from '@/components/UpdateRecipeImage';
 
 // Fallback image mapping based on recipe type and ingredients
 const FALLBACK_IMAGES: Record<string, string> = {
@@ -210,6 +211,10 @@ export default function RecipesPage() {
   const [loadingCms, setLoadingCms] = useState(true);
   const [activeTab, setActiveTab] = useState<'browse' | 'generate'>('browse');
   const [filterIngredients, setFilterIngredients] = useState<string[]>([]);
+  const [updateRecipeImage, setUpdateRecipeImage] = useState<{
+    recipeName: string;
+    imageUrl: string;
+  } | null>(null);
 
   // Load recipes from CMS on component mount
   useEffect(() => {
@@ -329,6 +334,32 @@ export default function RecipesPage() {
 
   return (
     <div className="min-h-screen bg-background py-8">
+      {/* Update recipe image when needed */}
+      {updateRecipeImage && (
+        <UpdateRecipeImage
+          recipeName={updateRecipeImage.recipeName}
+          newImageUrl={updateRecipeImage.imageUrl}
+          onSuccess={() => {
+            setUpdateRecipeImage(null);
+            // Reload recipes to show the updated image
+            const loadRecipes = async () => {
+              try {
+                const { items } = await BaseCrudService.getAll<HealthyRecipesandSnacks>(
+                  'healthyrecipes'
+                );
+                setCmsRecipes(items || []);
+              } catch (err) {
+                console.error('Failed to reload recipes:', err);
+              }
+            };
+            loadRecipes();
+          }}
+          onError={(err) => {
+            console.error('Failed to update recipe image:', err);
+            setUpdateRecipeImage(null);
+          }}
+        />
+      )}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -467,7 +498,7 @@ export default function RecipesPage() {
                       >
                         <Card className="bg-white/70 backdrop-blur-sm border-primary/10 shadow-lg overflow-hidden h-full flex flex-col">
                           {/* Recipe Image */}
-                          <div className="w-full h-48 overflow-hidden bg-foreground/5">
+                          <div className="w-full h-48 overflow-hidden bg-foreground/5 relative group">
                             <Image
                               src={recipe.dishImage || getFallbackImage(recipe.recipeName, recipe.ingredients)}
                               alt={recipe.recipeName || 'Recipe dish'}
@@ -475,6 +506,23 @@ export default function RecipesPage() {
                               height={192}
                               className="w-full h-full object-cover"
                             />
+                            {/* Update Image Button - Only for specific recipe */}
+                            {recipe.recipeName === 'Жимстэй Овьёосны Каш' && (
+                              <button
+                                onClick={() =>
+                                  setUpdateRecipeImage({
+                                    recipeName: recipe.recipeName || '',
+                                    imageUrl:
+                                      'https://static.wixstatic.com/media/906313_a88cb19638e74a7fa0be72d08ccb8327~mv2.png?originWidth=384&originHeight=256',
+                                  })
+                                }
+                                className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"
+                              >
+                                <span className="text-white text-sm font-paragraph">
+                                  Зураг шинэчлэх
+                                </span>
+                              </button>
+                            )}
                           </div>
 
                           <CardHeader className="pb-3">
