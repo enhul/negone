@@ -468,15 +468,6 @@ export default function RecipesPage() {
               {/* Recipes Grid */}
               {!loadingCms && filteredCmsRecipes.length > 0 && (
                 <div>
-                  <div className="text-center mb-8">
-                    <h2 className="text-2xl font-heading text-foreground mb-2">
-                      {filteredCmsRecipes.length} жор олдлоо
-                    </h2>
-                    <p className="text-foreground/60 font-paragraph">
-                      Эрүүл амтат хоол идэхийн тулд сонгоно уу
-                    </p>
-                  </div>
-
                   <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {filteredCmsRecipes.map((recipe, index) => (
                       <motion.div
