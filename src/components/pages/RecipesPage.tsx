@@ -10,6 +10,71 @@ import { Image } from '@/components/ui/image';
 import { BaseCrudService } from '@/integrations';
 import { HealthyRecipesandSnacks } from '@/entities';
 
+// Fallback image mapping based on recipe type and ingredients
+const FALLBACK_IMAGES: Record<string, string> = {
+  // Salads
+  'салат': 'https://static.wixstatic.com/media/12d367_71ebdd7141d041e4be3d91d80d4578dd~mv2.png?id=salad-fresh',
+  'цөцгий': 'https://static.wixstatic.com/media/12d367_71ebdd7141d041e4be3d91d80d4578dd~mv2.png?id=vegetable-salad',
+  'авокадо': 'https://static.wixstatic.com/media/12d367_71ebdd7141d041e4be3d91d80d4578dd~mv2.png?id=avocado-salad',
+  
+  // Smoothies & Drinks
+  'жүүс': 'https://static.wixstatic.com/media/12d367_71ebdd7141d041e4be3d91d80d4578dd~mv2.png?id=smoothie-drink',
+  'смүүси': 'https://static.wixstatic.com/media/12d367_71ebdd7141d041e4be3d91d80d4578dd~mv2.png?id=smoothie-bowl',
+  'цай': 'https://static.wixstatic.com/media/12d367_71ebdd7141d041e4be3d91d80d4578dd~mv2.png?id=herbal-tea',
+  
+  // Breakfast
+  'өндөг': 'https://static.wixstatic.com/media/12d367_71ebdd7141d041e4be3d91d80d4578dd~mv2.png?id=egg-breakfast',
+  'үрийн': 'https://static.wixstatic.com/media/12d367_71ebdd7141d041e4be3d91d80d4578dd~mv2.png?id=granola-bowl',
+  'хүнсний': 'https://static.wixstatic.com/media/12d367_71ebdd7141d041e4be3d91d80d4578dd~mv2.png?id=healthy-breakfast',
+  
+  // Soups
+  'шөл': 'https://static.wixstatic.com/media/12d367_71ebdd7141d041e4be3d91d80d4578dd~mv2.png?id=vegetable-soup',
+  'нэрс': 'https://static.wixstatic.com/media/12d367_71ebdd7141d041e4be3d91d80d4578dd~mv2.png?id=soup-bowl',
+  
+  // Proteins
+  'мах': 'https://static.wixstatic.com/media/12d367_71ebdd7141d041e4be3d91d80d4578dd~mv2.png?id=grilled-meat',
+  'цыпилон': 'https://static.wixstatic.com/media/12d367_71ebdd7141d041e4be3d91d80d4578dd~mv2.png?id=chicken-dish',
+  'загас': 'https://static.wixstatic.com/media/12d367_71ebdd7141d041e4be3d91d80d4578dd~mv2.png?id=grilled-fish',
+  
+  // Grains & Carbs
+  'будаа': 'https://static.wixstatic.com/media/12d367_71ebdd7141d041e4be3d91d80d4578dd~mv2.png?id=rice-bowl',
+  'макарон': 'https://static.wixstatic.com/media/12d367_71ebdd7141d041e4be3d91d80d4578dd~mv2.png?id=pasta-dish',
+  'талх': 'https://static.wixstatic.com/media/12d367_71ebdd7141d041e4be3d91d80d4578dd~mv2.png?id=whole-grain-bread',
+  
+  // Vegetables
+  'төмс': 'https://static.wixstatic.com/media/12d367_71ebdd7141d041e4be3d91d80d4578dd~mv2.png?id=roasted-vegetables',
+  'сонгино': 'https://static.wixstatic.com/media/12d367_71ebdd7141d041e4be3d91d80d4578dd~mv2.png?id=onion-dish',
+  'томат': 'https://static.wixstatic.com/media/12d367_71ebdd7141d041e4be3d91d80d4578dd~mv2.png?id=tomato-salad',
+  
+  // Fruits
+  'жимс': 'https://static.wixstatic.com/media/12d367_71ebdd7141d041e4be3d91d80d4578dd~mv2.png?id=fruit-bowl',
+  'алим': 'https://static.wixstatic.com/media/12d367_71ebdd7141d041e4be3d91d80d4578dd~mv2.png?id=apple-dish',
+  'банан': 'https://static.wixstatic.com/media/12d367_71ebdd7141d041e4be3d91d80d4578dd~mv2.png?id=banana-smoothie',
+  
+  // Snacks
+  'зууш': 'https://static.wixstatic.com/media/12d367_71ebdd7141d041e4be3d91d80d4578dd~mv2.png?id=healthy-snack',
+  'түрэмгий': 'https://static.wixstatic.com/media/12d367_71ebdd7141d041e4be3d91d80d4578dd~mv2.png?id=nuts-snack',
+  'үр': 'https://static.wixstatic.com/media/12d367_71ebdd7141d041e4be3d91d80d4578dd~mv2.png?id=seeds-snack',
+  
+  // Default
+  'default': 'https://static.wixstatic.com/media/12d367_71ebdd7141d041e4be3d91d80d4578dd~mv2.png?id=healthy-food-default',
+};
+
+// Function to get fallback image based on recipe name and ingredients
+function getFallbackImage(recipeName?: string, ingredients?: string): string {
+  const searchText = `${recipeName || ''} ${ingredients || ''}`.toLowerCase();
+  
+  // Check for exact matches in fallback images
+  for (const [keyword, imageUrl] of Object.entries(FALLBACK_IMAGES)) {
+    if (keyword !== 'default' && searchText.includes(keyword)) {
+      return imageUrl;
+    }
+  }
+  
+  // Return default if no match found
+  return FALLBACK_IMAGES.default;
+}
+
 interface ParsedRecipe {
   name: string;
   type: string;
@@ -331,17 +396,15 @@ export default function RecipesPage() {
                       >
                         <Card className="bg-white/70 backdrop-blur-sm border-primary/10 shadow-lg overflow-hidden h-full flex flex-col">
                           {/* Recipe Image */}
-                          {recipe.dishImage && (
-                            <div className="w-full h-48 overflow-hidden bg-foreground/5">
-                              <Image
-                                src={recipe.dishImage}
-                                alt={recipe.recipeName || 'Recipe dish'}
-                                width={400}
-                                height={192}
-                                className="w-full h-full object-cover"
-                              />
-                            </div>
-                          )}
+                          <div className="w-full h-48 overflow-hidden bg-foreground/5">
+                            <Image
+                              src={recipe.dishImage || getFallbackImage(recipe.recipeName, recipe.ingredients)}
+                              alt={recipe.recipeName || 'Recipe dish'}
+                              width={400}
+                              height={192}
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
 
                           <CardHeader className="pb-3">
                             <div className="flex items-start justify-between gap-2 mb-2">
