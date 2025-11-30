@@ -23,17 +23,17 @@ export default {
                 paragraph: ["madefor-display"]
             },
             colors: {
-                primary: "#B9D6E8",
+                primary: "#aed979",
                 "primary-foreground": "#333333",
-                secondary: "#F9FAFB",
+                secondary: "#f592ab",
                 "secondary-foreground": "#333333",
-                background: "#FFFFFF",
-                "soft-light-green": "#F9FAFB",
+                background: "#ffffff",
+                "soft-light-green": "#dfb8e9",
                 destructive: "#DF3131",
                 "destructive-foreground": "#FFFFFF",
                 foreground: "#333333",
                 footerbackground: "#333333",
-                linkcolor: "#B9D6E8",
+                linkcolor: "#e1b9eb",
                 buttonborder: "#B9D6E8",
                 darktext: "#333333",
                 contentblockbackground: "#F9FAFB"
