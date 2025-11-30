@@ -19,15 +19,15 @@ export default {
                 '9xl': ['8rem', { lineHeight: '1', letterSpacing: '0.05em', fontWeight: '500' }],
             },
             fontFamily: {
-                heading: "cormorantgaramond",
-                paragraph: "lato-light"
+                heading: ["noticia text", "serif"],
+                paragraph: ["noticia text", "serif"]
             },
             colors: {
-                primary: "#ffd1dc",
+                primary: "#d56989",
                 "primary-foreground": "#212121",
-                secondary: "#dbade3",
+                secondary: "#c2dc80",
                 "secondary-foreground": "#212121",
-                background: "#fbfbfb",
+                background: "#f3eef1",
                 "soft-light-green": "#b3ca98",
                 destructive: "#F44336",
                 "destructive-foreground": "#FFFFFF",
