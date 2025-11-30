@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Image } from '@/components/ui/image';
-import { Search, Utensils, ExternalLink, Filter, X, Sparkles, Loader } from 'lucide-react';
+import { Search, Utensils, ExternalLink, Filter, X, Sparkles, Loader, ImagePlus } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 interface UserProfile {
@@ -40,6 +40,8 @@ export default function RecipesPage() {
   const [filterMode, setFilterMode] = useState<'search' | 'ingredients'>('search');
   const [generatedRecipes, setGeneratedRecipes] = useState<string>('');
   const [isGenerating, setIsGenerating] = useState(false);
+  const [isGeneratingImages, setIsGeneratingImages] = useState(false);
+  const [imageGenerationProgress, setImageGenerationProgress] = useState<{ current: number; total: number } | null>(null);
 
   useEffect(() => {
     if (!member?.loginEmail) return;
@@ -198,6 +200,42 @@ export default function RecipesPage() {
     }
   };
 
+  const handleGenerateImages = async () => {
+    setIsGeneratingImages(true);
+    setImageGenerationProgress({ current: 0, total: recipes.length });
+    
+    try {
+      const response = await fetch('/api/generate-recipe-images', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        console.error('Image generation error:', error);
+        alert('Уучлаарай, зургийг үүсгэхэд алдаа гарлаа. Дахин оролдоорой.');
+        return;
+      }
+
+      const data = await response.json();
+      
+      // Refresh recipes to show new images
+      const { items } = await BaseCrudService.getAll<HealthyRecipesandSnacks>('healthyrecipes');
+      setRecipes(items);
+      setFilteredRecipes(items);
+      
+      alert(`✓ ${data.updated} жорын зургийг амжилттай үүсгэлээ!`);
+    } catch (error) {
+      console.error('Error generating images:', error);
+      alert('Уучлаарай, сүлжээний алдаа гарлаа. Дахин оролдоорой.');
+    } finally {
+      setIsGeneratingImages(false);
+      setImageGenerationProgress(null);
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-background py-8">
@@ -246,6 +284,69 @@ export default function RecipesPage() {
               </p>
             )}
           </div>
+
+          {/* Generate Images Button */}
+          {recipes.length > 0 && recipes.some(r => !r.dishImage) && (
+            <motion.div
+              className="mb-6"
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <Card className="bg-gradient-to-r from-soft-light-green/10 to-secondary/10 border-soft-light-green/30 shadow-lg">
+                <CardContent className="p-6">
+                  <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+                    <div className="flex items-center gap-3">
+                      <ImagePlus className="w-6 h-6 text-soft-light-green" />
+                      <div>
+                        <h3 className="font-heading text-foreground font-semibold">
+                          Жорын зургийг үүсгэх
+                        </h3>
+                        <p className="text-sm text-foreground/70 font-paragraph">
+                          {recipes.filter(r => !r.dishImage).length} жорын зургийг AI-ээр үүсгэх
+                        </p>
+                      </div>
+                    </div>
+                    <Button
+                      onClick={handleGenerateImages}
+                      disabled={isGeneratingImages}
+                      className="bg-soft-light-green hover:bg-soft-light-green/90 text-foreground rounded-xl font-paragraph whitespace-nowrap"
+                    >
+                      {isGeneratingImages ? (
+                        <>
+                          <Loader className="w-4 h-4 mr-2 animate-spin" />
+                          Үүсгэж байна...
+                        </>
+                      ) : (
+                        <>
+                          <Sparkles className="w-4 h-4 mr-2" />
+                          Зургийг үүсгэх
+                        </>
+                      )}
+                    </Button>
+                  </div>
+                  {imageGenerationProgress && (
+                    <div className="mt-4 pt-4 border-t border-soft-light-green/20">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-xs font-paragraph text-foreground/70">
+                          Явц: {imageGenerationProgress.current} / {imageGenerationProgress.total}
+                        </span>
+                        <span className="text-xs font-paragraph text-foreground/70">
+                          {Math.round((imageGenerationProgress.current / imageGenerationProgress.total) * 100)}%
+                        </span>
+                      </div>
+                      <div className="w-full bg-foreground/10 rounded-full h-2">
+                        <div
+                          className="bg-soft-light-green h-2 rounded-full transition-all duration-300"
+                          style={{ width: `${(imageGenerationProgress.current / imageGenerationProgress.total) * 100}%` }}
+                        ></div>
+                      </div>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </motion.div>
+          )}
 
           {/* Filters */}
           <Card className="bg-white/70 backdrop-blur-sm border-primary/20 shadow-lg mb-8">
