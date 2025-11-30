@@ -2,7 +2,6 @@ import { useMember } from '@/integrations';
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Button } from '@/components/ui/button';
-import { Toaster } from '@/components/ui/toaster';
 import { motion } from 'framer-motion';
 import { Home, User, BarChart3, BookOpen, Utensils, Menu, X } from 'lucide-react';
 import { useState } from 'react';
@@ -198,9 +197,6 @@ export default function Layout() {
 
       {/* Chatbot */}
       <Chatbot />
-
-      {/* Toast Notifications */}
-      <Toaster />
 
       {/* Footer */}
       <motion.footer 
