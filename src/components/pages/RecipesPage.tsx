@@ -162,7 +162,7 @@ function parseRecipesText(text: string): ParsedRecipe[] {
         recipe.type = trimmed.replace('Төрөл:', '').trim();
       } else if (trimmed.startsWith('Тайлбар:')) {
         recipe.description = trimmed.replace('Тайлбар:', '').trim();
-      } else if (trimmed.startsWith('Орцууд:')) {
+      } else if (trimmed.startsWith('Орцуу:')) {
         currentSection = 'ingredients';
       } else if (trimmed.startsWith('Хийх арга:')) {
         currentSection = 'instructions';
@@ -517,7 +517,7 @@ export default function RecipesPage() {
                             {/* Ingredients */}
                             {recipe.ingredients && (
                               <div>
-                                <h4 className="font-paragraph font-medium text-foreground mb-2 text-sm">Орцууд:</h4>
+                                <h4 className="font-paragraph font-medium text-foreground mb-2 text-sm">Орцуу:</h4>
                                 <p className="text-foreground/70 font-paragraph text-sm line-clamp-3">
                                   {recipe.ingredients}
                                 </p>
@@ -710,7 +710,7 @@ export default function RecipesPage() {
 
                             {/* Ingredients */}
                             <div>
-                              <h4 className="font-paragraph font-medium text-foreground mb-2 text-sm">Орцууд:</h4>
+                              <h4 className="font-paragraph font-medium text-foreground mb-2 text-sm">Орцуу:</h4>
                               <ul className="space-y-1">
                                 {recipe.ingredients.map((ingredient, i) => (
                                   <li key={i} className="text-foreground/70 font-paragraph text-sm flex items-start">
