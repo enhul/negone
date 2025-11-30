@@ -10,7 +10,6 @@ import { Badge } from '@/components/ui/badge';
 import { Image } from '@/components/ui/image';
 import { Search, Utensils, ExternalLink, Filter, X, Sparkles, Loader } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { regenerateAllRecipeImages, generateImagesForSpecificRecipes } from '@/utils/generateRecipeImages';
 
 interface UserProfile {
   dailyCalories?: number;
@@ -41,9 +40,20 @@ export default function RecipesPage() {
   const [filterMode, setFilterMode] = useState<'search' | 'ingredients'>('search');
   const [generatedRecipes, setGeneratedRecipes] = useState<string>('');
   const [isGenerating, setIsGenerating] = useState(false);
-  const [isGeneratingImages, setIsGeneratingImages] = useState(false);
 
   useEffect(() => {
+    if (!member?.loginEmail) return;
+    
+    // Load user profile
+    const savedProfile = localStorage.getItem(`profile_${member.loginEmail}`);
+    if (savedProfile) {
+      try {
+        setProfile(JSON.parse(savedProfile));
+      } catch (error) {
+        console.error('Error parsing saved profile:', error);
+      }
+    }
+
     // Fetch recipes
     const fetchRecipes = async () => {
       try {
@@ -58,63 +68,7 @@ export default function RecipesPage() {
     };
 
     fetchRecipes();
-  }, []);
-
-  useEffect(() => {
-    if (!member?.loginEmail) return;
-    
-    // Load user profile
-    const savedProfile = localStorage.getItem(`profile_${member.loginEmail}`);
-    if (savedProfile) {
-      try {
-        setProfile(JSON.parse(savedProfile));
-      } catch (error) {
-        console.error('Error parsing saved profile:', error);
-      }
-    }
   }, [member?.loginEmail]);
-
-  const handleRegenerateImages = async () => {
-    setIsGeneratingImages(true);
-    try {
-      const result = await regenerateAllRecipeImages();
-      console.log('Image regeneration result:', result);
-      
-      // Refetch recipes to get the updated images
-      const { items: updatedItems } = await BaseCrudService.getAll<HealthyRecipesandSnacks>('healthyrecipes');
-      setRecipes(updatedItems);
-      setFilteredRecipes(updatedItems);
-    } catch (error) {
-      console.error('Error regenerating recipe images:', error);
-    } finally {
-      setIsGeneratingImages(false);
-    }
-  };
-
-  const handleGenerateImagesForSpecificRecipes = async () => {
-    const recipeNames = [
-      'Өндөгтэй Салат',
-      'Жимстэй Тараг',
-      'Бүхэл Үрийн Талхтай Сэндвич',
-      'Эрүүл Шоколадтай Пудинг',
-      'Цагаан Будаатай Тахианы Мах'
-    ];
-    
-    setIsGeneratingImages(true);
-    try {
-      const result = await generateImagesForSpecificRecipes(recipeNames);
-      console.log('Image generation result:', result);
-      
-      // Refetch recipes to get the updated images
-      const { items: updatedItems } = await BaseCrudService.getAll<HealthyRecipesandSnacks>('healthyrecipes');
-      setRecipes(updatedItems);
-      setFilteredRecipes(updatedItems);
-    } catch (error) {
-      console.error('Error generating recipe images:', error);
-    } finally {
-      setIsGeneratingImages(false);
-    }
-  };
 
   useEffect(() => {
     let filtered = recipes;
@@ -291,45 +245,6 @@ export default function RecipesPage() {
                 Таны өдрийн калорийн хэрэгцээ: {profile.dailyCalories} калори
               </p>
             )}
-            
-            {/* Regenerate Images Button */}
-            <div className="mt-6 flex justify-center gap-3">
-              <Button
-                onClick={handleRegenerateImages}
-                disabled={isGeneratingImages}
-                className="bg-soft-light-green hover:bg-soft-light-green/90 text-foreground rounded-xl font-paragraph px-6 py-2"
-              >
-                {isGeneratingImages ? (
-                  <>
-                    <Loader className="w-4 h-4 mr-2 animate-spin" />
-                    Зургуудыг дахин үүсгэж байна...
-                  </>
-                ) : (
-                  <>
-                    <Sparkles className="w-4 h-4 mr-2" />
-                    Бүх жорын зургуудыг дахин үүсгэх
-                  </>
-                )}
-              </Button>
-              
-              <Button
-                onClick={handleGenerateImagesForSpecificRecipes}
-                disabled={isGeneratingImages}
-                className="bg-primary hover:bg-primary/90 text-foreground rounded-xl font-paragraph px-6 py-2"
-              >
-                {isGeneratingImages ? (
-                  <>
-                    <Loader className="w-4 h-4 mr-2 animate-spin" />
-                    Зургуудыг үүсгэж байна...
-                  </>
-                ) : (
-                  <>
-                    <Sparkles className="w-4 h-4 mr-2" />
-                    5 жорын зургуудыг үүсгэх
-                  </>
-                )}
-              </Button>
-            </div>
           </div>
 
           {/* Filters */}
