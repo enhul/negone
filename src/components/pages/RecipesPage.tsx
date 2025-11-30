@@ -91,6 +91,7 @@ interface ParsedRecipe {
   fat?: number;
   tags?: string[];
   image?: string;
+  imagePrompt?: string;
 }
 
 interface RecipeModalProps {
@@ -202,6 +203,23 @@ function parseRecipesText(text: string): ParsedRecipe[] {
         recipe.type = trimmed.replace('Төрөл:', '').trim();
       } else if (trimmed.startsWith('Тайлбар:')) {
         recipe.description = trimmed.replace('Тайлбар:', '').trim();
+      } else if (trimmed.startsWith('Бэлтгэл:')) {
+        const prepMatch = trimmed.match(/Бэлтгэл:\\s*(\\d+)/);
+        if (prepMatch) recipe.prepTime = parseInt(prepMatch[1]);
+      } else if (trimmed.startsWith('Уураг:')) {
+        const proteinMatch = trimmed.match(/Уураг:\\s*(\\d+)/);
+        if (proteinMatch) recipe.protein = parseInt(proteinMatch[1]);
+      } else if (trimmed.startsWith('Нүүрс:')) {
+        const carbsMatch = trimmed.match(/Нүүрс:\\s*(\\d+)/);
+        if (carbsMatch) recipe.carbs = parseInt(carbsMatch[1]);
+      } else if (trimmed.startsWith('Өөх:')) {
+        const fatMatch = trimmed.match(/Өөх:\\s*(\\d+)/);
+        if (fatMatch) recipe.fat = parseInt(fatMatch[1]);
+      } else if (trimmed.startsWith('Шошго:')) {
+        const tagsText = trimmed.replace('Шошго:', '').trim();
+        recipe.tags = tagsText.split(',').map(t => t.trim()).filter(t => t);
+      } else if (trimmed.startsWith('Зургийн сэдэв:')) {
+        recipe.imagePrompt = trimmed.replace('Зургийн сэдэв:', '').trim();
       } else if (trimmed.startsWith('Орцуу:')) {
         currentSection = 'ingredients';
       } else if (trimmed.startsWith('Хийх арга:')) {
@@ -225,7 +243,12 @@ function parseRecipesText(text: string): ParsedRecipe[] {
 
     if (recipe.name && recipe.ingredients && recipe.ingredients.length > 0) {
       const caloriesPerServing = recipe.caloriesPerServing || 300;
-      const macros = generateMacros(caloriesPerServing);
+      // Use parsed macros if available, otherwise generate them
+      const macros = {
+        protein: recipe.protein || generateMacros(caloriesPerServing).protein,
+        carbs: recipe.carbs || generateMacros(caloriesPerServing).carbs,
+        fat: recipe.fat || generateMacros(caloriesPerServing).fat,
+      };
       
       recipes.push({
         name: recipe.name || 'Үл мэдэгдэх жор',
@@ -241,7 +264,8 @@ function parseRecipesText(text: string): ParsedRecipe[] {
         protein: macros.protein,
         carbs: macros.carbs,
         fat: macros.fat,
-        tags: generateHealthyTags(recipe.name || '', recipe.ingredients),
+        tags: recipe.tags && recipe.tags.length > 0 ? recipe.tags : generateHealthyTags(recipe.name || '', recipe.ingredients),
+        imagePrompt: recipe.imagePrompt,
       });
     }
   }
@@ -735,6 +759,35 @@ export default function RecipesPage() {
 
       const data = await response.json();
       const parsedRecipes = parseRecipesText(data.recipes);
+      
+      // Generate images for recipes with image prompts
+      if (parsedRecipes.length > 0 && parsedRecipes.some(r => r.imagePrompt)) {
+        try {
+          const recipesWithPrompts = parsedRecipes
+            .filter(r => r.imagePrompt)
+            .map(r => ({ recipeName: r.name, imagePrompt: r.imagePrompt! }));
+          
+          const imageResponse = await fetch('/api/generate-recipe-images-ai', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ recipes: recipesWithPrompts }),
+          });
+          
+          if (imageResponse.ok) {
+            const imageData = await imageResponse.json();
+            // Assign generated images to recipes
+            parsedRecipes.forEach(recipe => {
+              if (imageData.images[recipe.name]) {
+                recipe.image = imageData.images[recipe.name];
+              }
+            });
+          }
+        } catch (err) {
+          console.error('Failed to generate images:', err);
+          // Continue without images if generation fails
+        }
+      }
+      
       setRecipes(parsedRecipes);
 
       if (parsedRecipes.length === 0) {
