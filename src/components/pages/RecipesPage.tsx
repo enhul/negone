@@ -75,6 +75,9 @@ export default function RecipesPage() {
   useEffect(() => {
     let filtered = recipes;
 
+    // Filter out recipes without images
+    filtered = filtered.filter(recipe => recipe.dishImage);
+
     // Ingredient filter (hashtag mode)
     if (filterMode === 'ingredients' && selectedIngredients.length > 0) {
       filtered = filtered.filter(recipe => {
