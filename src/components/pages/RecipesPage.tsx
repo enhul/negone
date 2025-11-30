@@ -10,7 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import { Image } from '@/components/ui/image';
 import { Search, Utensils, ExternalLink, Filter, X, Sparkles, Loader } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { generateAndAddRecipeImages } from '@/utils/generateRecipeImages';
+import { regenerateAllRecipeImages } from '@/utils/generateRecipeImages';
 
 interface UserProfile {
   dailyCalories?: number;
@@ -44,6 +44,23 @@ export default function RecipesPage() {
   const [isGeneratingImages, setIsGeneratingImages] = useState(false);
 
   useEffect(() => {
+    // Fetch recipes
+    const fetchRecipes = async () => {
+      try {
+        const { items } = await BaseCrudService.getAll<HealthyRecipesandSnacks>('healthyrecipes');
+        setRecipes(items);
+        setFilteredRecipes(items);
+      } catch (error) {
+        console.error('Error fetching recipes:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchRecipes();
+  }, []);
+
+  useEffect(() => {
     if (!member?.loginEmail) return;
     
     // Load user profile
@@ -55,39 +72,24 @@ export default function RecipesPage() {
         console.error('Error parsing saved profile:', error);
       }
     }
-
-    // Fetch recipes
-    const fetchRecipes = async () => {
-      try {
-        const { items } = await BaseCrudService.getAll<HealthyRecipesandSnacks>('healthyrecipes');
-        setRecipes(items);
-        setFilteredRecipes(items);
-        
-        // Check if recipes need images and generate them
-        const recipesNeedingImages = items.filter(recipe => !recipe.dishImage);
-        if (recipesNeedingImages.length > 0) {
-          setIsGeneratingImages(true);
-          try {
-            await generateAndAddRecipeImages();
-            // Refetch recipes to get the updated images
-            const { items: updatedItems } = await BaseCrudService.getAll<HealthyRecipesandSnacks>('healthyrecipes');
-            setRecipes(updatedItems);
-            setFilteredRecipes(updatedItems);
-          } catch (error) {
-            console.error('Error generating recipe images:', error);
-          } finally {
-            setIsGeneratingImages(false);
-          }
-        }
-      } catch (error) {
-        console.error('Error fetching recipes:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchRecipes();
   }, [member?.loginEmail]);
+
+  const handleRegenerateImages = async () => {
+    setIsGeneratingImages(true);
+    try {
+      const result = await regenerateAllRecipeImages();
+      console.log('Image regeneration result:', result);
+      
+      // Refetch recipes to get the updated images
+      const { items: updatedItems } = await BaseCrudService.getAll<HealthyRecipesandSnacks>('healthyrecipes');
+      setRecipes(updatedItems);
+      setFilteredRecipes(updatedItems);
+    } catch (error) {
+      console.error('Error regenerating recipe images:', error);
+    } finally {
+      setIsGeneratingImages(false);
+    }
+  };
 
   useEffect(() => {
     let filtered = recipes;
@@ -264,6 +266,27 @@ export default function RecipesPage() {
                 Таны өдрийн калорийн хэрэгцээ: {profile.dailyCalories} калори
               </p>
             )}
+            
+            {/* Regenerate Images Button */}
+            <div className="mt-6 flex justify-center">
+              <Button
+                onClick={handleRegenerateImages}
+                disabled={isGeneratingImages}
+                className="bg-soft-light-green hover:bg-soft-light-green/90 text-foreground rounded-xl font-paragraph px-6 py-2"
+              >
+                {isGeneratingImages ? (
+                  <>
+                    <Loader className="w-4 h-4 mr-2 animate-spin" />
+                    Зургуудыг дахин үүсгэж байна...
+                  </>
+                ) : (
+                  <>
+                    <Sparkles className="w-4 h-4 mr-2" />
+                    Бүх жорын зургуудыг дахин үүсгэх
+                  </>
+                )}
+              </Button>
+            </div>
           </div>
 
           {/* Filters */}
