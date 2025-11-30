@@ -308,32 +308,28 @@ function RecipeModal({ recipe, isOpen, onClose }: RecipeModalProps) {
               </button>
             </div>
 
-            {/* Macro Info - Large Bold Blocks */}
-            <div className="grid grid-cols-2 gap-3">
-              <div className="bg-primary/15 rounded-xl p-5 text-center border border-primary/20">
-                <Flame className="w-6 h-6 text-primary mx-auto mb-2" />
-                <p className="text-xs font-paragraph text-foreground/60 uppercase tracking-wide mb-1">Калори</p>
-                <p className="text-3xl font-heading font-bold text-primary">{calories}</p>
+            {/* Macro Info - Simple Text */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="font-paragraph text-foreground/70">Калори:</span>
+                <span className="font-heading font-bold text-foreground">{calories}</span>
               </div>
               {parsedRecipe.protein && (
-                <div className="bg-blue-100/40 rounded-xl p-5 text-center border border-blue-200/50">
-                  <Zap className="w-6 h-6 text-blue-600 mx-auto mb-2" />
-                  <p className="text-xs font-paragraph text-foreground/60 uppercase tracking-wide mb-1">Уураг</p>
-                  <p className="text-3xl font-heading font-bold text-blue-700">{parsedRecipe.protein}г</p>
+                <div className="flex items-center justify-between">
+                  <span className="font-paragraph text-foreground/70">Уураг:</span>
+                  <span className="font-heading font-bold text-foreground">{parsedRecipe.protein}г</span>
                 </div>
               )}
               {parsedRecipe.carbs && (
-                <div className="bg-amber-100/40 rounded-xl p-5 text-center border border-amber-200/50">
-                  <Zap className="w-6 h-6 text-amber-600 mx-auto mb-2" />
-                  <p className="text-xs font-paragraph text-foreground/60 uppercase tracking-wide mb-1">Нүүрс</p>
-                  <p className="text-3xl font-heading font-bold text-amber-700">{parsedRecipe.carbs}г</p>
+                <div className="flex items-center justify-between">
+                  <span className="font-paragraph text-foreground/70">Нүүрс:</span>
+                  <span className="font-heading font-bold text-foreground">{parsedRecipe.carbs}г</span>
                 </div>
               )}
               {parsedRecipe.fat && (
-                <div className="bg-orange-100/40 rounded-xl p-5 text-center border border-orange-200/50">
-                  <Zap className="w-6 h-6 text-orange-600 mx-auto mb-2" />
-                  <p className="text-xs font-paragraph text-foreground/60 uppercase tracking-wide mb-1">Өөх</p>
-                  <p className="text-3xl font-heading font-bold text-orange-700">{parsedRecipe.fat}г</p>
+                <div className="flex items-center justify-between">
+                  <span className="font-paragraph text-foreground/70">Өөх:</span>
+                  <span className="font-heading font-bold text-foreground">{parsedRecipe.fat}г</span>
                 </div>
               )}
             </div>
@@ -456,32 +452,28 @@ function RecipeCard({ recipe, onCardClick }: { recipe: ParsedRecipe; onCardClick
         </CardHeader>
 
         <CardContent className="pt-0 flex flex-col flex-1 space-y-3">
-          {/* Macros Grid - Large Bold Blocks */}
-          <div className="grid grid-cols-2 gap-2">
-            <div className="bg-primary/15 rounded-lg p-4 text-center border border-primary/20">
-              <Flame className="w-5 h-5 text-primary mx-auto mb-1" />
-              <p className="text-xs font-paragraph text-foreground/60 uppercase tracking-wide mb-1">Калори</p>
-              <p className="text-2xl font-heading font-bold text-primary">{recipe.caloriesPerServing}</p>
+          {/* Macros - Simple Text */}
+          <div className="space-y-1.5 text-sm">
+            <div className="flex items-center justify-between">
+              <span className="font-paragraph text-foreground/70">Калори:</span>
+              <span className="font-heading font-bold text-foreground">{recipe.caloriesPerServing}</span>
             </div>
             {recipe.protein && (
-              <div className="bg-blue-100/40 rounded-lg p-4 text-center border border-blue-200/50">
-                <Zap className="w-5 h-5 text-blue-600 mx-auto mb-1" />
-                <p className="text-xs font-paragraph text-foreground/60 uppercase tracking-wide mb-1">Уураг</p>
-                <p className="text-2xl font-heading font-bold text-blue-700">{recipe.protein}г</p>
+              <div className="flex items-center justify-between">
+                <span className="font-paragraph text-foreground/70">Уураг:</span>
+                <span className="font-heading font-bold text-foreground">{recipe.protein}г</span>
               </div>
             )}
             {recipe.carbs && (
-              <div className="bg-amber-100/40 rounded-lg p-4 text-center border border-amber-200/50">
-                <Zap className="w-5 h-5 text-amber-600 mx-auto mb-1" />
-                <p className="text-xs font-paragraph text-foreground/60 uppercase tracking-wide mb-1">Нүүрс</p>
-                <p className="text-2xl font-heading font-bold text-amber-700">{recipe.carbs}г</p>
+              <div className="flex items-center justify-between">
+                <span className="font-paragraph text-foreground/70">Нүүрс:</span>
+                <span className="font-heading font-bold text-foreground">{recipe.carbs}г</span>
               </div>
             )}
             {recipe.fat && (
-              <div className="bg-orange-100/40 rounded-lg p-4 text-center border border-orange-200/50">
-                <Zap className="w-5 h-5 text-orange-600 mx-auto mb-1" />
-                <p className="text-xs font-paragraph text-foreground/60 uppercase tracking-wide mb-1">Өөх</p>
-                <p className="text-2xl font-heading font-bold text-orange-700">{recipe.fat}г</p>
+              <div className="flex items-center justify-between">
+                <span className="font-paragraph text-foreground/70">Өөх:</span>
+                <span className="font-heading font-bold text-foreground">{recipe.fat}г</span>
               </div>
             )}
           </div>
@@ -558,28 +550,24 @@ function CMSRecipeCard({ recipe, onCardClick }: { recipe: HealthyRecipesandSnack
         </CardHeader>
 
         <CardContent className="pt-0 flex flex-col flex-1 space-y-3">
-          {/* Macros Grid - Large Bold Blocks */}
+          {/* Macros - Simple Text */}
           {recipe.caloriesPerServing && (
-            <div className="grid grid-cols-2 gap-2">
-              <div className="bg-primary/15 rounded-lg p-4 text-center border border-primary/20">
-                <Flame className="w-5 h-5 text-primary mx-auto mb-1" />
-                <p className="text-xs font-paragraph text-foreground/60 uppercase tracking-wide mb-1">Калори</p>
-                <p className="text-2xl font-heading font-bold text-primary">{recipe.caloriesPerServing}</p>
+            <div className="space-y-1.5 text-sm">
+              <div className="flex items-center justify-between">
+                <span className="font-paragraph text-foreground/70">Калори:</span>
+                <span className="font-heading font-bold text-foreground">{recipe.caloriesPerServing}</span>
               </div>
-              <div className="bg-blue-100/40 rounded-lg p-4 text-center border border-blue-200/50">
-                <Zap className="w-5 h-5 text-blue-600 mx-auto mb-1" />
-                <p className="text-xs font-paragraph text-foreground/60 uppercase tracking-wide mb-1">Уураг</p>
-                <p className="text-2xl font-heading font-bold text-blue-700">{macros.protein}г</p>
+              <div className="flex items-center justify-between">
+                <span className="font-paragraph text-foreground/70">Уураг:</span>
+                <span className="font-heading font-bold text-foreground">{macros.protein}г</span>
               </div>
-              <div className="bg-amber-100/40 rounded-lg p-4 text-center border border-amber-200/50">
-                <Zap className="w-5 h-5 text-amber-600 mx-auto mb-1" />
-                <p className="text-xs font-paragraph text-foreground/60 uppercase tracking-wide mb-1">Нүүрс</p>
-                <p className="text-2xl font-heading font-bold text-amber-700">{macros.carbs}г</p>
+              <div className="flex items-center justify-between">
+                <span className="font-paragraph text-foreground/70">Нүүрс:</span>
+                <span className="font-heading font-bold text-foreground">{macros.carbs}г</span>
               </div>
-              <div className="bg-orange-100/40 rounded-lg p-4 text-center border border-orange-200/50">
-                <Zap className="w-5 h-5 text-orange-600 mx-auto mb-1" />
-                <p className="text-xs font-paragraph text-foreground/60 uppercase tracking-wide mb-1">Өөх</p>
-                <p className="text-2xl font-heading font-bold text-orange-700">{macros.fat}г</p>
+              <div className="flex items-center justify-between">
+                <span className="font-paragraph text-foreground/70">Өөх:</span>
+                <span className="font-heading font-bold text-foreground">{macros.fat}г</span>
               </div>
             </div>
           )}
