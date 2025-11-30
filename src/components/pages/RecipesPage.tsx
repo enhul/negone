@@ -209,7 +209,6 @@ export default function RecipesPage() {
   const [cmsRecipes, setCmsRecipes] = useState<HealthyRecipesandSnacks[]>([]);
   const [loadingCms, setLoadingCms] = useState(true);
   const [activeTab, setActiveTab] = useState<'browse' | 'generate'>('browse');
-  const [searchQuery, setSearchQuery] = useState('');
   const [filterIngredients, setFilterIngredients] = useState<string[]>([]);
 
   // Load recipes from CMS on component mount
@@ -229,16 +228,11 @@ export default function RecipesPage() {
     loadRecipes();
   }, []);
 
-  // Filter CMS recipes based on search query and selected ingredients
+  // Filter CMS recipes based on selected ingredients
   const filteredCmsRecipes = cmsRecipes.filter(recipe => {
-    // Check search query match
-    const matchesSearch = !searchQuery || 
-      recipe.recipeName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      recipe.description?.toLowerCase().includes(searchQuery.toLowerCase());
-    
     // Check ingredient filter match
     if (filterIngredients.length === 0) {
-      return matchesSearch;
+      return true;
     }
     
     const recipeIngredients = recipe.ingredients?.toLowerCase() || '';
@@ -246,7 +240,7 @@ export default function RecipesPage() {
       recipeIngredients.includes(ingredient.toLowerCase())
     );
     
-    return matchesSearch && matchesIngredients;
+    return matchesIngredients;
   });
 
   const handleAddIngredient = () => {
@@ -389,24 +383,6 @@ export default function RecipesPage() {
             >
               {/* Search and Filter Section */}
               <div className="space-y-4">
-                {/* Search Card */}
-                <Card className="bg-white/70 backdrop-blur-sm border-primary/20 shadow-lg">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2 font-heading text-foreground">
-                      <Utensils className="w-5 h-5 text-primary" />
-                      Жорууд хайх
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <Input
-                      placeholder="Жорын нэр эсвэл тайлбараар хайх..."
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      className="rounded-xl border-primary/20 font-paragraph"
-                    />
-                  </CardContent>
-                </Card>
-
                 {/* Ingredient Filter Card */}
                 <Card className="bg-white/70 backdrop-blur-sm border-primary/20 shadow-lg">
                   <CardHeader>
