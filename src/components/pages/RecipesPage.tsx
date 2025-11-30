@@ -218,6 +218,26 @@ export default function RecipesPage() {
         setLoadingCms(true);
         const { items } = await BaseCrudService.getAll<HealthyRecipesandSnacks>('healthyrecipes');
         setCmsRecipes(items || []);
+        
+        // Update the image for 'Тахианы Цээж Махтай Салат' if it doesn't have one
+        const chickenSaladRecipe = items?.find(r => r.recipeName === 'Тахианы Цээж Махтай Салат');
+        if (chickenSaladRecipe && !chickenSaladRecipe.dishImage) {
+          try {
+            await fetch('/api/update-recipe-image', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                recipeName: 'Тахианы Цээж Махтай Салат',
+                imageUrl: 'https://static.wixstatic.com/media/906313_20853d4fbdb54172a14103f1d4be5dc8~mv2.png?originWidth=384&originHeight=256'
+              })
+            });
+            // Reload recipes to show the updated image
+            const { items: updatedItems } = await BaseCrudService.getAll<HealthyRecipesandSnacks>('healthyrecipes');
+            setCmsRecipes(updatedItems || []);
+          } catch (err) {
+            console.error('Failed to update recipe image:', err);
+          }
+        }
       } catch (err) {
         console.error('Failed to load recipes:', err);
       } finally {
