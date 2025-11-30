@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Utensils, Sparkles, X, Loader2, AlertCircle, Flame } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Image } from '@/components/ui/image';
 import { BaseCrudService } from '@/integrations';
 import { HealthyRecipesandSnacks } from '@/entities';
 
@@ -329,6 +330,19 @@ export default function RecipesPage() {
                         transition={{ duration: 0.5, delay: index * 0.05 }}
                       >
                         <Card className="bg-white/70 backdrop-blur-sm border-primary/10 shadow-lg overflow-hidden h-full flex flex-col">
+                          {/* Recipe Image */}
+                          {recipe.dishImage && (
+                            <div className="w-full h-48 overflow-hidden bg-foreground/5">
+                              <Image
+                                src={recipe.dishImage}
+                                alt={recipe.recipeName || 'Recipe dish'}
+                                width={400}
+                                height={192}
+                                className="w-full h-full object-cover"
+                              />
+                            </div>
+                          )}
+
                           <CardHeader className="pb-3">
                             <div className="flex items-start justify-between gap-2 mb-2">
                               <CardTitle className="text-xl font-heading text-foreground line-clamp-2">
