@@ -309,7 +309,7 @@ function RecipeModal({ recipe, isOpen, onClose }: RecipeModalProps) {
             </div>
 
             {/* Macro Info */}
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-2 gap-4">
               <div className="bg-primary/10 rounded-lg p-4 text-center">
                 <Flame className="w-5 h-5 text-primary mx-auto mb-2" />
                 <p className="text-sm font-paragraph text-foreground/70">Калори</p>
@@ -327,6 +327,13 @@ function RecipeModal({ recipe, isOpen, onClose }: RecipeModalProps) {
                   <Zap className="w-5 h-5 text-amber-500 mx-auto mb-2" />
                   <p className="text-sm font-paragraph text-foreground/70">Нүүрс</p>
                   <p className="text-xl font-heading text-amber-600">{parsedRecipe.carbs}г</p>
+                </div>
+              )}
+              {parsedRecipe.fat && (
+                <div className="bg-orange-50 rounded-lg p-4 text-center">
+                  <Zap className="w-5 h-5 text-orange-500 mx-auto mb-2" />
+                  <p className="text-sm font-paragraph text-foreground/70">Өөх</p>
+                  <p className="text-xl font-heading text-orange-600">{parsedRecipe.fat}г</p>
                 </div>
               )}
             </div>
@@ -504,6 +511,9 @@ function RecipeCard({ recipe, onCardClick }: { recipe: ParsedRecipe; onCardClick
 
 // CMS Recipe Card Component
 function CMSRecipeCard({ recipe, onCardClick }: { recipe: HealthyRecipesandSnacks; onCardClick: () => void }) {
+  const calories = recipe.caloriesPerServing || 0;
+  const macros = generateMacros(calories);
+  
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }}
@@ -537,13 +547,22 @@ function CMSRecipeCard({ recipe, onCardClick }: { recipe: HealthyRecipesandSnack
         </CardHeader>
 
         <CardContent className="pt-0 flex flex-col flex-1 space-y-3">
-          {/* Calories */}
+          {/* Calories & Macros */}
           {recipe.caloriesPerServing && (
-            <div className="bg-primary/10 rounded-lg p-3 flex items-center gap-2">
-              <Flame className="w-4 h-4 text-primary" />
-              <span className="font-paragraph text-sm text-foreground/80">
-                <span className="font-medium text-primary">{recipe.caloriesPerServing}</span> ккал
-              </span>
+            <div className="bg-primary/10 rounded-lg p-3 space-y-2">
+              <div className="flex items-center gap-2">
+                <Flame className="w-4 h-4 text-primary" />
+                <span className="font-paragraph text-sm text-foreground/80">
+                  <span className="font-medium text-primary">{recipe.caloriesPerServing}</span> ккал
+                </span>
+              </div>
+              
+              {/* Macro Info */}
+              <div className="flex gap-2 text-xs font-paragraph text-foreground/60">
+                <span>Уураг: {macros.protein}г</span>
+                <span>Нүүрс: {macros.carbs}г</span>
+                <span>Өөх: {macros.fat}г</span>
+              </div>
             </div>
           )}
 
