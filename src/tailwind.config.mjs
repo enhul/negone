@@ -23,9 +23,9 @@ export default {
                 paragraph: ["noticia text", "serif"]
             },
             colors: {
-                primary: "#d56989",
-                "primary-foreground": "#212121",
-                secondary: "#c2dc80",
+                primary: "#2d6a4f",
+                "primary-foreground": "#ffffff",
+                secondary: "#97bc62",
                 "secondary-foreground": "#212121",
                 background: "#f3eef1",
                 "soft-light-green": "#b3ca98",
