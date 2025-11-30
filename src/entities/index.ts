@@ -52,6 +52,10 @@ export interface HealthyRecipesandSnacks {
   videoLink?: string;
   /** @wixFieldType image */
   dishImage?: string;
+  /** @wixFieldType number */
+  prepTime?: number;
+  /** @wixFieldType number */
+  cookTime?: number;
 }
 
 

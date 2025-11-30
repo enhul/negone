@@ -571,11 +571,25 @@ function CMSRecipeCard({ recipe, onCardClick }: { recipe: HealthyRecipesandSnack
 
           {/* Time + Tag Row */}
           <div className="flex items-center justify-between gap-2 mb-4">
-            {/* Time Info - placeholder since CMS doesn't have prep time */}
-            <div className="flex items-center gap-1 text-foreground/70">
-              <Clock className="w-4 h-4 text-foreground/70" />
-              <span className="font-paragraph text-xs">30 мин</span>
-            </div>
+            {/* Time Info - Show actual prep + cook time */}
+            {(recipe.prepTime || recipe.cookTime) ? (
+              <div className="flex items-center gap-1 text-foreground/70">
+                <Clock className="w-4 h-4 text-foreground/70" />
+                <span className="font-paragraph text-xs">
+                  {recipe.prepTime && recipe.cookTime 
+                    ? `${recipe.prepTime + recipe.cookTime} мин`
+                    : recipe.prepTime 
+                    ? `${recipe.prepTime} мин`
+                    : `${recipe.cookTime} мин`
+                  }
+                </span>
+              </div>
+            ) : (
+              <div className="flex items-center gap-1 text-foreground/70">
+                <Clock className="w-4 h-4 text-foreground/70" />
+                <span className="font-paragraph text-xs">30 мин</span>
+              </div>
+            )}
             
             {/* Tag - Thin red border */}
             <div className="border border-destructive text-destructive rounded-full px-3 py-1 text-xs font-paragraph">
