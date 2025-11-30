@@ -8,12 +8,23 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Image } from '@/components/ui/image';
-import { Search, Clock, Utensils, ExternalLink, Filter } from 'lucide-react';
+import { Search, Utensils, ExternalLink, Filter, X, Sparkles, Loader } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 interface UserProfile {
   dailyCalories?: number;
   fitnessGoal?: string;
+}
+
+interface GeneratedRecipe {
+  name: string;
+  type: string;
+  description: string;
+  ingredients: string[];
+  instructions: string[];
+  totalCalories: number;
+  caloriesPerServing: number;
+  servings: number;
 }
 
 export default function RecipesPage() {
@@ -24,6 +35,11 @@ export default function RecipesPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [calorieFilter, setCalorieFilter] = useState<string>('all');
   const [profile, setProfile] = useState<UserProfile>({});
+  const [ingredientInput, setIngredientInput] = useState('');
+  const [selectedIngredients, setSelectedIngredients] = useState<string[]>([]);
+  const [filterMode, setFilterMode] = useState<'search' | 'ingredients'>('search');
+  const [generatedRecipes, setGeneratedRecipes] = useState<string>('');
+  const [isGenerating, setIsGenerating] = useState(false);
 
   useEffect(() => {
     if (!member?.loginEmail) return;
@@ -57,8 +73,18 @@ export default function RecipesPage() {
   useEffect(() => {
     let filtered = recipes;
 
+    // Ingredient filter (hashtag mode)
+    if (filterMode === 'ingredients' && selectedIngredients.length > 0) {
+      filtered = filtered.filter(recipe => {
+        if (!recipe.ingredients) return false;
+        const recipeIngredientsLower = recipe.ingredients.toLowerCase();
+        return selectedIngredients.some(ingredient =>
+          recipeIngredientsLower.includes(ingredient.toLowerCase())
+        );
+      });
+    }
     // Search filter
-    if (searchTerm) {
+    else if (filterMode === 'search' && searchTerm) {
       filtered = filtered.filter(recipe =>
         recipe.recipeName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         recipe.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -88,7 +114,7 @@ export default function RecipesPage() {
     }
 
     setFilteredRecipes(filtered);
-  }, [searchTerm, calorieFilter, recipes, profile]);
+  }, [searchTerm, calorieFilter, recipes, profile, selectedIngredients, filterMode]);
 
   const getCalorieBadgeColor = (calories: number) => {
     if (!profile.dailyCalories) return 'bg-gray-100 text-gray-700';
@@ -115,6 +141,60 @@ export default function RecipesPage() {
       return 'Дунд калори';
     } else {
       return 'Өндөр калори';
+    }
+  };
+
+  const handleAddIngredient = () => {
+    if (ingredientInput.trim()) {
+      const ingredient = ingredientInput.trim().replace(/^#+/, '').trim();
+      if (ingredient && !selectedIngredients.includes(ingredient)) {
+        setSelectedIngredients([...selectedIngredients, ingredient]);
+        setIngredientInput('');
+        setFilterMode('ingredients');
+      }
+    }
+  };
+
+  const handleRemoveIngredient = (ingredient: string) => {
+    setSelectedIngredients(selectedIngredients.filter(i => i !== ingredient));
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleAddIngredient();
+    }
+  };
+
+  const handleGenerateRecipes = async () => {
+    if (selectedIngredients.length === 0) return;
+
+    setIsGenerating(true);
+    try {
+      const response = await fetch('/api/generate-recipes', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ingredients: selectedIngredients,
+        }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        console.error('Recipe generation error:', error);
+        setGeneratedRecipes('Уучлаарай, жор үүсгэхэд алдаа гарлаа. Дахин оролдоорой.');
+        return;
+      }
+
+      const data = await response.json();
+      setGeneratedRecipes(data.recipes || '');
+    } catch (error) {
+      console.error('Error generating recipes:', error);
+      setGeneratedRecipes('Уучлаарай, сүлжээний алдаа гарлаа. Дахин оролдоорой.');
+    } finally {
+      setIsGenerating(false);
     }
   };
 
@@ -170,35 +250,174 @@ export default function RecipesPage() {
           {/* Filters */}
           <Card className="bg-white/70 backdrop-blur-sm border-primary/20 shadow-lg mb-8">
             <CardContent className="p-6">
-              <div className="flex flex-col md:flex-row gap-4">
-                <div className="flex-1">
-                  <div className="relative">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-foreground/40" />
-                    <Input
-                      placeholder="Жор хайх..."
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                      className="pl-10 rounded-xl border-primary/20 font-paragraph"
-                    />
+              <div className="space-y-4">
+                {/* Filter Mode Tabs */}
+                <div className="flex gap-2 mb-4">
+                  <Button
+                    variant={filterMode === 'search' ? 'default' : 'outline'}
+                    onClick={() => {
+                      setFilterMode('search');
+                      setSelectedIngredients([]);
+                    }}
+                    className="rounded-xl font-paragraph"
+                  >
+                    <Search className="w-4 h-4 mr-2" />
+                    Хайх
+                  </Button>
+                  <Button
+                    variant={filterMode === 'ingredients' ? 'default' : 'outline'}
+                    onClick={() => {
+                      setFilterMode('ingredients');
+                      setSearchTerm('');
+                    }}
+                    className="rounded-xl font-paragraph"
+                  >
+                    <Sparkles className="w-4 h-4 mr-2" />
+                    AI жор үүсгэх
+                  </Button>
+                </div>
+
+                {/* Search Mode */}
+                {filterMode === 'search' && (
+                  <div className="flex flex-col md:flex-row gap-4">
+                    <div className="flex-1">
+                      <div className="relative">
+                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-foreground/40" />
+                        <Input
+                          placeholder="Жор хайх..."
+                          value={searchTerm}
+                          onChange={(e) => setSearchTerm(e.target.value)}
+                          className="pl-10 rounded-xl border-primary/20 font-paragraph"
+                        />
+                      </div>
+                    </div>
+                    <div className="md:w-48">
+                      <Select value={calorieFilter} onValueChange={setCalorieFilter}>
+                        <SelectTrigger className="rounded-xl border-primary/20">
+                          <Filter className="w-4 h-4 mr-2" />
+                          <SelectValue placeholder="Калори шүүх" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="all">Бүх жор</SelectItem>
+                          <SelectItem value="low">Бага калори</SelectItem>
+                          <SelectItem value="medium">Дунд калори</SelectItem>
+                          <SelectItem value="high">Өндөр калори</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
                   </div>
-                </div>
-                <div className="md:w-48">
-                  <Select value={calorieFilter} onValueChange={setCalorieFilter}>
-                    <SelectTrigger className="rounded-xl border-primary/20">
-                      <Filter className="w-4 h-4 mr-2" />
-                      <SelectValue placeholder="Калори шүүх" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">Бүх жор</SelectItem>
-                      <SelectItem value="low">Бага калори</SelectItem>
-                      <SelectItem value="medium">Дунд калори</SelectItem>
-                      <SelectItem value="high">Өндөр калори</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
+                )}
+
+                {/* Ingredients Mode */}
+                {filterMode === 'ingredients' && (
+                  <div className="space-y-3">
+                    <div className="flex gap-2">
+                      <div className="flex-1 relative">
+                        <Input
+                          placeholder="Орцуу нэмэх (жишээ: #Алим #овьёос)..."
+                          value={ingredientInput}
+                          onChange={(e) => setIngredientInput(e.target.value)}
+                          onKeyDown={handleKeyDown}
+                          className="pl-4 rounded-xl border-primary/20 font-paragraph"
+                        />
+                      </div>
+                      <Button
+                        onClick={handleAddIngredient}
+                        className="rounded-xl font-paragraph bg-primary hover:bg-primary/90"
+                      >
+                        Нэмэх
+                      </Button>
+                    </div>
+
+                    {/* Selected Ingredients */}
+                    {selectedIngredients.length > 0 && (
+                      <div className="flex flex-wrap gap-2">
+                        {selectedIngredients.map((ingredient) => (
+                          <Badge
+                            key={ingredient}
+                            variant="secondary"
+                            className="bg-secondary/20 text-secondary border-secondary/30 font-paragraph pl-3 pr-1 py-1"
+                          >
+                            #{ingredient}
+                            <button
+                              onClick={() => handleRemoveIngredient(ingredient)}
+                              className="ml-2 hover:text-secondary/70"
+                            >
+                              <X className="w-3 h-3" />
+                            </button>
+                          </Badge>
+                        ))}
+                      </div>
+                    )}
+
+                    {/* Generate Button */}
+                    {selectedIngredients.length > 0 && (
+                      <Button
+                        onClick={handleGenerateRecipes}
+                        disabled={isGenerating}
+                        className="w-full bg-soft-light-green hover:bg-soft-light-green/90 text-foreground rounded-xl font-paragraph"
+                      >
+                        {isGenerating ? (
+                          <>
+                            <Loader className="w-4 h-4 mr-2 animate-spin" />
+                            Жор үүсгэж байна...
+                          </>
+                        ) : (
+                          <>
+                            <Sparkles className="w-4 h-4 mr-2" />
+                            3 жор үүсгэх
+                          </>
+                        )}
+                      </Button>
+                    )}
+                  </div>
+                )}
               </div>
             </CardContent>
           </Card>
+
+          {/* Generated Recipes Section */}
+          {generatedRecipes && (
+            <motion.div
+              className="mb-12"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <Card className="bg-gradient-to-br from-soft-light-green/10 to-secondary/10 border-soft-light-green/30 shadow-lg">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2 text-2xl font-heading text-foreground">
+                    <Sparkles className="w-6 h-6 text-soft-light-green" />
+                    AI-ээр үүсгэсэн жорууд
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-6">
+                    {generatedRecipes.split('---').filter(recipe => recipe.trim()).map((recipe, index) => (
+                      <motion.div
+                        key={index}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.3, delay: index * 0.1 }}
+                        className="bg-white/60 rounded-xl p-6 border border-soft-light-green/20"
+                      >
+                        <div className="prose prose-sm max-w-none font-paragraph text-foreground/90 whitespace-pre-wrap text-sm leading-relaxed">
+                          {recipe.trim()}
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
+                  <Button
+                    onClick={() => setGeneratedRecipes('')}
+                    variant="outline"
+                    className="w-full mt-6 rounded-xl font-paragraph border-soft-light-green/30 text-foreground hover:bg-soft-light-green/10"
+                  >
+                    Үүсгэсэн жорыг цэвэрлэх
+                  </Button>
+                </CardContent>
+              </Card>
+            </motion.div>
+          )}
 
           {/* Recipes Grid */}
           {filteredRecipes.length === 0 ? (
