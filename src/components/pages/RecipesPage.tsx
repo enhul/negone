@@ -10,6 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import { Image } from '@/components/ui/image';
 import { Search, Utensils, ExternalLink, Filter, X, Sparkles, Loader } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { generateAndAddRecipeImages } from '@/utils/generateRecipeImages';
 
 interface UserProfile {
   dailyCalories?: number;
@@ -40,6 +41,7 @@ export default function RecipesPage() {
   const [filterMode, setFilterMode] = useState<'search' | 'ingredients'>('search');
   const [generatedRecipes, setGeneratedRecipes] = useState<string>('');
   const [isGenerating, setIsGenerating] = useState(false);
+  const [isGeneratingImages, setIsGeneratingImages] = useState(false);
 
   useEffect(() => {
     if (!member?.loginEmail) return;
@@ -60,6 +62,23 @@ export default function RecipesPage() {
         const { items } = await BaseCrudService.getAll<HealthyRecipesandSnacks>('healthyrecipes');
         setRecipes(items);
         setFilteredRecipes(items);
+        
+        // Check if recipes need images and generate them
+        const recipesNeedingImages = items.filter(recipe => !recipe.dishImage);
+        if (recipesNeedingImages.length > 0) {
+          setIsGeneratingImages(true);
+          try {
+            await generateAndAddRecipeImages();
+            // Refetch recipes to get the updated images
+            const { items: updatedItems } = await BaseCrudService.getAll<HealthyRecipesandSnacks>('healthyrecipes');
+            setRecipes(updatedItems);
+            setFilteredRecipes(updatedItems);
+          } catch (error) {
+            console.error('Error generating recipe images:', error);
+          } finally {
+            setIsGeneratingImages(false);
+          }
+        }
       } catch (error) {
         console.error('Error fetching recipes:', error);
       } finally {
