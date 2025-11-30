@@ -1,11 +1,13 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Utensils, Sparkles, X, Loader2, AlertCircle } from 'lucide-react';
+import { Utensils, Sparkles, X, Loader2, AlertCircle, Flame } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { BaseCrudService } from '@/integrations';
+import { HealthyRecipesandSnacks } from '@/entities';
 
 interface ParsedRecipe {
   name: string;
@@ -138,6 +140,33 @@ export default function RecipesPage() {
   const [recipes, setRecipes] = useState<ParsedRecipe[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [cmsRecipes, setCmsRecipes] = useState<HealthyRecipesandSnacks[]>([]);
+  const [loadingCms, setLoadingCms] = useState(true);
+  const [activeTab, setActiveTab] = useState<'browse' | 'generate'>('browse');
+  const [searchQuery, setSearchQuery] = useState('');
+
+  // Load recipes from CMS on component mount
+  useEffect(() => {
+    const loadRecipes = async () => {
+      try {
+        setLoadingCms(true);
+        const { items } = await BaseCrudService.getAll<HealthyRecipesandSnacks>('healthyrecipes');
+        setCmsRecipes(items || []);
+      } catch (err) {
+        console.error('Failed to load recipes:', err);
+      } finally {
+        setLoadingCms(false);
+      }
+    };
+
+    loadRecipes();
+  }, []);
+
+  // Filter CMS recipes based on search query
+  const filteredCmsRecipes = cmsRecipes.filter(recipe =>
+    recipe.recipeName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    recipe.description?.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   const handleAddIngredient = () => {
     if (!ingredientInput.trim()) return;
@@ -213,12 +242,183 @@ export default function RecipesPage() {
               Эрүүл жорууд ба зууш
             </h1>
             <p className="text-lg text-foreground/80 font-paragraph max-w-3xl mx-auto">
-              Таны байгаа орцуу ашиглан AI-ээр үүсгэсэн эрүүл жорууд
+              Таны байгаа орцуу ашиглан AI-ээр үүсгэсэн эрүүл жорууд эсвэл сонгосон жорууд
             </p>
           </div>
 
-          {/* Input Section */}
-          <Card className="bg-white/70 backdrop-blur-sm border-primary/20 shadow-lg mb-8">
+          {/* Tab Navigation */}
+          <div className="flex gap-4 mb-8 justify-center">
+            <Button
+              onClick={() => setActiveTab('browse')}
+              variant={activeTab === 'browse' ? 'default' : 'outline'}
+              className={`rounded-xl font-paragraph ${
+                activeTab === 'browse'
+                  ? 'bg-primary text-primary-foreground'
+                  : 'border-primary/20'
+              }`}
+            >
+              <Utensils className="w-4 h-4 mr-2" />
+              Жорууд сонгох ({cmsRecipes.length})
+            </Button>
+            <Button
+              onClick={() => setActiveTab('generate')}
+              variant={activeTab === 'generate' ? 'default' : 'outline'}
+              className={`rounded-xl font-paragraph ${
+                activeTab === 'generate'
+                  ? 'bg-primary text-primary-foreground'
+                  : 'border-primary/20'
+              }`}
+            >
+              <Sparkles className="w-4 h-4 mr-2" />
+              AI-ээр үүсгэх
+            </Button>
+          </div>
+
+          {/* Browse Recipes Tab */}
+          {activeTab === 'browse' && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="space-y-6"
+            >
+              {/* Search Section */}
+              <Card className="bg-white/70 backdrop-blur-sm border-primary/20 shadow-lg">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2 font-heading text-foreground">
+                    <Utensils className="w-5 h-5 text-primary" />
+                    Жорууд хайх
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <Input
+                    placeholder="Жорын нэр эсвэл тайлбараар хайх..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="rounded-xl border-primary/20 font-paragraph"
+                  />
+                </CardContent>
+              </Card>
+
+              {/* Loading State */}
+              {loadingCms && (
+                <div className="text-center py-12">
+                  <Loader2 className="w-8 h-8 animate-spin text-primary mx-auto mb-4" />
+                  <p className="text-foreground/60 font-paragraph">Жорууд ачаалж байна...</p>
+                </div>
+              )}
+
+              {/* Recipes Grid */}
+              {!loadingCms && filteredCmsRecipes.length > 0 && (
+                <div>
+                  <div className="text-center mb-8">
+                    <h2 className="text-2xl font-heading text-foreground mb-2">
+                      {filteredCmsRecipes.length} жор олдлоо
+                    </h2>
+                    <p className="text-foreground/60 font-paragraph">
+                      Эрүүл амтат хоол идэхийн тулд сонгоно уу
+                    </p>
+                  </div>
+
+                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {filteredCmsRecipes.map((recipe, index) => (
+                      <motion.div
+                        key={recipe._id}
+                        initial={{ opacity: 0, y: 30 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5, delay: index * 0.05 }}
+                      >
+                        <Card className="bg-white/70 backdrop-blur-sm border-primary/10 shadow-lg overflow-hidden h-full flex flex-col">
+                          <CardHeader className="pb-3">
+                            <div className="flex items-start justify-between gap-2 mb-2">
+                              <CardTitle className="text-xl font-heading text-foreground line-clamp-2">
+                                {recipe.recipeName}
+                              </CardTitle>
+                            </div>
+                            {recipe.description && (
+                              <p className="text-foreground/80 font-paragraph text-sm line-clamp-2">
+                                {recipe.description}
+                              </p>
+                            )}
+                          </CardHeader>
+
+                          <CardContent className="pt-0 flex flex-col flex-1 space-y-4">
+                            {/* Calories */}
+                            {recipe.caloriesPerServing && (
+                              <div className="bg-primary/10 rounded-lg p-3 flex items-center gap-2">
+                                <Flame className="w-4 h-4 text-primary" />
+                                <div>
+                                  <p className="text-sm font-paragraph text-foreground/80">
+                                    <span className="font-medium text-primary">{recipe.caloriesPerServing}</span> калори
+                                  </p>
+                                </div>
+                              </div>
+                            )}
+
+                            {/* Ingredients */}
+                            {recipe.ingredients && (
+                              <div>
+                                <h4 className="font-paragraph font-medium text-foreground mb-2 text-sm">Орцуу:</h4>
+                                <p className="text-foreground/70 font-paragraph text-sm line-clamp-3">
+                                  {recipe.ingredients}
+                                </p>
+                              </div>
+                            )}
+
+                            {/* Instructions */}
+                            {recipe.instructions && (
+                              <div>
+                                <h4 className="font-paragraph font-medium text-foreground mb-2 text-sm">Хийх арга:</h4>
+                                <p className="text-foreground/70 font-paragraph text-sm line-clamp-3">
+                                  {recipe.instructions}
+                                </p>
+                              </div>
+                            )}
+                          </CardContent>
+                        </Card>
+                      </motion.div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* No Results State */}
+              {!loadingCms && filteredCmsRecipes.length === 0 && cmsRecipes.length > 0 && (
+                <div className="text-center py-12">
+                  <Utensils className="w-16 h-16 text-foreground/30 mx-auto mb-4" />
+                  <h3 className="text-xl font-heading text-foreground mb-2">
+                    Жор олдсонгүй
+                  </h3>
+                  <p className="text-foreground/60 font-paragraph">
+                    Өөр хайлтын нэр оруулаад үзнэ үү
+                  </p>
+                </div>
+              )}
+
+              {/* Empty State */}
+              {!loadingCms && cmsRecipes.length === 0 && (
+                <div className="text-center py-12">
+                  <Utensils className="w-16 h-16 text-foreground/30 mx-auto mb-4" />
+                  <h3 className="text-xl font-heading text-foreground mb-2">
+                    Жор байхгүй байна
+                  </h3>
+                  <p className="text-foreground/60 font-paragraph">
+                    Одоогоор жор нэмэгдээгүй байна. AI-ээр үүсгэхийг оролдоно уу.
+                  </p>
+                </div>
+              )}
+            </motion.div>
+          )}
+
+          {/* Generate Recipes Tab */}
+          {activeTab === 'generate' && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              {/* Input Section */}
+              <Card className="bg-white/70 backdrop-blur-sm border-primary/20 shadow-lg mb-8">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 font-heading text-foreground">
                 <Sparkles className="w-5 h-5 text-primary" />
@@ -399,6 +599,8 @@ export default function RecipesPage() {
               <p className="text-foreground/60 font-paragraph">
                 Таны байгаа орцуу оруулаад AI-ээр үүсгэсэн жорууд авна уу
               </p>
+            </motion.div>
+          )}
             </motion.div>
           )}
         </motion.div>
