@@ -127,7 +127,8 @@ export default function ProfilePage() {
       setProfile(updatedProfile);
 
       toast({
-        title: 'Таны мэдээллийг хадгаллаа',
+        title: 'Амжилттай хадгалагдлаа',
+        description: 'Таны профайл мэдээлэл шинэчлэгдлээ',
       });
     } catch (error) {
       toast({
