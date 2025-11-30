@@ -388,7 +388,7 @@ export default function RecipesPage() {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 text-2xl font-heading text-foreground">
                     <Sparkles className="w-6 h-6 text-soft-light-green" />
-                    AI-ээр үүсгэсэн жорууд
+                    🥗 Танд зориулсан шинээр зохиосон эрүүл жорууд
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -401,8 +401,54 @@ export default function RecipesPage() {
                         transition={{ duration: 0.3, delay: index * 0.1 }}
                         className="bg-white/60 rounded-xl p-6 border border-soft-light-green/20"
                       >
-                        <div className="prose prose-sm max-w-none font-paragraph text-foreground/90 whitespace-pre-wrap text-sm leading-relaxed">
-                          {recipe.trim()}
+                        <div className="space-y-4 font-paragraph text-foreground/90 text-sm leading-relaxed">
+                          {recipe.trim().split('\n').map((line, lineIndex) => {
+                            const trimmedLine = line.trim();
+                            if (!trimmedLine) return null;
+                            
+                            // Recipe title
+                            if (trimmedLine.startsWith('ЖОР')) {
+                              return (
+                                <h3 key={lineIndex} className="font-heading text-lg text-primary font-semibold pt-2">
+                                  {trimmedLine}
+                                </h3>
+                              );
+                            }
+                            
+                            // Section headers (Төрөл, Тайлбар, Орцуу, Хийх арга, Калори)
+                            if (trimmedLine.match(/^(Төрөл|Тайлбар|Орцуу|Хийх арга|Калори):/)) {
+                              return (
+                                <h4 key={lineIndex} className="font-heading text-base font-semibold text-secondary mt-3 mb-2">
+                                  {trimmedLine}
+                                </h4>
+                              );
+                            }
+                            
+                            // Ingredient lines (starting with -)
+                            if (trimmedLine.startsWith('-')) {
+                              return (
+                                <div key={lineIndex} className="ml-4 text-foreground/80">
+                                  {trimmedLine}
+                                </div>
+                              );
+                            }
+                            
+                            // Numbered instruction lines
+                            if (trimmedLine.match(/^\d+\./)) {
+                              return (
+                                <div key={lineIndex} className="ml-4 text-foreground/80">
+                                  {trimmedLine}
+                                </div>
+                              );
+                            }
+                            
+                            // Regular text
+                            return (
+                              <p key={lineIndex} className="text-foreground/80">
+                                {trimmedLine}
+                              </p>
+                            );
+                          })}
                         </div>
                       </motion.div>
                     ))}
