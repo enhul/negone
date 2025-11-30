@@ -428,9 +428,9 @@ function RecipeCard({ recipe, onCardClick }: { recipe: ParsedRecipe; onCardClick
       onClick={onCardClick}
       className="cursor-pointer group"
     >
-      <Card className="bg-white/70 backdrop-blur-sm border-primary/10 shadow-lg overflow-hidden h-full flex flex-col hover:shadow-xl transition-shadow">
-        {/* Image Container */}
-        <div className="w-full h-48 overflow-hidden bg-gradient-to-br from-primary/5 to-primary/10 relative">
+      <div className="bg-white rounded-3xl overflow-hidden shadow-md hover:shadow-lg transition-shadow h-full flex flex-col">
+        {/* Image Container - Full width with rounded corners */}
+        <div className="w-full h-48 overflow-hidden bg-gradient-to-br from-primary/5 to-primary/10 relative rounded-t-3xl">
           {recipe.image ? (
             <Image
               src={recipe.image}
@@ -446,92 +446,78 @@ function RecipeCard({ recipe, onCardClick }: { recipe: ParsedRecipe; onCardClick
           )}
         </div>
 
-        <CardHeader className="pb-2">
-          <div className="flex items-start justify-between gap-2 mb-2">
-            <CardTitle className="text-lg font-heading text-foreground line-clamp-2">
+        {/* Content Container */}
+        <div className="p-5 flex flex-col flex-1">
+          {/* Header: Title + Calorie Chip */}
+          <div className="flex items-start justify-between gap-3 mb-2">
+            <h3 className="text-lg font-heading font-bold text-foreground flex-1 line-clamp-2">
               {recipe.name}
-            </CardTitle>
-          </div>
-          
-          {/* Tags */}
-          {recipe.tags && recipe.tags.length > 0 && (
-            <div className="flex flex-wrap gap-1 mb-2">
-              {recipe.tags.map((tag) => (
-                <Badge
-                  key={tag}
-                  variant="secondary"
-                  className="bg-primary/20 text-primary border-primary/30 text-xs font-paragraph"
-                >
-                  {tag}
-                </Badge>
-              ))}
+            </h3>
+            {/* Calorie Chip - Right aligned */}
+            <div className="bg-pink-100 text-pink-600 rounded-full px-3 py-1 text-xs font-bold whitespace-nowrap">
+              {recipe.caloriesPerServing} ккал
             </div>
-          )}
-          
+          </div>
+
+          {/* Description */}
           {recipe.description && (
-            <p className="text-foreground/70 font-paragraph text-sm line-clamp-2">
+            <p className="text-foreground/60 font-paragraph text-xs line-clamp-2 mb-3">
               {recipe.description}
             </p>
           )}
-        </CardHeader>
 
-        <CardContent className="pt-0 flex flex-col flex-1 space-y-3">
-          {/* Macros - Simple Text */}
-          <div className="space-y-1.5 text-sm">
-            <div className="flex items-center justify-between">
-              <span className="font-paragraph text-foreground/70">Калори:</span>
-              <span className="font-heading font-bold text-foreground">{recipe.caloriesPerServing}</span>
-            </div>
-            {recipe.protein && (
-              <div className="flex items-center justify-between">
-                <span className="font-paragraph text-foreground/70">Уураг:</span>
-                <span className="font-heading font-bold text-foreground">{recipe.protein}г</span>
+          {/* Time + Tag Row */}
+          <div className="flex items-center justify-between gap-2 mb-4">
+            {/* Time Info */}
+            {recipe.prepTime && (
+              <div className="flex items-center gap-1 text-foreground/70">
+                <Clock className="w-4 h-4 text-foreground/70" />
+                <span className="font-paragraph text-xs">{recipe.prepTime} мин</span>
               </div>
             )}
-            {recipe.carbs && (
-              <div className="flex items-center justify-between">
-                <span className="font-paragraph text-foreground/70">Нүүрс:</span>
-                <span className="font-heading font-bold text-foreground">{recipe.carbs}г</span>
-              </div>
-            )}
-            {recipe.fat && (
-              <div className="flex items-center justify-between">
-                <span className="font-paragraph text-foreground/70">Өөх:</span>
-                <span className="font-heading font-bold text-foreground">{recipe.fat}г</span>
+            
+            {/* Tag - Thin red border */}
+            {recipe.tags && recipe.tags.length > 0 && (
+              <div className="border border-destructive text-destructive rounded-full px-3 py-1 text-xs font-paragraph">
+                {recipe.tags[0]}
               </div>
             )}
           </div>
 
-          {/* Time Info */}
-          {(recipe.prepTime || recipe.cookTime) && (
-            <div className="flex gap-3 text-xs font-paragraph text-foreground/60">
-              {recipe.prepTime && (
-                <div className="flex items-center gap-1">
-                  <Clock className="w-3 h-3" />
-                  <span>{recipe.prepTime} мин</span>
-                </div>
-              )}
-              {recipe.cookTime && (
-                <div className="flex items-center gap-1">
-                  <Flame className="w-3 h-3" />
-                  <span>{recipe.cookTime} мин</span>
-                </div>
-              )}
-            </div>
-          )}
+          {/* Macros - 3 Columns */}
+          <div className="grid grid-cols-3 gap-2 mb-4 text-center">
+            {recipe.protein && (
+              <div>
+                <div className="text-xs font-paragraph text-foreground/60">Уураг</div>
+                <div className="text-sm font-heading font-bold text-foreground">{recipe.protein}г</div>
+              </div>
+            )}
+            {recipe.carbs && (
+              <div>
+                <div className="text-xs font-paragraph text-foreground/60">Нүүрс</div>
+                <div className="text-sm font-heading font-bold text-foreground">{recipe.carbs}г</div>
+              </div>
+            )}
+            {recipe.fat && (
+              <div>
+                <div className="text-xs font-paragraph text-foreground/60">Өөх</div>
+                <div className="text-sm font-heading font-bold text-foreground">{recipe.fat}г</div>
+              </div>
+            )}
+          </div>
 
-          {/* View Details Button */}
+          {/* View Details Button - Large rounded */}
           <Button
             onClick={(e) => {
               e.stopPropagation();
               onCardClick();
             }}
-            className="w-full bg-primary text-primary-foreground hover:bg-primary/90 rounded-lg font-paragraph h-9 text-sm mt-auto"
+            className="w-full bg-pink-500 text-white hover:bg-pink-600 rounded-full font-paragraph font-bold h-11 mt-auto"
           >
-            Дэлгэрэнгүй
+            Жор харах
           </Button>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </motion.div>
   );
 }
@@ -549,9 +535,9 @@ function CMSRecipeCard({ recipe, onCardClick }: { recipe: HealthyRecipesandSnack
       onClick={onCardClick}
       className="cursor-pointer group"
     >
-      <Card className="bg-white/70 backdrop-blur-sm border-primary/10 shadow-lg overflow-hidden h-full flex flex-col hover:shadow-xl transition-shadow">
-        {/* Image Container */}
-        <div className="w-full h-48 overflow-hidden bg-gradient-to-br from-primary/5 to-primary/10">
+      <div className="bg-white rounded-3xl overflow-hidden shadow-md hover:shadow-lg transition-shadow h-full flex flex-col">
+        {/* Image Container - Full width with rounded corners */}
+        <div className="w-full h-48 overflow-hidden bg-gradient-to-br from-primary/5 to-primary/10 rounded-t-3xl">
           <Image
             src={recipe.dishImage || getFallbackImage(recipe.recipeName, recipe.ingredients)}
             alt={recipe.recipeName || 'Recipe'}
@@ -561,63 +547,70 @@ function CMSRecipeCard({ recipe, onCardClick }: { recipe: HealthyRecipesandSnack
           />
         </div>
 
-        <CardHeader className="pb-2">
-          <CardTitle className="text-lg font-heading text-foreground line-clamp-2 mb-2">
-            {recipe.recipeName}
-          </CardTitle>
-          
+        {/* Content Container */}
+        <div className="p-5 flex flex-col flex-1">
+          {/* Header: Title + Calorie Chip */}
+          <div className="flex items-start justify-between gap-3 mb-2">
+            <h3 className="text-lg font-heading font-bold text-foreground flex-1 line-clamp-2">
+              {recipe.recipeName}
+            </h3>
+            {/* Calorie Chip - Right aligned */}
+            {recipe.caloriesPerServing && (
+              <div className="bg-pink-100 text-pink-600 rounded-full px-3 py-1 text-xs font-bold whitespace-nowrap">
+                {recipe.caloriesPerServing} ккал
+              </div>
+            )}
+          </div>
+
+          {/* Description */}
           {recipe.description && (
-            <p className="text-foreground/70 font-paragraph text-sm line-clamp-2">
+            <p className="text-foreground/60 font-paragraph text-xs line-clamp-2 mb-3">
               {recipe.description}
             </p>
           )}
-        </CardHeader>
 
-        <CardContent className="pt-0 flex flex-col flex-1 space-y-3">
-          {/* Macros - Simple Text */}
-          {recipe.caloriesPerServing && (
-            <div className="space-y-1.5 text-sm">
-              <div className="flex items-center justify-between">
-                <span className="font-paragraph text-foreground/70">Калори:</span>
-                <span className="font-heading font-bold text-foreground">{recipe.caloriesPerServing}</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="font-paragraph text-foreground/70">Уураг:</span>
-                <span className="font-heading font-bold text-foreground">{macros.protein}г</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="font-paragraph text-foreground/70">Нүүрс:</span>
-                <span className="font-heading font-bold text-foreground">{macros.carbs}г</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="font-paragraph text-foreground/70">Өөх:</span>
-                <span className="font-heading font-bold text-foreground">{macros.fat}г</span>
-              </div>
+          {/* Time + Tag Row */}
+          <div className="flex items-center justify-between gap-2 mb-4">
+            {/* Time Info - placeholder since CMS doesn't have prep time */}
+            <div className="flex items-center gap-1 text-foreground/70">
+              <Clock className="w-4 h-4 text-foreground/70" />
+              <span className="font-paragraph text-xs">30 мин</span>
             </div>
-          )}
+            
+            {/* Tag - Thin red border */}
+            <div className="border border-destructive text-destructive rounded-full px-3 py-1 text-xs font-paragraph">
+              Үдийн хоол
+            </div>
+          </div>
 
-          {/* Ingredients Preview */}
-          {recipe.ingredients && (
+          {/* Macros - 3 Columns */}
+          <div className="grid grid-cols-3 gap-2 mb-4 text-center">
             <div>
-              <h4 className="font-paragraph font-medium text-foreground text-sm mb-1">Орцуу:</h4>
-              <p className="text-foreground/70 font-paragraph text-xs line-clamp-2">
-                {recipe.ingredients}
-              </p>
+              <div className="text-xs font-paragraph text-foreground/60">Уураг</div>
+              <div className="text-sm font-heading font-bold text-foreground">{macros.protein}г</div>
             </div>
-          )}
+            <div>
+              <div className="text-xs font-paragraph text-foreground/60">Нүүрс</div>
+              <div className="text-sm font-heading font-bold text-foreground">{macros.carbs}г</div>
+            </div>
+            <div>
+              <div className="text-xs font-paragraph text-foreground/60">Өөх</div>
+              <div className="text-sm font-heading font-bold text-foreground">{macros.fat}г</div>
+            </div>
+          </div>
 
-          {/* View Details Button */}
+          {/* View Details Button - Large rounded */}
           <Button
             onClick={(e) => {
               e.stopPropagation();
               onCardClick();
             }}
-            className="w-full bg-primary text-primary-foreground hover:bg-primary/90 rounded-lg font-paragraph h-9 text-sm mt-auto"
+            className="w-full bg-pink-500 text-white hover:bg-pink-600 rounded-full font-paragraph font-bold h-11 mt-auto"
           >
-            Дэлгэрэнгүй
+            Жор харах
           </Button>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </motion.div>
   );
 }
