@@ -13,51 +13,51 @@ import { HealthyRecipesandSnacks } from '@/entities';
 // Fallback image mapping based on recipe type and ingredients
 const FALLBACK_IMAGES: Record<string, string> = {
   // Salads
-  'салат': 'https://static.wixstatic.com/media/12d367_71ebdd7141d041e4be3d91d80d4578dd~mv2.png?id=salad-fresh',
-  'цөцгий': 'https://static.wixstatic.com/media/12d367_71ebdd7141d041e4be3d91d80d4578dd~mv2.png?id=vegetable-salad',
-  'авокадо': 'https://static.wixstatic.com/media/12d367_71ebdd7141d041e4be3d91d80d4578dd~mv2.png?id=avocado-salad',
+  'салат': 'https://static.wixstatic.com/media/906313_2b1868ded2464d20b142c5fa322b6d9d~mv2.png?originWidth=384&originHeight=192',
+  'цөцгий': 'https://static.wixstatic.com/media/906313_2b303e502aaa46e39be003a82fec163e~mv2.png?originWidth=384&originHeight=192',
+  'авокадо': 'https://static.wixstatic.com/media/906313_3dac49888ecc456ea128c557b1749cd0~mv2.png?originWidth=384&originHeight=192',
   
   // Smoothies & Drinks
-  'жүүс': 'https://static.wixstatic.com/media/12d367_71ebdd7141d041e4be3d91d80d4578dd~mv2.png?id=smoothie-drink',
-  'смүүси': 'https://static.wixstatic.com/media/12d367_71ebdd7141d041e4be3d91d80d4578dd~mv2.png?id=smoothie-bowl',
-  'цай': 'https://static.wixstatic.com/media/12d367_71ebdd7141d041e4be3d91d80d4578dd~mv2.png?id=herbal-tea',
+  'жүүс': 'https://static.wixstatic.com/media/906313_4d71f9e2e5934fd0b7283899257f9ea4~mv2.png?originWidth=384&originHeight=192',
+  'смүүси': 'https://static.wixstatic.com/media/906313_6b7d0bd0e5494cd6b0cbc36a0d70bf09~mv2.png?originWidth=384&originHeight=192',
+  'цай': 'https://static.wixstatic.com/media/906313_a3c5fdf683a54c9bab0c37b1962b907b~mv2.png?originWidth=384&originHeight=192',
   
   // Breakfast
-  'өндөг': 'https://static.wixstatic.com/media/12d367_71ebdd7141d041e4be3d91d80d4578dd~mv2.png?id=egg-breakfast',
-  'үрийн': 'https://static.wixstatic.com/media/12d367_71ebdd7141d041e4be3d91d80d4578dd~mv2.png?id=granola-bowl',
-  'хүнсний': 'https://static.wixstatic.com/media/12d367_71ebdd7141d041e4be3d91d80d4578dd~mv2.png?id=healthy-breakfast',
+  'өндөг': 'https://static.wixstatic.com/media/906313_8bde755ccf5f4b24809dd003eca214f1~mv2.png?originWidth=384&originHeight=192',
+  'үрийн': 'https://static.wixstatic.com/media/906313_b80a7da2613746cdbd6af2ff8fe378fd~mv2.png?originWidth=384&originHeight=192',
+  'хүнсний': 'https://static.wixstatic.com/media/906313_1bb8c2ea731649ad91a87dbdf31e171d~mv2.png?originWidth=384&originHeight=192',
   
   // Soups
-  'шөл': 'https://static.wixstatic.com/media/12d367_71ebdd7141d041e4be3d91d80d4578dd~mv2.png?id=vegetable-soup',
-  'нэрс': 'https://static.wixstatic.com/media/12d367_71ebdd7141d041e4be3d91d80d4578dd~mv2.png?id=soup-bowl',
+  'шөл': 'https://static.wixstatic.com/media/906313_2cf61cc049bd4ab79b28b481c401f068~mv2.png?originWidth=384&originHeight=192',
+  'нэрс': 'https://static.wixstatic.com/media/906313_f9375cf510e24065a714105913d97e94~mv2.png?originWidth=384&originHeight=192',
   
   // Proteins
-  'мах': 'https://static.wixstatic.com/media/12d367_71ebdd7141d041e4be3d91d80d4578dd~mv2.png?id=grilled-meat',
-  'цыпилон': 'https://static.wixstatic.com/media/12d367_71ebdd7141d041e4be3d91d80d4578dd~mv2.png?id=chicken-dish',
-  'загас': 'https://static.wixstatic.com/media/12d367_71ebdd7141d041e4be3d91d80d4578dd~mv2.png?id=grilled-fish',
+  'мах': 'https://static.wixstatic.com/media/906313_2c2b1a0a86b54195aa7fbd34ca87ceac~mv2.png?originWidth=384&originHeight=192',
+  'цыпилон': 'https://static.wixstatic.com/media/906313_28b80740003a495791d5c1de873ef229~mv2.png?originWidth=384&originHeight=192',
+  'загас': 'https://static.wixstatic.com/media/906313_0acddb55b2d1445faa26ef0f3de58bc3~mv2.png?originWidth=384&originHeight=192',
   
   // Grains & Carbs
-  'будаа': 'https://static.wixstatic.com/media/12d367_71ebdd7141d041e4be3d91d80d4578dd~mv2.png?id=rice-bowl',
-  'макарон': 'https://static.wixstatic.com/media/12d367_71ebdd7141d041e4be3d91d80d4578dd~mv2.png?id=pasta-dish',
-  'талх': 'https://static.wixstatic.com/media/12d367_71ebdd7141d041e4be3d91d80d4578dd~mv2.png?id=whole-grain-bread',
+  'будаа': 'https://static.wixstatic.com/media/906313_97cedb589104419e9cfab9a497fd1e37~mv2.png?originWidth=384&originHeight=192',
+  'макарон': 'https://static.wixstatic.com/media/906313_33f097e1340f49f0a0836b85b6b1340a~mv2.png?originWidth=384&originHeight=192',
+  'талх': 'https://static.wixstatic.com/media/906313_2ea16bf273344f31aa1061cee35862b5~mv2.png?originWidth=384&originHeight=192',
   
   // Vegetables
-  'төмс': 'https://static.wixstatic.com/media/12d367_71ebdd7141d041e4be3d91d80d4578dd~mv2.png?id=roasted-vegetables',
-  'сонгино': 'https://static.wixstatic.com/media/12d367_71ebdd7141d041e4be3d91d80d4578dd~mv2.png?id=onion-dish',
-  'томат': 'https://static.wixstatic.com/media/12d367_71ebdd7141d041e4be3d91d80d4578dd~mv2.png?id=tomato-salad',
+  'төмс': 'https://static.wixstatic.com/media/906313_9ff04f07db9c4c6dad2f350f7d7a31df~mv2.png?originWidth=384&originHeight=192',
+  'сонгино': 'https://static.wixstatic.com/media/906313_000e17889363429e85cab1036de05c60~mv2.png?originWidth=384&originHeight=192',
+  'томат': 'https://static.wixstatic.com/media/906313_6d79aab922314ab8868e58cf36120cf7~mv2.png?originWidth=384&originHeight=192',
   
   // Fruits
-  'жимс': 'https://static.wixstatic.com/media/12d367_71ebdd7141d041e4be3d91d80d4578dd~mv2.png?id=fruit-bowl',
-  'алим': 'https://static.wixstatic.com/media/12d367_71ebdd7141d041e4be3d91d80d4578dd~mv2.png?id=apple-dish',
-  'банан': 'https://static.wixstatic.com/media/12d367_71ebdd7141d041e4be3d91d80d4578dd~mv2.png?id=banana-smoothie',
+  'жимс': 'https://static.wixstatic.com/media/906313_89e2deec0b7244b1a29a17f50cf25339~mv2.png?originWidth=384&originHeight=192',
+  'алим': 'https://static.wixstatic.com/media/906313_f71495667ebd40939fd3a9609fea15d9~mv2.png?originWidth=384&originHeight=192',
+  'банан': 'https://static.wixstatic.com/media/906313_c923c851b53445ec9627dcd22e133af8~mv2.png?originWidth=384&originHeight=192',
   
   // Snacks
-  'зууш': 'https://static.wixstatic.com/media/12d367_71ebdd7141d041e4be3d91d80d4578dd~mv2.png?id=healthy-snack',
-  'түрэмгий': 'https://static.wixstatic.com/media/12d367_71ebdd7141d041e4be3d91d80d4578dd~mv2.png?id=nuts-snack',
-  'үр': 'https://static.wixstatic.com/media/12d367_71ebdd7141d041e4be3d91d80d4578dd~mv2.png?id=seeds-snack',
+  'зууш': 'https://static.wixstatic.com/media/906313_d4a31e6145884d63be95040b2487a2e7~mv2.png?originWidth=384&originHeight=192',
+  'түрэмгий': 'https://static.wixstatic.com/media/906313_6b68a002ffc74dbe9f943d7ed383831a~mv2.png?originWidth=384&originHeight=192',
+  'үр': 'https://static.wixstatic.com/media/906313_efe1c9f0e5b844cfbdca02e51d093c37~mv2.png?originWidth=384&originHeight=192',
   
   // Default
-  'default': 'https://static.wixstatic.com/media/12d367_71ebdd7141d041e4be3d91d80d4578dd~mv2.png?id=healthy-food-default',
+  'default': 'https://static.wixstatic.com/media/906313_33f48af3d6be4e6b9dd7c541eb3dcc3d~mv2.png?originWidth=384&originHeight=192',
 };
 
 // Function to get fallback image based on recipe name and ingredients
@@ -210,6 +210,7 @@ export default function RecipesPage() {
   const [loadingCms, setLoadingCms] = useState(true);
   const [activeTab, setActiveTab] = useState<'browse' | 'generate'>('browse');
   const [searchQuery, setSearchQuery] = useState('');
+  const [filterIngredients, setFilterIngredients] = useState<string[]>([]);
 
   // Load recipes from CMS on component mount
   useEffect(() => {
@@ -228,11 +229,25 @@ export default function RecipesPage() {
     loadRecipes();
   }, []);
 
-  // Filter CMS recipes based on search query
-  const filteredCmsRecipes = cmsRecipes.filter(recipe =>
-    recipe.recipeName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    recipe.description?.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  // Filter CMS recipes based on search query and selected ingredients
+  const filteredCmsRecipes = cmsRecipes.filter(recipe => {
+    // Check search query match
+    const matchesSearch = !searchQuery || 
+      recipe.recipeName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      recipe.description?.toLowerCase().includes(searchQuery.toLowerCase());
+    
+    // Check ingredient filter match
+    if (filterIngredients.length === 0) {
+      return matchesSearch;
+    }
+    
+    const recipeIngredients = recipe.ingredients?.toLowerCase() || '';
+    const matchesIngredients = filterIngredients.every(ingredient =>
+      recipeIngredients.includes(ingredient.toLowerCase())
+    );
+    
+    return matchesSearch && matchesIngredients;
+  });
 
   const handleAddIngredient = () => {
     if (!ingredientInput.trim()) return;
@@ -249,6 +264,30 @@ export default function RecipesPage() {
 
   const handleRemoveIngredient = (ingredient: string) => {
     setSelectedIngredients(selectedIngredients.filter(i => i !== ingredient));
+  };
+
+  const handleAddFilterIngredient = () => {
+    if (!ingredientInput.trim()) return;
+
+    const ingredient = ingredientInput.replace(/^#/, '').trim();
+    const corrected = correctIngredient(ingredient);
+
+    if (!filterIngredients.includes(corrected)) {
+      setFilterIngredients([...filterIngredients, corrected]);
+    }
+
+    setIngredientInput('');
+  };
+
+  const handleRemoveFilterIngredient = (ingredient: string) => {
+    setFilterIngredients(filterIngredients.filter(i => i !== ingredient));
+  };
+
+  const handleKeyPressFilter = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleAddFilterIngredient();
+    }
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -348,23 +387,79 @@ export default function RecipesPage() {
               transition={{ duration: 0.5 }}
               className="space-y-6"
             >
-              {/* Search Section */}
-              <Card className="bg-white/70 backdrop-blur-sm border-primary/20 shadow-lg">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2 font-heading text-foreground">
-                    <Utensils className="w-5 h-5 text-primary" />
-                    Жорууд хайх
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <Input
-                    placeholder="Жорын нэр эсвэл тайлбараар хайх..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="rounded-xl border-primary/20 font-paragraph"
-                  />
-                </CardContent>
-              </Card>
+              {/* Search and Filter Section */}
+              <div className="space-y-4">
+                {/* Search Card */}
+                <Card className="bg-white/70 backdrop-blur-sm border-primary/20 shadow-lg">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2 font-heading text-foreground">
+                      <Utensils className="w-5 h-5 text-primary" />
+                      Жорууд хайх
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <Input
+                      placeholder="Жорын нэр эсвэл тайлбараар хайх..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="rounded-xl border-primary/20 font-paragraph"
+                    />
+                  </CardContent>
+                </Card>
+
+                {/* Ingredient Filter Card */}
+                <Card className="bg-white/70 backdrop-blur-sm border-primary/20 shadow-lg">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2 font-heading text-foreground">
+                      <Sparkles className="w-5 h-5 text-primary" />
+                      Орцуугаар сүүлжүүлэх
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="flex gap-2">
+                      <Input
+                        placeholder="Орц оруулах (жишээ: #өндөг, #сүү)..."
+                        value={ingredientInput}
+                        onChange={(e) => setIngredientInput(e.target.value)}
+                        onKeyPress={handleKeyPressFilter}
+                        className="rounded-xl border-primary/20 font-paragraph"
+                      />
+                      <Button
+                        onClick={handleAddFilterIngredient}
+                        className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-xl font-paragraph"
+                      >
+                        Нэмэх
+                      </Button>
+                    </div>
+
+                    {/* Selected Filter Ingredients */}
+                    {filterIngredients.length > 0 && (
+                      <div className="space-y-2">
+                        <p className="text-sm font-paragraph text-foreground/70">
+                          Сонгосон орцуу ({filterIngredients.length}):
+                        </p>
+                        <div className="flex flex-wrap gap-2">
+                          {filterIngredients.map((ingredient) => (
+                            <Badge
+                              key={ingredient}
+                              variant="secondary"
+                              className="bg-primary/20 text-primary border-primary/30 font-paragraph px-3 py-1.5"
+                            >
+                              #{ingredient}
+                              <button
+                                onClick={() => handleRemoveFilterIngredient(ingredient)}
+                                className="ml-2 hover:opacity-70"
+                              >
+                                <X className="w-3 h-3" />
+                              </button>
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              </div>
 
               {/* Loading State */}
               {loadingCms && (
@@ -496,188 +591,188 @@ export default function RecipesPage() {
             >
               {/* Input Section */}
               <Card className="bg-white/70 backdrop-blur-sm border-primary/20 shadow-lg mb-8">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 font-heading text-foreground">
-                <Sparkles className="w-5 h-5 text-primary" />
-                Орцуу оруулах
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex gap-2">
-                <Input
-                  placeholder="Орц оруулах (жишээ: өндөг, сүү, авокадо)..."
-                  value={ingredientInput}
-                  onChange={(e) => setIngredientInput(e.target.value)}
-                  onKeyPress={handleKeyPress}
-                  className="rounded-xl border-primary/20 font-paragraph"
-                />
-                <Button
-                  onClick={handleAddIngredient}
-                  className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-xl font-paragraph"
-                >
-                  Нэмэх
-                </Button>
-              </div>
-
-              {/* Selected Ingredients */}
-              {selectedIngredients.length > 0 && (
-                <div className="flex flex-wrap gap-2">
-                  {selectedIngredients.map((ingredient) => (
-                    <Badge
-                      key={ingredient}
-                      variant="secondary"
-                      className="bg-primary/20 text-primary border-primary/30 font-paragraph px-3 py-1.5"
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2 font-heading text-foreground">
+                    <Sparkles className="w-5 h-5 text-primary" />
+                    Орцуу оруулах
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="flex gap-2">
+                    <Input
+                      placeholder="Орц оруулах (жишээ: өндөг, сүү, авокадо)..."
+                      value={ingredientInput}
+                      onChange={(e) => setIngredientInput(e.target.value)}
+                      onKeyPress={handleKeyPress}
+                      className="rounded-xl border-primary/20 font-paragraph"
+                    />
+                    <Button
+                      onClick={handleAddIngredient}
+                      className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-xl font-paragraph"
                     >
-                      #{ingredient}
-                      <button
-                        onClick={() => handleRemoveIngredient(ingredient)}
-                        className="ml-2 hover:opacity-70"
-                      >
-                        <X className="w-3 h-3" />
-                      </button>
-                    </Badge>
-                  ))}
-                </div>
-              )}
+                      Нэмэх
+                    </Button>
+                  </div>
 
-              {/* Error Alert */}
-              {error && (
-                <Alert variant="destructive" className="bg-destructive/10 border-destructive/30">
-                  <AlertCircle className="h-4 w-4" />
-                  <AlertDescription className="font-paragraph text-destructive">
-                    {error}
-                  </AlertDescription>
-                </Alert>
-              )}
+                  {/* Selected Ingredients */}
+                  {selectedIngredients.length > 0 && (
+                    <div className="flex flex-wrap gap-2">
+                      {selectedIngredients.map((ingredient) => (
+                        <Badge
+                          key={ingredient}
+                          variant="secondary"
+                          className="bg-primary/20 text-primary border-primary/30 font-paragraph px-3 py-1.5"
+                        >
+                          #{ingredient}
+                          <button
+                            onClick={() => handleRemoveIngredient(ingredient)}
+                            className="ml-2 hover:opacity-70"
+                          >
+                            <X className="w-3 h-3" />
+                          </button>
+                        </Badge>
+                      ))}
+                    </div>
+                  )}
 
-              {/* Generate Button */}
-              <Button
-                onClick={handleGenerateRecipes}
-                disabled={selectedIngredients.length === 0 || loading}
-                className="w-full bg-primary text-primary-foreground hover:bg-primary/90 rounded-xl font-paragraph h-11"
-              >
-                {loading ? (
-                  <>
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    Жор үүсгэж байна...
-                  </>
-                ) : (
-                  <>
-                    <Sparkles className="w-4 h-4 mr-2" />
-                    Жор үүсгэх
-                  </>
-                )}
-              </Button>
-            </CardContent>
-          </Card>
+                  {/* Error Alert */}
+                  {error && (
+                    <Alert variant="destructive" className="bg-destructive/10 border-destructive/30">
+                      <AlertCircle className="h-4 w-4" />
+                      <AlertDescription className="font-paragraph text-destructive">
+                        {error}
+                      </AlertDescription>
+                    </Alert>
+                  )}
 
-          {/* Recipes Display */}
-          {recipes.length > 0 && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="space-y-6"
-            >
-              <div className="text-center mb-8">
-                <h2 className="text-2xl font-heading text-foreground mb-2">
-                  {recipes.length} жор үүсгэгдлээ
-                </h2>
-                <p className="text-foreground/60 font-paragraph">
-                  Таны орцуу ашиглан үүсгэсэн эрүүл жорууд
-                </p>
-              </div>
-
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {recipes.map((recipe, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                  {/* Generate Button */}
+                  <Button
+                    onClick={handleGenerateRecipes}
+                    disabled={selectedIngredients.length === 0 || loading}
+                    className="w-full bg-primary text-primary-foreground hover:bg-primary/90 rounded-xl font-paragraph h-11"
                   >
-                    <Card className="bg-white/70 backdrop-blur-sm border-primary/10 shadow-lg overflow-hidden h-full flex flex-col">
-                      <CardHeader className="pb-3">
-                        <div className="flex items-start justify-between gap-2 mb-2">
-                          <CardTitle className="text-xl font-heading text-foreground line-clamp-2">
-                            {recipe.name}
-                          </CardTitle>
-                          <Badge variant="outline" className="bg-primary/20 text-primary border-primary/30 shrink-0 font-paragraph text-xs">
-                            {recipe.type}
-                          </Badge>
-                        </div>
-                        {recipe.description && (
-                          <p className="text-foreground/80 font-paragraph text-sm">
-                            {recipe.description}
-                          </p>
-                        )}
-                      </CardHeader>
+                    {loading ? (
+                      <>
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                        Жор үүсгэж байна...
+                      </>
+                    ) : (
+                      <>
+                        <Sparkles className="w-4 h-4 mr-2" />
+                        Жор үүсгэх
+                      </>
+                    )}
+                  </Button>
+                </CardContent>
+              </Card>
 
-                      <CardContent className="pt-0 flex flex-col flex-1 space-y-4">
-                        {/* Calories */}
-                        {recipe.caloriesPerServing > 0 && (
-                          <div className="bg-primary/10 rounded-lg p-3">
-                            <p className="text-sm font-paragraph text-foreground/80">
-                              <span className="font-medium text-primary">{recipe.caloriesPerServing}</span> калори / хэсэг
-                            </p>
-                            <p className="text-xs font-paragraph text-foreground/60">
-                              Нийт: {recipe.totalCalories} калори ({recipe.servings} хэсэг)
-                            </p>
-                          </div>
-                        )}
+              {/* Recipes Display */}
+              {recipes.length > 0 && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5 }}
+                  className="space-y-6"
+                >
+                  <div className="text-center mb-8">
+                    <h2 className="text-2xl font-heading text-foreground mb-2">
+                      {recipes.length} жор үүсгэгдлээ
+                    </h2>
+                    <p className="text-foreground/60 font-paragraph">
+                      Таны орцуу ашиглан үүсгэсэн эрүүл жорууд
+                    </p>
+                  </div>
 
-                        {/* Ingredients */}
-                        <div>
-                          <h4 className="font-paragraph font-medium text-foreground mb-2 text-sm">Орцуу:</h4>
-                          <ul className="space-y-1">
-                            {recipe.ingredients.map((ingredient, i) => (
-                              <li key={i} className="text-foreground/70 font-paragraph text-sm flex items-start">
-                                <span className="mr-2">•</span>
-                                <span>{ingredient}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
+                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {recipes.map((recipe, index) => (
+                      <motion.div
+                        key={index}
+                        initial={{ opacity: 0, y: 30 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5, delay: index * 0.1 }}
+                      >
+                        <Card className="bg-white/70 backdrop-blur-sm border-primary/10 shadow-lg overflow-hidden h-full flex flex-col">
+                          <CardHeader className="pb-3">
+                            <div className="flex items-start justify-between gap-2 mb-2">
+                              <CardTitle className="text-xl font-heading text-foreground line-clamp-2">
+                                {recipe.name}
+                              </CardTitle>
+                              <Badge variant="outline" className="bg-primary/20 text-primary border-primary/30 shrink-0 font-paragraph text-xs">
+                                {recipe.type}
+                              </Badge>
+                            </div>
+                            {recipe.description && (
+                              <p className="text-foreground/80 font-paragraph text-sm">
+                                {recipe.description}
+                              </p>
+                            )}
+                          </CardHeader>
 
-                        {/* Instructions */}
-                        {recipe.instructions.length > 0 && (
-                          <div>
-                            <h4 className="font-paragraph font-medium text-foreground mb-2 text-sm">Хийх арга:</h4>
-                            <ol className="space-y-2">
-                              {recipe.instructions.map((instruction, i) => (
-                                <li key={i} className="text-foreground/70 font-paragraph text-sm flex gap-2">
-                                  <span className="font-medium text-primary shrink-0">{i + 1}.</span>
-                                  <span>{instruction}</span>
-                                </li>
-                              ))}
-                            </ol>
-                          </div>
-                        )}
-                      </CardContent>
-                    </Card>
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
-          )}
+                          <CardContent className="pt-0 flex flex-col flex-1 space-y-4">
+                            {/* Calories */}
+                            {recipe.caloriesPerServing > 0 && (
+                              <div className="bg-primary/10 rounded-lg p-3">
+                                <p className="text-sm font-paragraph text-foreground/80">
+                                  <span className="font-medium text-primary">{recipe.caloriesPerServing}</span> калори / хэсэг
+                                </p>
+                                <p className="text-xs font-paragraph text-foreground/60">
+                                  Нийт: {recipe.totalCalories} калори ({recipe.servings} хэсэг)
+                                </p>
+                              </div>
+                            )}
 
-          {/* Empty State */}
-          {!loading && recipes.length === 0 && selectedIngredients.length === 0 && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="text-center py-12"
-            >
-              <Utensils className="w-16 h-16 text-foreground/30 mx-auto mb-4" />
-              <h3 className="text-xl font-heading text-foreground mb-2">
-                Жор үүсгэхийн тулд орцуу оруулна уу
-              </h3>
-              <p className="text-foreground/60 font-paragraph">
-                Таны байгаа орцуу оруулаад AI-ээр үүсгэсэн жорууд авна уу
-              </p>
-            </motion.div>
-          )}
+                            {/* Ingredients */}
+                            <div>
+                              <h4 className="font-paragraph font-medium text-foreground mb-2 text-sm">Орцуу:</h4>
+                              <ul className="space-y-1">
+                                {recipe.ingredients.map((ingredient, i) => (
+                                  <li key={i} className="text-foreground/70 font-paragraph text-sm flex items-start">
+                                    <span className="mr-2">•</span>
+                                    <span>{ingredient}</span>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+
+                            {/* Instructions */}
+                            {recipe.instructions.length > 0 && (
+                              <div>
+                                <h4 className="font-paragraph font-medium text-foreground mb-2 text-sm">Хийх арга:</h4>
+                                <ol className="space-y-2">
+                                  {recipe.instructions.map((instruction, i) => (
+                                    <li key={i} className="text-foreground/70 font-paragraph text-sm flex gap-2">
+                                      <span className="font-medium text-primary shrink-0">{i + 1}.</span>
+                                      <span>{instruction}</span>
+                                    </li>
+                                  ))}
+                                </ol>
+                              </div>
+                            )}
+                          </CardContent>
+                        </Card>
+                      </motion.div>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+
+              {/* Empty State */}
+              {!loading && recipes.length === 0 && selectedIngredients.length === 0 && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5 }}
+                  className="text-center py-12"
+                >
+                  <Utensils className="w-16 h-16 text-foreground/30 mx-auto mb-4" />
+                  <h3 className="text-xl font-heading text-foreground mb-2">
+                    Жор үүсгэхийн тулд орцуу оруулна уу
+                  </h3>
+                  <p className="text-foreground/60 font-paragraph">
+                    Таны байгаа орцуу оруулаад AI-ээр үүсгэсэн жорууд авна уу
+                  </p>
+                </motion.div>
+              )}
             </motion.div>
           )}
         </motion.div>
