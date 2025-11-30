@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Image } from '@/components/ui/image';
-import { Search, Clock, Utensils, ExternalLink, Filter } from 'lucide-react';
+import { Search, Utensils, ExternalLink, Filter, X } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 interface UserProfile {
@@ -24,6 +24,9 @@ export default function RecipesPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [calorieFilter, setCalorieFilter] = useState<string>('all');
   const [profile, setProfile] = useState<UserProfile>({});
+  const [ingredientInput, setIngredientInput] = useState('');
+  const [selectedIngredients, setSelectedIngredients] = useState<string[]>([]);
+  const [filterMode, setFilterMode] = useState<'search' | 'ingredients'>('search');
 
   useEffect(() => {
     if (!member?.loginEmail) return;
@@ -57,8 +60,18 @@ export default function RecipesPage() {
   useEffect(() => {
     let filtered = recipes;
 
+    // Ingredient filter (hashtag mode)
+    if (filterMode === 'ingredients' && selectedIngredients.length > 0) {
+      filtered = filtered.filter(recipe => {
+        if (!recipe.ingredients) return false;
+        const recipeIngredientsLower = recipe.ingredients.toLowerCase();
+        return selectedIngredients.some(ingredient =>
+          recipeIngredientsLower.includes(ingredient.toLowerCase())
+        );
+      });
+    }
     // Search filter
-    if (searchTerm) {
+    else if (filterMode === 'search' && searchTerm) {
       filtered = filtered.filter(recipe =>
         recipe.recipeName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         recipe.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -88,7 +101,7 @@ export default function RecipesPage() {
     }
 
     setFilteredRecipes(filtered);
-  }, [searchTerm, calorieFilter, recipes, profile]);
+  }, [searchTerm, calorieFilter, recipes, profile, selectedIngredients, filterMode]);
 
   const getCalorieBadgeColor = (calories: number) => {
     if (!profile.dailyCalories) return 'bg-gray-100 text-gray-700';
@@ -115,6 +128,28 @@ export default function RecipesPage() {
       return 'Дунд калори';
     } else {
       return 'Өндөр калори';
+    }
+  };
+
+  const handleAddIngredient = () => {
+    if (ingredientInput.trim()) {
+      const ingredient = ingredientInput.trim().replace(/^#+/, '').trim();
+      if (ingredient && !selectedIngredients.includes(ingredient)) {
+        setSelectedIngredients([...selectedIngredients, ingredient]);
+        setIngredientInput('');
+        setFilterMode('ingredients');
+      }
+    }
+  };
+
+  const handleRemoveIngredient = (ingredient: string) => {
+    setSelectedIngredients(selectedIngredients.filter(i => i !== ingredient));
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleAddIngredient();
     }
   };
 
@@ -170,32 +205,122 @@ export default function RecipesPage() {
           {/* Filters */}
           <Card className="bg-white/70 backdrop-blur-sm border-primary/20 shadow-lg mb-8">
             <CardContent className="p-6">
-              <div className="flex flex-col md:flex-row gap-4">
-                <div className="flex-1">
-                  <div className="relative">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-foreground/40" />
-                    <Input
-                      placeholder="Жор хайх..."
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                      className="pl-10 rounded-xl border-primary/20 font-paragraph"
-                    />
+              <div className="space-y-4">
+                {/* Filter Mode Tabs */}
+                <div className="flex gap-2 mb-4">
+                  <Button
+                    variant={filterMode === 'search' ? 'default' : 'outline'}
+                    onClick={() => {
+                      setFilterMode('search');
+                      setSelectedIngredients([]);
+                    }}
+                    className="rounded-xl font-paragraph"
+                  >
+                    <Search className="w-4 h-4 mr-2" />
+                    Хайх
+                  </Button>
+                  <Button
+                    variant={filterMode === 'ingredients' ? 'default' : 'outline'}
+                    onClick={() => {
+                      setFilterMode('ingredients');
+                      setSearchTerm('');
+                    }}
+                    className="rounded-xl font-paragraph"
+                  >
+                    #Орцууд
+                  </Button>
+                </div>
+
+                {/* Search Mode */}
+                {filterMode === 'search' && (
+                  <div className="flex flex-col md:flex-row gap-4">
+                    <div className="flex-1">
+                      <div className="relative">
+                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-foreground/40" />
+                        <Input
+                          placeholder="Жор хайх..."
+                          value={searchTerm}
+                          onChange={(e) => setSearchTerm(e.target.value)}
+                          className="pl-10 rounded-xl border-primary/20 font-paragraph"
+                        />
+                      </div>
+                    </div>
+                    <div className="md:w-48">
+                      <Select value={calorieFilter} onValueChange={setCalorieFilter}>
+                        <SelectTrigger className="rounded-xl border-primary/20">
+                          <Filter className="w-4 h-4 mr-2" />
+                          <SelectValue placeholder="Калори шүүх" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="all">Бүх жор</SelectItem>
+                          <SelectItem value="low">Бага калори</SelectItem>
+                          <SelectItem value="medium">Дунд калори</SelectItem>
+                          <SelectItem value="high">Өндөр калори</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
                   </div>
-                </div>
-                <div className="md:w-48">
-                  <Select value={calorieFilter} onValueChange={setCalorieFilter}>
-                    <SelectTrigger className="rounded-xl border-primary/20">
-                      <Filter className="w-4 h-4 mr-2" />
-                      <SelectValue placeholder="Калори шүүх" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">Бүх жор</SelectItem>
-                      <SelectItem value="low">Бага калори</SelectItem>
-                      <SelectItem value="medium">Дунд калори</SelectItem>
-                      <SelectItem value="high">Өндөр калори</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
+                )}
+
+                {/* Ingredients Mode */}
+                {filterMode === 'ingredients' && (
+                  <div className="space-y-3">
+                    <div className="flex gap-2">
+                      <div className="flex-1 relative">
+                        <Input
+                          placeholder="Орцуу нэмэх (жишээ: #Алим #овьёос)..."
+                          value={ingredientInput}
+                          onChange={(e) => setIngredientInput(e.target.value)}
+                          onKeyDown={handleKeyDown}
+                          className="pl-4 rounded-xl border-primary/20 font-paragraph"
+                        />
+                      </div>
+                      <Button
+                        onClick={handleAddIngredient}
+                        className="rounded-xl font-paragraph bg-primary hover:bg-primary/90"
+                      >
+                        Нэмэх
+                      </Button>
+                    </div>
+
+                    {/* Selected Ingredients */}
+                    {selectedIngredients.length > 0 && (
+                      <div className="flex flex-wrap gap-2">
+                        {selectedIngredients.map((ingredient) => (
+                          <Badge
+                            key={ingredient}
+                            variant="secondary"
+                            className="bg-secondary/20 text-secondary border-secondary/30 font-paragraph pl-3 pr-1 py-1"
+                          >
+                            #{ingredient}
+                            <button
+                              onClick={() => handleRemoveIngredient(ingredient)}
+                              className="ml-2 hover:text-secondary/70"
+                            >
+                              <X className="w-3 h-3" />
+                            </button>
+                          </Badge>
+                        ))}
+                      </div>
+                    )}
+
+                    {/* Calorie Filter for Ingredients Mode */}
+                    <div className="md:w-48">
+                      <Select value={calorieFilter} onValueChange={setCalorieFilter}>
+                        <SelectTrigger className="rounded-xl border-primary/20">
+                          <Filter className="w-4 h-4 mr-2" />
+                          <SelectValue placeholder="Калори шүүх" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="all">Бүх жор</SelectItem>
+                          <SelectItem value="low">Бага калори</SelectItem>
+                          <SelectItem value="medium">Дунд калори</SelectItem>
+                          <SelectItem value="high">Өндөр калори</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                )}
               </div>
             </CardContent>
           </Card>
