@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Utensils, Sparkles, X, Loader2, AlertCircle, Flame } from 'lucide-react';
+import { Utensils, Sparkles, X, Loader2, AlertCircle, Flame, Clock, Zap } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Image } from '@/components/ui/image';
 import { BaseCrudService } from '@/integrations';
@@ -84,6 +84,19 @@ interface ParsedRecipe {
   totalCalories: number;
   caloriesPerServing: number;
   servings: number;
+  prepTime?: number;
+  cookTime?: number;
+  protein?: number;
+  carbs?: number;
+  fat?: number;
+  tags?: string[];
+  image?: string;
+}
+
+interface RecipeModalProps {
+  recipe: ParsedRecipe | HealthyRecipesandSnacks | null;
+  isOpen: boolean;
+  onClose: () => void;
 }
 
 // Typo correction mapping for common Mongolian ingredients
@@ -137,6 +150,31 @@ function correctIngredient(ingredient: string): string {
   return INGREDIENT_CORRECTIONS[lower] || ingredient;
 }
 
+function generateHealthyTags(recipeName: string, ingredients: string[]): string[] {
+  const tags: string[] = [];
+  const nameAndIngredients = `${recipeName} ${ingredients.join(' ')}`.toLowerCase();
+  
+  if (nameAndIngredients.includes('салат') || nameAndIngredients.includes('цөцгий')) tags.push('Салат');
+  if (nameAndIngredients.includes('смүүси') || nameAndIngredients.includes('жүүс')) tags.push('Уух');
+  if (nameAndIngredients.includes('өндөг')) tags.push('Өндөг');
+  if (nameAndIngredients.includes('загас')) tags.push('Загас');
+  if (nameAndIngredients.includes('цыпилон') || nameAndIngredients.includes('мах')) tags.push('Мах');
+  if (nameAndIngredients.includes('авокадо')) tags.push('Авокадо');
+  if (nameAndIngredients.includes('сүү')) tags.push('Сүүтэй');
+  if (nameAndIngredients.includes('жимс')) tags.push('Жимс');
+  
+  return tags.length > 0 ? tags.slice(0, 2) : ['Эрүүл'];
+}
+
+function generateMacros(caloriesPerServing: number): { protein: number; carbs: number; fat: number } {
+  // Estimate macros based on calories (rough approximation)
+  const protein = Math.round((caloriesPerServing * 0.3) / 4);
+  const carbs = Math.round((caloriesPerServing * 0.45) / 4);
+  const fat = Math.round((caloriesPerServing * 0.25) / 9);
+  
+  return { protein, carbs, fat };
+}
+
 function parseRecipesText(text: string): ParsedRecipe[] {
   const recipes: ParsedRecipe[] = [];
   const recipeBlocks = text.split('---').filter(block => block.trim());
@@ -148,6 +186,8 @@ function parseRecipesText(text: string): ParsedRecipe[] {
     let recipe: Partial<ParsedRecipe> = {
       ingredients: [],
       instructions: [],
+      prepTime: 15,
+      cookTime: 20,
     };
 
     let currentSection = '';
@@ -184,6 +224,9 @@ function parseRecipesText(text: string): ParsedRecipe[] {
     }
 
     if (recipe.name && recipe.ingredients && recipe.ingredients.length > 0) {
+      const caloriesPerServing = recipe.caloriesPerServing || 300;
+      const macros = generateMacros(caloriesPerServing);
+      
       recipes.push({
         name: recipe.name || 'Үл мэдэгдэх жор',
         type: recipe.type || 'Үл мэдэгдэх',
@@ -191,13 +234,343 @@ function parseRecipesText(text: string): ParsedRecipe[] {
         ingredients: recipe.ingredients,
         instructions: recipe.instructions || [],
         totalCalories: recipe.totalCalories || 0,
-        caloriesPerServing: recipe.caloriesPerServing || 0,
+        caloriesPerServing: caloriesPerServing,
         servings: recipe.servings || 1,
+        prepTime: recipe.prepTime || 15,
+        cookTime: recipe.cookTime || 20,
+        protein: macros.protein,
+        carbs: macros.carbs,
+        fat: macros.fat,
+        tags: generateHealthyTags(recipe.name || '', recipe.ingredients),
       });
     }
   }
 
   return recipes;
+}
+
+// Recipe Modal Component
+function RecipeModal({ recipe, isOpen, onClose }: RecipeModalProps) {
+  if (!isOpen || !recipe) return null;
+
+  const isCmsRecipe = 'dishImage' in recipe;
+  const image = isCmsRecipe ? (recipe as HealthyRecipesandSnacks).dishImage : (recipe as ParsedRecipe).image;
+  const name = isCmsRecipe ? (recipe as HealthyRecipesandSnacks).recipeName : (recipe as ParsedRecipe).name;
+  const description = isCmsRecipe ? (recipe as HealthyRecipesandSnacks).description : (recipe as ParsedRecipe).description;
+  const ingredients = isCmsRecipe ? (recipe as HealthyRecipesandSnacks).ingredients?.split('\n') || [] : (recipe as ParsedRecipe).ingredients;
+  const instructions = isCmsRecipe ? (recipe as HealthyRecipesandSnacks).instructions?.split('\n') || [] : (recipe as ParsedRecipe).instructions;
+  const calories = isCmsRecipe ? (recipe as HealthyRecipesandSnacks).caloriesPerServing : (recipe as ParsedRecipe).caloriesPerServing;
+  const parsedRecipe = recipe as ParsedRecipe;
+
+  return (
+    <AnimatePresence>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        onClick={onClose}
+        className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
+      >
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95, y: 20 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          exit={{ opacity: 0, scale: 0.95, y: 20 }}
+          onClick={(e) => e.stopPropagation()}
+          className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+        >
+          {/* Image */}
+          {image && (
+            <div className="w-full h-64 overflow-hidden bg-foreground/5">
+              <Image
+                src={image}
+                alt={name || 'Recipe'}
+                width={800}
+                height={400}
+                className="w-full h-full object-cover"
+              />
+            </div>
+          )}
+
+          <div className="p-6 md:p-8 space-y-6">
+            {/* Header */}
+            <div className="flex items-start justify-between gap-4">
+              <div className="flex-1">
+                <h2 className="text-3xl font-heading text-foreground mb-2">{name}</h2>
+                {description && (
+                  <p className="text-foreground/70 font-paragraph">{description}</p>
+                )}
+              </div>
+              <button
+                onClick={onClose}
+                className="text-foreground/60 hover:text-foreground transition-colors"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+
+            {/* Macro Info */}
+            <div className="grid grid-cols-3 gap-4">
+              <div className="bg-primary/10 rounded-lg p-4 text-center">
+                <Flame className="w-5 h-5 text-primary mx-auto mb-2" />
+                <p className="text-sm font-paragraph text-foreground/70">Калори</p>
+                <p className="text-xl font-heading text-primary">{calories}</p>
+              </div>
+              {parsedRecipe.protein && (
+                <div className="bg-blue-50 rounded-lg p-4 text-center">
+                  <Zap className="w-5 h-5 text-blue-500 mx-auto mb-2" />
+                  <p className="text-sm font-paragraph text-foreground/70">Уураг</p>
+                  <p className="text-xl font-heading text-blue-600">{parsedRecipe.protein}г</p>
+                </div>
+              )}
+              {parsedRecipe.carbs && (
+                <div className="bg-amber-50 rounded-lg p-4 text-center">
+                  <Zap className="w-5 h-5 text-amber-500 mx-auto mb-2" />
+                  <p className="text-sm font-paragraph text-foreground/70">Нүүрс</p>
+                  <p className="text-xl font-heading text-amber-600">{parsedRecipe.carbs}г</p>
+                </div>
+              )}
+            </div>
+
+            {/* Time Info */}
+            {(parsedRecipe.prepTime || parsedRecipe.cookTime) && (
+              <div className="flex gap-4">
+                {parsedRecipe.prepTime && (
+                  <div className="flex items-center gap-2">
+                    <Clock className="w-4 h-4 text-primary" />
+                    <span className="font-paragraph text-sm text-foreground/70">Бэлтгэл: {parsedRecipe.prepTime} мин</span>
+                  </div>
+                )}
+                {parsedRecipe.cookTime && (
+                  <div className="flex items-center gap-2">
+                    <Flame className="w-4 h-4 text-primary" />
+                    <span className="font-paragraph text-sm text-foreground/70">Хоол: {parsedRecipe.cookTime} мин</span>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Ingredients */}
+            <div>
+              <h3 className="text-lg font-heading text-foreground mb-3">Орцуу</h3>
+              <ul className="space-y-2">
+                {ingredients.map((ingredient, i) => (
+                  <li key={i} className="flex items-start gap-3 text-foreground/80 font-paragraph">
+                    <span className="text-primary font-bold mt-0.5">•</span>
+                    <span>{ingredient}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Instructions */}
+            {instructions.length > 0 && (
+              <div>
+                <h3 className="text-lg font-heading text-foreground mb-3">Хийх арга</h3>
+                <ol className="space-y-3">
+                  {instructions.map((instruction, i) => (
+                    <li key={i} className="flex gap-3">
+                      <span className="font-heading text-primary font-bold shrink-0 w-6">{i + 1}.</span>
+                      <span className="text-foreground/80 font-paragraph">{instruction}</span>
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            )}
+
+            {/* Close Button */}
+            <Button
+              onClick={onClose}
+              className="w-full bg-primary text-primary-foreground hover:bg-primary/90 rounded-xl font-paragraph h-11"
+            >
+              Хаах
+            </Button>
+          </div>
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
+  );
+}
+
+// Recipe Card Component for AI-generated recipes
+function RecipeCard({ recipe, onCardClick }: { recipe: ParsedRecipe; onCardClick: () => void }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      onClick={onCardClick}
+      className="cursor-pointer group"
+    >
+      <Card className="bg-white/70 backdrop-blur-sm border-primary/10 shadow-lg overflow-hidden h-full flex flex-col hover:shadow-xl transition-shadow">
+        {/* Image Container */}
+        <div className="w-full h-48 overflow-hidden bg-gradient-to-br from-primary/5 to-primary/10 relative">
+          {recipe.image ? (
+            <Image
+              src={recipe.image}
+              alt={recipe.name}
+              width={400}
+              height={192}
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+            />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center">
+              <Utensils className="w-12 h-12 text-primary/30" />
+            </div>
+          )}
+        </div>
+
+        <CardHeader className="pb-2">
+          <div className="flex items-start justify-between gap-2 mb-2">
+            <CardTitle className="text-lg font-heading text-foreground line-clamp-2">
+              {recipe.name}
+            </CardTitle>
+          </div>
+          
+          {/* Tags */}
+          {recipe.tags && recipe.tags.length > 0 && (
+            <div className="flex flex-wrap gap-1 mb-2">
+              {recipe.tags.map((tag) => (
+                <Badge
+                  key={tag}
+                  variant="secondary"
+                  className="bg-primary/20 text-primary border-primary/30 text-xs font-paragraph"
+                >
+                  {tag}
+                </Badge>
+              ))}
+            </div>
+          )}
+          
+          {recipe.description && (
+            <p className="text-foreground/70 font-paragraph text-sm line-clamp-2">
+              {recipe.description}
+            </p>
+          )}
+        </CardHeader>
+
+        <CardContent className="pt-0 flex flex-col flex-1 space-y-3">
+          {/* Calories & Macros Row */}
+          <div className="bg-primary/10 rounded-lg p-3 space-y-2">
+            <div className="flex items-center gap-2">
+              <Flame className="w-4 h-4 text-primary" />
+              <span className="font-paragraph text-sm text-foreground/80">
+                <span className="font-medium text-primary">{recipe.caloriesPerServing}</span> ккал
+              </span>
+            </div>
+            
+            {/* Macro Info */}
+            {(recipe.protein || recipe.carbs || recipe.fat) && (
+              <div className="flex gap-2 text-xs font-paragraph text-foreground/60">
+                {recipe.protein && <span>Уураг: {recipe.protein}г</span>}
+                {recipe.carbs && <span>Нүүрс: {recipe.carbs}г</span>}
+                {recipe.fat && <span>Өөх: {recipe.fat}г</span>}
+              </div>
+            )}
+          </div>
+
+          {/* Time Info */}
+          {(recipe.prepTime || recipe.cookTime) && (
+            <div className="flex gap-3 text-xs font-paragraph text-foreground/60">
+              {recipe.prepTime && (
+                <div className="flex items-center gap-1">
+                  <Clock className="w-3 h-3" />
+                  <span>{recipe.prepTime} мин</span>
+                </div>
+              )}
+              {recipe.cookTime && (
+                <div className="flex items-center gap-1">
+                  <Flame className="w-3 h-3" />
+                  <span>{recipe.cookTime} мин</span>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* View Details Button */}
+          <Button
+            onClick={(e) => {
+              e.stopPropagation();
+              onCardClick();
+            }}
+            className="w-full bg-primary text-primary-foreground hover:bg-primary/90 rounded-lg font-paragraph h-9 text-sm mt-auto"
+          >
+            Дэлгэрэнгүй
+          </Button>
+        </CardContent>
+      </Card>
+    </motion.div>
+  );
+}
+
+// CMS Recipe Card Component
+function CMSRecipeCard({ recipe, onCardClick }: { recipe: HealthyRecipesandSnacks; onCardClick: () => void }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      onClick={onCardClick}
+      className="cursor-pointer group"
+    >
+      <Card className="bg-white/70 backdrop-blur-sm border-primary/10 shadow-lg overflow-hidden h-full flex flex-col hover:shadow-xl transition-shadow">
+        {/* Image Container */}
+        <div className="w-full h-48 overflow-hidden bg-gradient-to-br from-primary/5 to-primary/10">
+          <Image
+            src={recipe.dishImage || getFallbackImage(recipe.recipeName, recipe.ingredients)}
+            alt={recipe.recipeName || 'Recipe'}
+            width={400}
+            height={192}
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+          />
+        </div>
+
+        <CardHeader className="pb-2">
+          <CardTitle className="text-lg font-heading text-foreground line-clamp-2 mb-2">
+            {recipe.recipeName}
+          </CardTitle>
+          
+          {recipe.description && (
+            <p className="text-foreground/70 font-paragraph text-sm line-clamp-2">
+              {recipe.description}
+            </p>
+          )}
+        </CardHeader>
+
+        <CardContent className="pt-0 flex flex-col flex-1 space-y-3">
+          {/* Calories */}
+          {recipe.caloriesPerServing && (
+            <div className="bg-primary/10 rounded-lg p-3 flex items-center gap-2">
+              <Flame className="w-4 h-4 text-primary" />
+              <span className="font-paragraph text-sm text-foreground/80">
+                <span className="font-medium text-primary">{recipe.caloriesPerServing}</span> ккал
+              </span>
+            </div>
+          )}
+
+          {/* Ingredients Preview */}
+          {recipe.ingredients && (
+            <div>
+              <h4 className="font-paragraph font-medium text-foreground text-sm mb-1">Орцуу:</h4>
+              <p className="text-foreground/70 font-paragraph text-xs line-clamp-2">
+                {recipe.ingredients}
+              </p>
+            </div>
+          )}
+
+          {/* View Details Button */}
+          <Button
+            onClick={(e) => {
+              e.stopPropagation();
+              onCardClick();
+            }}
+            className="w-full bg-primary text-primary-foreground hover:bg-primary/90 rounded-lg font-paragraph h-9 text-sm mt-auto"
+          >
+            Дэлгэрэнгүй
+          </Button>
+        </CardContent>
+      </Card>
+    </motion.div>
+  );
 }
 
 export default function RecipesPage() {
@@ -210,6 +583,8 @@ export default function RecipesPage() {
   const [loadingCms, setLoadingCms] = useState(true);
   const [activeTab, setActiveTab] = useState<'browse' | 'generate'>('browse');
   const [filterIngredients, setFilterIngredients] = useState<string[]>([]);
+  const [selectedRecipe, setSelectedRecipe] = useState<ParsedRecipe | HealthyRecipesandSnacks | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Load recipes from CMS on component mount
   useEffect(() => {
@@ -469,73 +844,15 @@ export default function RecipesPage() {
               {!loadingCms && filteredCmsRecipes.length > 0 && (
                 <div>
                   <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {filteredCmsRecipes.map((recipe, index) => (
-                      <motion.div
+                    {filteredCmsRecipes.map((recipe) => (
+                      <CMSRecipeCard
                         key={recipe._id}
-                        initial={{ opacity: 0, y: 30 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.5, delay: index * 0.05 }}
-                      >
-                        <Card className="bg-white/70 backdrop-blur-sm border-primary/10 shadow-lg overflow-hidden h-full flex flex-col">
-                          {/* Recipe Image */}
-                          <div className="w-full h-48 overflow-hidden bg-foreground/5">
-                            <Image
-                              src={recipe.dishImage || getFallbackImage(recipe.recipeName, recipe.ingredients)}
-                              alt={recipe.recipeName || 'Recipe dish'}
-                              width={400}
-                              height={192}
-                              className="w-full h-full object-cover"
-                            />
-                          </div>
-
-                          <CardHeader className="pb-3">
-                            <div className="flex items-start justify-between gap-2 mb-2">
-                              <CardTitle className="text-xl font-heading text-foreground line-clamp-2">
-                                {recipe.recipeName}
-                              </CardTitle>
-                            </div>
-                            {recipe.description && (
-                              <p className="text-foreground/80 font-paragraph text-sm line-clamp-2">
-                                {recipe.description}
-                              </p>
-                            )}
-                          </CardHeader>
-
-                          <CardContent className="pt-0 flex flex-col flex-1 space-y-4">
-                            {/* Calories */}
-                            {recipe.caloriesPerServing && (
-                              <div className="bg-primary/10 rounded-lg p-3 flex items-center gap-2">
-                                <Flame className="w-4 h-4 text-primary" />
-                                <div>
-                                  <p className="text-sm font-paragraph text-foreground/80">
-                                    <span className="font-medium text-primary">{recipe.caloriesPerServing}</span> калори
-                                  </p>
-                                </div>
-                              </div>
-                            )}
-
-                            {/* Ingredients */}
-                            {recipe.ingredients && (
-                              <div>
-                                <h4 className="font-paragraph font-medium text-foreground mb-2 text-sm">Орцуу:</h4>
-                                <p className="text-foreground/70 font-paragraph text-sm line-clamp-3">
-                                  {recipe.ingredients}
-                                </p>
-                              </div>
-                            )}
-
-                            {/* Instructions */}
-                            {recipe.instructions && (
-                              <div>
-                                <h4 className="font-paragraph font-medium text-foreground mb-2 text-sm">Хийх арга:</h4>
-                                <p className="text-foreground/70 font-paragraph text-sm line-clamp-3">
-                                  {recipe.instructions}
-                                </p>
-                              </div>
-                            )}
-                          </CardContent>
-                        </Card>
-                      </motion.div>
+                        recipe={recipe}
+                        onCardClick={() => {
+                          setSelectedRecipe(recipe);
+                          setIsModalOpen(true);
+                        }}
+                      />
                     ))}
                   </div>
                 </div>
@@ -672,72 +989,14 @@ export default function RecipesPage() {
 
                   <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {recipes.map((recipe, index) => (
-                      <motion.div
+                      <RecipeCard
                         key={index}
-                        initial={{ opacity: 0, y: 30 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.5, delay: index * 0.1 }}
-                      >
-                        <Card className="bg-white/70 backdrop-blur-sm border-primary/10 shadow-lg overflow-hidden h-full flex flex-col">
-                          <CardHeader className="pb-3">
-                            <div className="flex items-start justify-between gap-2 mb-2">
-                              <CardTitle className="text-xl font-heading text-foreground line-clamp-2">
-                                {recipe.name}
-                              </CardTitle>
-                              <Badge variant="outline" className="bg-primary/20 text-primary border-primary/30 shrink-0 font-paragraph text-xs">
-                                {recipe.type}
-                              </Badge>
-                            </div>
-                            {recipe.description && (
-                              <p className="text-foreground/80 font-paragraph text-sm">
-                                {recipe.description}
-                              </p>
-                            )}
-                          </CardHeader>
-
-                          <CardContent className="pt-0 flex flex-col flex-1 space-y-4">
-                            {/* Calories */}
-                            {recipe.caloriesPerServing > 0 && (
-                              <div className="bg-primary/10 rounded-lg p-3">
-                                <p className="text-sm font-paragraph text-foreground/80">
-                                  <span className="font-medium text-primary">{recipe.caloriesPerServing}</span> калори / хэсэг
-                                </p>
-                                <p className="text-xs font-paragraph text-foreground/60">
-                                  Нийт: {recipe.totalCalories} калори ({recipe.servings} хэсэг)
-                                </p>
-                              </div>
-                            )}
-
-                            {/* Ingredients */}
-                            <div>
-                              <h4 className="font-paragraph font-medium text-foreground mb-2 text-sm">Орцуу:</h4>
-                              <ul className="space-y-1">
-                                {recipe.ingredients.map((ingredient, i) => (
-                                  <li key={i} className="text-foreground/70 font-paragraph text-sm flex items-start">
-                                    <span className="mr-2">•</span>
-                                    <span>{ingredient}</span>
-                                  </li>
-                                ))}
-                              </ul>
-                            </div>
-
-                            {/* Instructions */}
-                            {recipe.instructions.length > 0 && (
-                              <div>
-                                <h4 className="font-paragraph font-medium text-foreground mb-2 text-sm">Хийх арга:</h4>
-                                <ol className="space-y-2">
-                                  {recipe.instructions.map((instruction, i) => (
-                                    <li key={i} className="text-foreground/70 font-paragraph text-sm flex gap-2">
-                                      <span className="font-medium text-primary shrink-0">{i + 1}.</span>
-                                      <span>{instruction}</span>
-                                    </li>
-                                  ))}
-                                </ol>
-                              </div>
-                            )}
-                          </CardContent>
-                        </Card>
-                      </motion.div>
+                        recipe={recipe}
+                        onCardClick={() => {
+                          setSelectedRecipe(recipe);
+                          setIsModalOpen(true);
+                        }}
+                      />
                     ))}
                   </div>
                 </motion.div>
@@ -764,6 +1023,16 @@ export default function RecipesPage() {
           )}
         </motion.div>
       </div>
+
+      {/* Recipe Modal */}
+      <RecipeModal
+        recipe={selectedRecipe}
+        isOpen={isModalOpen}
+        onClose={() => {
+          setIsModalOpen(false);
+          setSelectedRecipe(null);
+        }}
+      />
     </div>
   );
 }
