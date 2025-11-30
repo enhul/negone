@@ -38,8 +38,12 @@ export interface HealthyRecipesandSnacks {
   _id: string;
   _createdDate?: Date;
   _updatedDate?: Date;
+  /** @wixFieldType number */
+  cookTime?: number;
   /** @wixFieldType text */
   recipeName?: string;
+  /** @wixFieldType number */
+  prepTime?: number;
   /** @wixFieldType text */
   description?: string;
   /** @wixFieldType text */
@@ -52,10 +56,6 @@ export interface HealthyRecipesandSnacks {
   videoLink?: string;
   /** @wixFieldType image */
   dishImage?: string;
-  /** @wixFieldType number */
-  prepTime?: number;
-  /** @wixFieldType number */
-  cookTime?: number;
 }
 
 
