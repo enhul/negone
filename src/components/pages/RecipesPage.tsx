@@ -10,7 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import { Image } from '@/components/ui/image';
 import { Search, Utensils, ExternalLink, Filter, X, Sparkles, Loader } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { regenerateAllRecipeImages } from '@/utils/generateRecipeImages';
+import { regenerateAllRecipeImages, generateImagesForSpecificRecipes } from '@/utils/generateRecipeImages';
 
 interface UserProfile {
   dailyCalories?: number;
@@ -86,6 +86,31 @@ export default function RecipesPage() {
       setFilteredRecipes(updatedItems);
     } catch (error) {
       console.error('Error regenerating recipe images:', error);
+    } finally {
+      setIsGeneratingImages(false);
+    }
+  };
+
+  const handleGenerateImagesForSpecificRecipes = async () => {
+    const recipeNames = [
+      'Өндөгтэй Салат',
+      'Жимстэй Тараг',
+      'Бүхэл Үрийн Талхтай Сэндвич',
+      'Эрүүл Шоколадтай Пудинг',
+      'Цагаан Будаатай Тахианы Мах'
+    ];
+    
+    setIsGeneratingImages(true);
+    try {
+      const result = await generateImagesForSpecificRecipes(recipeNames);
+      console.log('Image generation result:', result);
+      
+      // Refetch recipes to get the updated images
+      const { items: updatedItems } = await BaseCrudService.getAll<HealthyRecipesandSnacks>('healthyrecipes');
+      setRecipes(updatedItems);
+      setFilteredRecipes(updatedItems);
+    } catch (error) {
+      console.error('Error generating recipe images:', error);
     } finally {
       setIsGeneratingImages(false);
     }
@@ -268,7 +293,7 @@ export default function RecipesPage() {
             )}
             
             {/* Regenerate Images Button */}
-            <div className="mt-6 flex justify-center">
+            <div className="mt-6 flex justify-center gap-3">
               <Button
                 onClick={handleRegenerateImages}
                 disabled={isGeneratingImages}
@@ -283,6 +308,24 @@ export default function RecipesPage() {
                   <>
                     <Sparkles className="w-4 h-4 mr-2" />
                     Бүх жорын зургуудыг дахин үүсгэх
+                  </>
+                )}
+              </Button>
+              
+              <Button
+                onClick={handleGenerateImagesForSpecificRecipes}
+                disabled={isGeneratingImages}
+                className="bg-primary hover:bg-primary/90 text-foreground rounded-xl font-paragraph px-6 py-2"
+              >
+                {isGeneratingImages ? (
+                  <>
+                    <Loader className="w-4 h-4 mr-2 animate-spin" />
+                    Зургуудыг үүсгэж байна...
+                  </>
+                ) : (
+                  <>
+                    <Sparkles className="w-4 h-4 mr-2" />
+                    5 жорын зургуудыг үүсгэх
                   </>
                 )}
               </Button>

@@ -88,3 +88,71 @@ export async function regenerateAllRecipeImages() {
     return { success: false, error: error instanceof Error ? error.message : 'Unknown error' };
   }
 }
+
+/**
+ * Generates images for specific recipes by name
+ * @param recipeNames - Array of recipe names to generate images for
+ */
+export async function generateImagesForSpecificRecipes(recipeNames: string[]) {
+  try {
+    // Fetch all recipes
+    const { items } = await BaseCrudService.getAll<HealthyRecipesandSnacks>('healthyrecipes');
+    
+    // Filter recipes by name
+    const recipesToUpdate = items.filter(recipe => 
+      recipeNames.some(name => 
+        recipe.recipeName?.toLowerCase().includes(name.toLowerCase()) ||
+        name.toLowerCase().includes(recipe.recipeName?.toLowerCase() || '')
+      )
+    );
+
+    if (recipesToUpdate.length === 0) {
+      console.log('No recipes found matching the provided names');
+      return { success: true, updated: 0, message: 'No recipes found matching the provided names' };
+    }
+
+    console.log(`Generating images for ${recipesToUpdate.length} recipes...`);
+    
+    let updated = 0;
+    const errors: string[] = [];
+
+    // Process recipes to generate their images
+    for (const recipe of recipesToUpdate) {
+      try {
+        // Create a detailed prompt based on the recipe name and description
+        const prompt = `A professional food photography of ${recipe.recipeName}. ${recipe.description || ''}. High quality, appetizing, well-lit, on a plate or bowl, restaurant style photography.`;
+        
+        // Generate image URL for the recipe
+        const imageUrl = await generateRecipeImage(prompt, recipe.recipeName || 'dish', recipe._id);
+        
+        if (imageUrl) {
+          // Update the recipe with the generated image
+          await BaseCrudService.update<HealthyRecipesandSnacks>('healthyrecipes', {
+            _id: recipe._id,
+            dishImage: imageUrl,
+          });
+          
+          updated++;
+          console.log(`✓ Generated image for: ${recipe.recipeName}`);
+        }
+      } catch (error) {
+        const errorMsg = `Failed to generate image for ${recipe.recipeName}: ${error instanceof Error ? error.message : 'Unknown error'}`;
+        console.error(errorMsg);
+        errors.push(errorMsg);
+      }
+      
+      // Add a small delay between requests to avoid overwhelming the API
+      await new Promise(resolve => setTimeout(resolve, 500));
+    }
+
+    return {
+      success: errors.length === 0,
+      updated,
+      total: recipesToUpdate.length,
+      errors: errors.length > 0 ? errors : undefined,
+    };
+  } catch (error) {
+    console.error('Error in generateImagesForSpecificRecipes:', error);
+    throw error;
+  }
+}
