@@ -220,7 +220,7 @@ function parseRecipesText(text: string): ParsedRecipe[] {
         recipe.tags = tagsText.split(',').map(t => t.trim()).filter(t => t);
       } else if (trimmed.startsWith('Зургийн сэдэв:')) {
         recipe.imagePrompt = trimmed.replace('Зургийн сэдэв:', '').trim();
-      } else if (trimmed.startsWith('Орцуу:')) {
+      } else if (trimmed.startsWith('Орцууд:')) {
         currentSection = 'ingredients';
       } else if (trimmed.startsWith('Хийх арга:')) {
         currentSection = 'instructions';
@@ -868,13 +868,13 @@ export default function RecipesPage() {
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2 font-heading text-foreground">
                       <Sparkles className="w-5 h-5 text-primary" />
-                      Орцуугаар сүүлжүүлэх
+                      Орц оруулах
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <div className="flex gap-2">
                       <Input
-                        placeholder="Орц оруулах (жишээ: #өндөг, #сүү)..."
+                        placeholder="Орц оруулах (жишээ: #өндөг, #сүү, #авокадо... г.м)"
                         value={ingredientInput}
                         onChange={(e) => setIngredientInput(e.target.value)}
                         onKeyPress={handleKeyPressFilter}
@@ -983,7 +983,7 @@ export default function RecipesPage() {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 font-heading text-foreground">
                     <Sparkles className="w-5 h-5 text-primary" />
-                    Орцуу оруулах
+                    Орцууд оруулах
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
@@ -1068,7 +1068,7 @@ export default function RecipesPage() {
                       {recipes.length} жор үүсгэгдлээ
                     </h2>
                     <p className="text-foreground/60 font-paragraph">
-                      Таны орцуу ашиглан үүсгэсэн эрүүл жорууд
+                      Таны орцууд ашиглан үүсгэсэн эрүүл жорууд
                     </p>
                   </div>
 
