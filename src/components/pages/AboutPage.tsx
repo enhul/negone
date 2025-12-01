@@ -232,7 +232,7 @@ export default function AboutPage() {
                   </p>
                   {member.school && (
                     <p className="text-foreground/70 font-paragraph text-sm">
-                      <strong>Сургууль:</strong> {member.school}
+                      <strong></strong> {member.school}
                     </p>
                   )}
                 </motion.div>
