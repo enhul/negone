@@ -150,9 +150,6 @@ export default function HomePage() {
                   Gmail-ээр нэвтрэх
                 </Button>
               )}
-              <Button asChild variant="outline" size="lg" className="border-primary/50 text-foreground hover:bg-primary/20 rounded-full px-8 py-6 text-lg font-semibold transition-transform duration-300 hover:scale-105">
-                <Link to="/about">Бидний тухай</Link>
-              </Button>
             </motion.div>
           </motion.div>
         </section>
