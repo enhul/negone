@@ -225,7 +225,7 @@ export default function AboutPage() {
                     </div>
                   )}
                   <h3 className="text-2xl font-heading text-foreground mb-2">
-                    Эрдэнэбаяр Эрхцэцэг
+                    {member.name}
                   </h3>
                   <p className="text-primary font-paragraph font-medium mb-3">
                     {member.role}
