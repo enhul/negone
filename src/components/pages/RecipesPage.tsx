@@ -204,16 +204,16 @@ function parseRecipesText(text: string): ParsedRecipe[] {
       } else if (trimmed.startsWith('Тайлбар:')) {
         recipe.description = trimmed.replace('Тайлбар:', '').trim();
       } else if (trimmed.startsWith('Бэлтгэл:')) {
-        const prepMatch = trimmed.match(/Бэлтгэл:\\s*(\d+)/);
+        const prepMatch = trimmed.match(/Бэлтгэл:\\s*(\\d+)/);
         if (prepMatch) recipe.prepTime = parseInt(prepMatch[1]);
       } else if (trimmed.startsWith('Уураг:')) {
-        const proteinMatch = trimmed.match(/Уураг:\\s*(\d+)/);
+        const proteinMatch = trimmed.match(/Уураг:\\s*(\\d+)/);
         if (proteinMatch) recipe.protein = parseInt(proteinMatch[1]);
       } else if (trimmed.startsWith('Нүүрс:')) {
-        const carbsMatch = trimmed.match(/Нүүрс:\\s*(\d+)/);
+        const carbsMatch = trimmed.match(/Нүүрс:\\s*(\\d+)/);
         if (carbsMatch) recipe.carbs = parseInt(carbsMatch[1]);
       } else if (trimmed.startsWith('Өөх:')) {
-        const fatMatch = trimmed.match(/Өөх:\\s*(\d+)/);
+        const fatMatch = trimmed.match(/Өөх:\\s*(\\d+)/);
         if (fatMatch) recipe.fat = parseInt(fatMatch[1]);
       } else if (trimmed.startsWith('Шошго:')) {
         const tagsText = trimmed.replace('Шошго:', '').trim();
@@ -273,7 +273,7 @@ function parseRecipesText(text: string): ParsedRecipe[] {
   return recipes;
 }
 
-  // Recipe Modal Component
+// Recipe Modal Component
 function RecipeModal({ recipe, isOpen, onClose }: RecipeModalProps) {
   if (!isOpen || !recipe) return null;
 
@@ -429,8 +429,8 @@ function RecipeCard({ recipe, onCardClick }: { recipe: ParsedRecipe; onCardClick
       className="cursor-pointer group"
     >
       <div className="bg-white rounded-3xl overflow-hidden shadow-md hover:shadow-lg transition-shadow h-full flex flex-col">
-        {/* Image Container */}
-        <div className="w-full h-48 overflow-hidden bg-gradient-to-br from-primary/5 to-primary/10 rounded-t-3xl">
+        {/* Image Container - Full width with rounded corners */}
+        <div className="w-full h-48 overflow-hidden bg-gradient-to-br from-primary/5 to-primary/10 relative rounded-t-3xl">
           {recipe.image ? (
             <Image
               src={recipe.image}
@@ -536,21 +536,15 @@ function CMSRecipeCard({ recipe, onCardClick }: { recipe: HealthyRecipesandSnack
       className="cursor-pointer group"
     >
       <div className="bg-white rounded-3xl overflow-hidden shadow-md hover:shadow-lg transition-shadow h-full flex flex-col">
-        {/* Image Container */}
+        {/* Image Container - Full width with rounded corners */}
         <div className="w-full h-48 overflow-hidden bg-gradient-to-br from-primary/5 to-primary/10 rounded-t-3xl">
-          {recipe.dishImage ? (
-            <Image
-              src={recipe.dishImage}
-              alt={recipe.recipeName || 'Recipe'}
-              width={400}
-              height={192}
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-            />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center">
-              <Utensils className="w-12 h-12 text-primary/30" />
-            </div>
-          )}
+          <Image
+            src={recipe.dishImage || getFallbackImage(recipe.recipeName, recipe.ingredients)}
+            alt={recipe.recipeName || 'Recipe'}
+            width={400}
+            height={192}
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+          />
         </div>
 
         {/* Content Container */}
@@ -659,22 +653,23 @@ export default function RecipesPage() {
         const { items } = await BaseCrudService.getAll<HealthyRecipesandSnacks>('healthyrecipes');
         setCmsRecipes(items || []);
         
-        // Auto-generate images for all recipes to ensure they have new AI-generated images
-        if (items && items.length > 0) {
+        // Update the image for 'Тахианы Цээж Махтай Салат' if it doesn't have one
+        const chickenSaladRecipe = items?.find(r => r.recipeName === 'Тахианы Цээж Махтай Салат');
+        if (chickenSaladRecipe && !chickenSaladRecipe.dishImage) {
           try {
-            setRegeneratingImages(true);
-            await fetch('/api/regenerate-all-recipe-images', {
+            await fetch('/api/update-recipe-image', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                recipeName: 'Тахианы Цээж Махтай Салат',
+                imageUrl: 'https://static.wixstatic.com/media/906313_57f20b273ddf4c1db8fb23de0bc60050~mv2.png?originWidth=768&originHeight=384'
+              })
             });
-            // Reload recipes to show the newly generated images
+            // Reload recipes to show the updated image
             const { items: updatedItems } = await BaseCrudService.getAll<HealthyRecipesandSnacks>('healthyrecipes');
             setCmsRecipes(updatedItems || []);
-            setSuccessMessage('✓ All recipe images have been generated successfully!');
           } catch (err) {
-            console.error('Failed to auto-generate images:', err);
-          } finally {
-            setRegeneratingImages(false);
+            console.error('Failed to update recipe image:', err);
           }
         }
       } catch (err) {
@@ -774,6 +769,35 @@ export default function RecipesPage() {
 
       const data = await response.json();
       const parsedRecipes = parseRecipesText(data.recipes);
+      
+      // Generate images for recipes with image prompts
+      if (parsedRecipes.length > 0 && parsedRecipes.some(r => r.imagePrompt)) {
+        try {
+          const recipesWithPrompts = parsedRecipes
+            .filter(r => r.imagePrompt)
+            .map(r => ({ recipeName: r.name, imagePrompt: r.imagePrompt! }));
+          
+          const imageResponse = await fetch('/api/generate-recipe-images-ai', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ recipes: recipesWithPrompts }),
+          });
+          
+          if (imageResponse.ok) {
+            const imageData = await imageResponse.json();
+            // Assign generated images to recipes
+            parsedRecipes.forEach(recipe => {
+              if (imageData.images[recipe.name]) {
+                recipe.image = imageData.images[recipe.name];
+              }
+            });
+          }
+        } catch (err) {
+          console.error('Failed to generate images:', err);
+          // Continue without images if generation fails
+        }
+      }
+      
       setRecipes(parsedRecipes);
 
       if (parsedRecipes.length === 0) {
@@ -878,38 +902,6 @@ export default function RecipesPage() {
             </p>
           </div>
 
-          {/* Success/Error Messages */}
-          {successMessage && (
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              className="mb-6"
-            >
-              <Alert className="bg-green-50 border-green-200">
-                <Sparkles className="h-4 w-4 text-green-600" />
-                <AlertDescription className="text-green-800 font-paragraph font-bold">
-                  {successMessage}
-                </AlertDescription>
-              </Alert>
-            </motion.div>
-          )}
-          {error && !successMessage && (
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              className="mb-6"
-            >
-              <Alert className="bg-red-50 border-red-200">
-                <AlertCircle className="h-4 w-4 text-red-600" />
-                <AlertDescription className="text-red-800 font-paragraph">
-                  {error}
-                </AlertDescription>
-              </Alert>
-            </motion.div>
-          )}
-
           {/* Tab Navigation */}
           <div className="flex gap-4 mb-8 justify-center flex-wrap">
             <Button
@@ -939,23 +931,6 @@ export default function RecipesPage() {
             {cmsRecipes.length > 0 && (
               <>
                 <Button
-                  onClick={handleRegenerateAllImages}
-                  disabled={regeneratingImages}
-                  className="rounded-xl font-paragraph bg-primary text-primary-foreground hover:bg-primary/90 font-bold shadow-lg"
-                >
-                  {regeneratingImages ? (
-                    <>
-                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                      Зургийг дахин үүсгэж байна...
-                    </>
-                  ) : (
-                    <>
-                      <Sparkles className="w-4 h-4 mr-2" />
-                      🔄 Бүх зургийг дахин үүсгэх
-                    </>
-                  )}
-                </Button>
-                <Button
                   onClick={handleGenerateMissingImages}
                   disabled={generatingMissingImages || cmsRecipes.every(r => r.dishImage)}
                   variant="outline"
@@ -970,6 +945,24 @@ export default function RecipesPage() {
                     <>
                       <Sparkles className="w-4 h-4 mr-2" />
                       Дутуу зургийг үүсгэх
+                    </>
+                  )}
+                </Button>
+                <Button
+                  onClick={handleRegenerateAllImages}
+                  disabled={regeneratingImages}
+                  variant="outline"
+                  className="rounded-xl font-paragraph border-primary/20 hover:bg-primary/10"
+                >
+                  {regeneratingImages ? (
+                    <>
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      Зургийг дахин үүсгэж байна...
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="w-4 h-4 mr-2" />
+                      Бүх зургийг дахин үүсгэх
                     </>
                   )}
                 </Button>
