@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Calendar, Target, Droplets, Activity, TrendingUp, Plus, MessageSquare } from 'lucide-react';
+import { Calendar, Target, Droplets, Activity, TrendingUp, Plus, MessageSquare, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
@@ -35,6 +35,9 @@ export default function DashboardPage() {
   const [currentWeek, setCurrentWeek] = useState<Date[]>([]);
   const [selectedDay, setSelectedDay] = useState<DailyEntry | null>(null);
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
+  const [currentMonth, setCurrentMonth] = useState<Date>(new Date());
+  const [selectedCalendarDay, setSelectedCalendarDay] = useState<DailyEntry | null>(null);
+  const [selectedCalendarDate, setSelectedCalendarDate] = useState<string | null>(null);
 
   useEffect(() => {
     if (!member?.loginEmail) return;
@@ -107,6 +110,47 @@ export default function DashboardPage() {
     }
   };
 
+  const handleCalendarDayClick = (fullDate: string) => {
+    const entry = dailyEntries.find(e => e.date === fullDate);
+    setSelectedCalendarDay(entry || { date: fullDate, exerciseCompleted: false, waterIntake: 0, mentalNote: '', weight: 0 });
+    setSelectedCalendarDate(fullDate);
+  };
+
+  const getDaysInMonth = (date: Date) => {
+    return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
+  };
+
+  const getFirstDayOfMonth = (date: Date) => {
+    return new Date(date.getFullYear(), date.getMonth(), 1).getDay();
+  };
+
+  const getCalendarDays = () => {
+    const daysInMonth = getDaysInMonth(currentMonth);
+    const firstDay = getFirstDayOfMonth(currentMonth);
+    const days = [];
+
+    // Add empty cells for days before month starts
+    for (let i = 0; i < firstDay; i++) {
+      days.push(null);
+    }
+
+    // Add days of the month
+    for (let i = 1; i <= daysInMonth; i++) {
+      const date = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), i);
+      days.push(date);
+    }
+
+    return days;
+  };
+
+  const previousMonth = () => {
+    setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1));
+  };
+
+  const nextMonth = () => {
+    setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1));
+  };
+
   const todayEntry = getTodayEntry();
   const { exerciseCount, avgWater, targetExerciseDays } = getWeeklyProgress();
   const weightData = getWeightData();
@@ -154,6 +198,158 @@ export default function DashboardPage() {
               Сайн байна уу, {member?.profile?.nickname || member?.contact?.firstName}! Өнөөдрийн ахиц дэвшлээ харцгаая
             </p>
           </div>
+
+          {/* Calendar Table */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="mb-8"
+          >
+            <Card className="bg-white/70 backdrop-blur-sm border-primary/20 shadow-lg">
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <CardTitle className="flex items-center gap-2 text-2xl font-heading text-foreground">
+                    <Calendar className="w-6 h-6 text-primary" />
+                    Сарын календарь
+                  </CardTitle>
+                  <div className="flex gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={previousMonth}
+                      className="rounded-lg border-primary/20 hover:bg-primary/10"
+                    >
+                      <ChevronLeft className="w-4 h-4" />
+                    </Button>
+                    <div className="px-4 py-2 text-sm font-heading text-foreground min-w-[150px] text-center">
+                      {currentMonth.toLocaleDateString('mn-MN', { month: 'long', year: 'numeric' })}
+                    </div>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={nextMonth}
+                      className="rounded-lg border-primary/20 hover:bg-primary/10"
+                    >
+                      <ChevronRight className="w-4 h-4" />
+                    </Button>
+                  </div>
+                </div>
+                <p className="text-sm font-paragraph text-foreground/60 mt-2">Өдрийг дарж дэлгэрэнгүй мэдээлэл үзээрэй</p>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {/* Weekday Headers */}
+                  <div className="grid grid-cols-7 gap-2 mb-2">
+                    {['Дав', 'Мяг', 'Лхг', 'Пүр', 'Баа', 'Бүм', 'Ням'].map((day) => (
+                      <div key={day} className="text-center font-heading text-sm text-foreground/60 py-2">
+                        {day}
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Calendar Grid */}
+                  <div className="grid grid-cols-7 gap-2">
+                    {getCalendarDays().map((date, index) => {
+                      if (!date) {
+                        return <div key={`empty-${index}`} className="aspect-square" />;
+                      }
+
+                      const dateStr = date.toISOString().split('T')[0];
+                      const entry = dailyEntries.find(e => e.date === dateStr);
+                      const isToday = dateStr === new Date().toISOString().split('T')[0];
+                      const isCurrentMonth = date.getMonth() === currentMonth.getMonth();
+
+                      // Calculate completion percentage
+                      let completionPercentage = 0;
+                      if (entry) {
+                        let completed = 0;
+                        if (entry.exerciseCompleted) completed++;
+                        if (entry.waterIntake >= (profile.dailyWater || 2000) * 0.8) completed++;
+                        if (entry.weight > 0) completed++;
+                        if (entry.mentalNote) completed++;
+                        completionPercentage = (completed / 4) * 100;
+                      }
+
+                      return (
+                        <motion.button
+                          key={dateStr}
+                          onClick={() => handleCalendarDayClick(dateStr)}
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                          className={`aspect-square rounded-lg border-2 p-2 transition-all flex flex-col items-center justify-center relative overflow-hidden ${
+                            !isCurrentMonth
+                              ? 'bg-gray-50 border-gray-200 opacity-40 cursor-default'
+                              : isToday
+                              ? 'bg-primary/20 border-primary/50 shadow-md'
+                              : entry
+                              ? 'bg-white border-primary/30 shadow-sm hover:shadow-md'
+                              : 'bg-white border-gray-200 hover:border-primary/30'
+                          }`}
+                          disabled={!isCurrentMonth}
+                        >
+                          {/* Background progress indicator */}
+                          {entry && completionPercentage > 0 && (
+                            <div
+                              className="absolute inset-0 bg-primary/10 transition-all"
+                              style={{ height: `${completionPercentage}%`, bottom: 0 }}
+                            />
+                          )}
+
+                          {/* Content */}
+                          <div className="relative z-10 text-center w-full">
+                            <div className={`text-sm font-heading ${
+                              isToday ? 'text-primary font-bold' : 'text-foreground'
+                            }`}>
+                              {date.getDate()}
+                            </div>
+                            {entry && (
+                              <div className="flex gap-0.5 justify-center mt-1">
+                                <div className={`w-1.5 h-1.5 rounded-full ${
+                                  entry.exerciseCompleted ? 'bg-soft-light-green' : 'bg-gray-300'
+                                }`} />
+                                <div className={`w-1.5 h-1.5 rounded-full ${
+                                  entry.waterIntake >= (profile.dailyWater || 2000) * 0.8 ? 'bg-blue-500' : 'bg-gray-300'
+                                }`} />
+                                <div className={`w-1.5 h-1.5 rounded-full ${
+                                  entry.weight > 0 ? 'bg-secondary' : 'bg-gray-300'
+                                }`} />
+                                <div className={`w-1.5 h-1.5 rounded-full ${
+                                  entry.mentalNote ? 'bg-primary' : 'bg-gray-300'
+                                }`} />
+                              </div>
+                            )}
+                          </div>
+                        </motion.button>
+                      );
+                    })}
+                  </div>
+
+                  {/* Legend */}
+                  <div className="mt-6 pt-4 border-t border-gray-200">
+                    <div className="text-xs font-paragraph text-foreground/60 space-y-1">
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full bg-soft-light-green"></div>
+                        <span>Дасгал хийсэн</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full bg-blue-500"></div>
+                        <span>Ус хангалттай</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full bg-secondary"></div>
+                        <span>Жин бүртгэсэн</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full bg-primary"></div>
+                        <span>Тэмдэглэл бичсэн</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
 
           {/* Quick Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
@@ -405,6 +601,97 @@ export default function DashboardPage() {
               </Card>
             </div>
           </div>
+
+          {/* Calendar Day Details Modal */}
+          <Dialog open={!!selectedCalendarDay && !!selectedCalendarDate} onOpenChange={(open) => {
+            if (!open) {
+              setSelectedCalendarDay(null);
+              setSelectedCalendarDate(null);
+            }
+          }}>
+            <DialogContent className="max-w-md">
+              <DialogHeader>
+                <DialogTitle className="text-2xl font-heading text-foreground">
+                  {selectedCalendarDate && new Date(selectedCalendarDate).toLocaleDateString('mn-MN', { 
+                    weekday: 'long', 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                  })}
+                </DialogTitle>
+              </DialogHeader>
+              
+              {selectedCalendarDay && (
+                <div className="space-y-4">
+                  {/* Exercise Status */}
+                  <div className="bg-soft-light-green/10 rounded-xl p-4 border border-soft-light-green/20">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Activity className="w-5 h-5 text-soft-light-green" />
+                      <h3 className="font-heading text-foreground">Дасгал</h3>
+                    </div>
+                    <p className={`font-paragraph text-sm ${
+                      selectedCalendarDay.exerciseCompleted 
+                        ? 'text-soft-light-green font-medium' 
+                        : 'text-foreground/60'
+                    }`}>
+                      {selectedCalendarDay.exerciseCompleted ? '✓ Хийсэн' : '✗ Хийгээгүй'}
+                    </p>
+                  </div>
+
+                  {/* Water Intake */}
+                  <div className="bg-blue-500/10 rounded-xl p-4 border border-blue-500/20">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Droplets className="w-5 h-5 text-blue-500" />
+                      <h3 className="font-heading text-foreground">Усны хэрэглээ</h3>
+                    </div>
+                    <div className="space-y-2">
+                      <p className="font-heading text-lg text-blue-500">
+                        {selectedCalendarDay.waterIntake}мл
+                      </p>
+                      <Progress 
+                        value={Math.min(100, (selectedCalendarDay.waterIntake / (profile.dailyWater || 2000)) * 100)} 
+                        className="h-2"
+                      />
+                      <p className="font-paragraph text-xs text-foreground/60">
+                        Зорилго: {profile.dailyWater || 2000}мл
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Weight */}
+                  {selectedCalendarDay.weight > 0 && (
+                    <div className="bg-secondary/10 rounded-xl p-4 border border-secondary/20">
+                      <h3 className="font-heading text-foreground mb-2">Жин</h3>
+                      <p className="font-heading text-lg text-secondary">
+                        {selectedCalendarDay.weight}кг
+                      </p>
+                    </div>
+                  )}
+
+                  {/* Mental Note */}
+                  {selectedCalendarDay.mentalNote && (
+                    <div className="bg-primary/10 rounded-xl p-4 border border-primary/20">
+                      <div className="flex items-center gap-2 mb-2">
+                        <MessageSquare className="w-5 h-5 text-primary" />
+                        <h3 className="font-heading text-foreground">Сэтгэлзүйн тэмдэглэл</h3>
+                      </div>
+                      <p className="font-paragraph text-sm text-foreground/80">
+                        {selectedCalendarDay.mentalNote}
+                      </p>
+                    </div>
+                  )}
+
+                  {!selectedCalendarDay.mentalNote && !selectedCalendarDay.weight && selectedCalendarDay.waterIntake === 0 && !selectedCalendarDay.exerciseCompleted && (
+                    <div className="text-center py-6">
+                      <p className="font-paragraph text-foreground/60">
+                        Энэ өдрийн мэдээлэл бүртгэгдээгүй байна
+                      </p>
+                    </div>
+                  )}
+                </div>
+              )}
+            </DialogContent>
+          </Dialog>
 
           {/* Day Details Modal */}
           <Dialog open={!!selectedDay} onOpenChange={(open) => {
