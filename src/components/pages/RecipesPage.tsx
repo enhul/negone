@@ -641,6 +641,7 @@ export default function RecipesPage() {
   const [filterIngredients, setFilterIngredients] = useState<string[]>([]);
   const [selectedRecipe, setSelectedRecipe] = useState<ParsedRecipe | HealthyRecipesandSnacks | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [regeneratingImages, setRegeneratingImages] = useState(false);
 
   // Load recipes from CMS on component mount
   useEffect(() => {
@@ -807,6 +808,40 @@ export default function RecipesPage() {
     }
   };
 
+  const handleRegenerateAllImages = async () => {
+    if (cmsRecipes.length === 0) {
+      setError('Жор байхгүй байна');
+      return;
+    }
+
+    setRegeneratingImages(true);
+    setError('');
+
+    try {
+      const response = await fetch('/api/regenerate-all-recipe-images', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.message || 'Зургийг дахин үүсгэхэд алдаа гарлаа');
+      }
+
+      const data = await response.json();
+      
+      // Reload recipes to show updated images
+      const { items } = await BaseCrudService.getAll<HealthyRecipesandSnacks>('healthyrecipes');
+      setCmsRecipes(items || []);
+      
+      setError('');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Уучлаарай, алдаа гарлаа');
+    } finally {
+      setRegeneratingImages(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -826,7 +861,7 @@ export default function RecipesPage() {
           </div>
 
           {/* Tab Navigation */}
-          <div className="flex gap-4 mb-8 justify-center">
+          <div className="flex gap-4 mb-8 justify-center flex-wrap">
             <Button
               onClick={() => setActiveTab('browse')}
               variant={activeTab === 'browse' ? 'default' : 'outline'}
@@ -851,6 +886,26 @@ export default function RecipesPage() {
               <Sparkles className="w-4 h-4 mr-2" />
               AI-ээр үүсгэх
             </Button>
+            {cmsRecipes.length > 0 && (
+              <Button
+                onClick={handleRegenerateAllImages}
+                disabled={regeneratingImages}
+                variant="outline"
+                className="rounded-xl font-paragraph border-primary/20 hover:bg-primary/10"
+              >
+                {regeneratingImages ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Зургийг дахин үүсгэж байна...
+                  </>
+                ) : (
+                  <>
+                    <Sparkles className="w-4 h-4 mr-2" />
+                    Бүх зургийг дахин үүсгэх
+                  </>
+                )}
+              </Button>
+            )}
           </div>
 
           {/* Browse Recipes Tab */}
