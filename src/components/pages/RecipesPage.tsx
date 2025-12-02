@@ -929,44 +929,24 @@ export default function RecipesPage() {
               AI-ээр үүсгэх
             </Button>
             {cmsRecipes.length > 0 && (
-              <>
-                <Button
-                  onClick={handleGenerateMissingImages}
-                  disabled={generatingMissingImages || cmsRecipes.every(r => r.dishImage)}
-                  variant="outline"
-                  className="rounded-xl font-paragraph border-primary/20 hover:bg-primary/10"
-                >
-                  {generatingMissingImages ? (
-                    <>
-                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                      Зургийг үүсгэж байна...
-                    </>
-                  ) : (
-                    <>
-                      <Sparkles className="w-4 h-4 mr-2" />
-                      Дутуу зургийг үүсгэх
-                    </>
-                  )}
-                </Button>
-                <Button
-                  onClick={handleRegenerateAllImages}
-                  disabled={regeneratingImages}
-                  variant="outline"
-                  className="rounded-xl font-paragraph border-primary/20 hover:bg-primary/10"
-                >
-                  {regeneratingImages ? (
-                    <>
-                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                      Зургийг дахин үүсгэж байна...
-                    </>
-                  ) : (
-                    <>
-                      <Sparkles className="w-4 h-4 mr-2" />
-                      Бүх зургийг дахин үүсгэх
-                    </>
-                  )}
-                </Button>
-              </>
+              <Button
+                onClick={handleGenerateMissingImages}
+                disabled={generatingMissingImages || cmsRecipes.every(r => r.dishImage)}
+                variant="outline"
+                className="rounded-xl font-paragraph border-primary/20 hover:bg-primary/10"
+              >
+                {generatingMissingImages ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Зургийг үүсгэж байна...
+                  </>
+                ) : (
+                  <>
+                    <Sparkles className="w-4 h-4 mr-2" />
+                    Дутуу зургийг үүсгэх
+                  </>
+                )}
+              </Button>
             )}
           </div>
 
