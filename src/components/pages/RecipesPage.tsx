@@ -218,62 +218,15 @@ function generateMacros(caloriesPerServing: number): { protein: number; carbs: n
 }
 
 // Estimate realistic prep and cook times based on recipe type and ingredients
+// All times are between 5-25 minutes total
 function estimateCookingTimes(recipeName: string, ingredients: string): { prepTime: number; cookTime: number } {
   const searchText = `${recipeName} ${ingredients}`.toLowerCase();
+  
+  // EASY RECIPES (5-7 minutes total)
   
   // Drinks & Smoothies - minimal prep, no cooking
   if (searchText.includes('смүүси') || searchText.includes('жүүс') || searchText.includes('цай')) {
     return { prepTime: 5, cookTime: 0 };
-  }
-  
-  // Salads - prep only, no cooking
-  if (searchText.includes('салат') || searchText.includes('цөцгий')) {
-    return { prepTime: 10, cookTime: 0 };
-  }
-  
-  // Soups - longer cooking time
-  if (searchText.includes('шөл') || searchText.includes('нэрс')) {
-    return { prepTime: 10, cookTime: 30 };
-  }
-  
-  // Eggs - quick prep and cooking
-  if (searchText.includes('өндөг') && !searchText.includes('шөл')) {
-    return { prepTime: 5, cookTime: 10 };
-  }
-  
-  // Fish - moderate prep and cooking
-  if (searchText.includes('загас')) {
-    return { prepTime: 15, cookTime: 20 };
-  }
-  
-  // Chicken - moderate prep and cooking
-  if (searchText.includes('цыпилон') || (searchText.includes('мах') && searchText.includes('цыпилон'))) {
-    return { prepTime: 15, cookTime: 25 };
-  }
-  
-  // Meat dishes - longer cooking
-  if (searchText.includes('мах') && !searchText.includes('салат')) {
-    return { prepTime: 15, cookTime: 30 };
-  }
-  
-  // Rice/Grain dishes - moderate cooking
-  if (searchText.includes('будаа') || searchText.includes('гарнир')) {
-    return { prepTime: 10, cookTime: 20 };
-  }
-  
-  // Pasta - moderate cooking
-  if (searchText.includes('макарон')) {
-    return { prepTime: 10, cookTime: 15 };
-  }
-  
-  // Bread - longer cooking
-  if (searchText.includes('талх')) {
-    return { prepTime: 20, cookTime: 40 };
-  }
-  
-  // Vegetables - moderate prep and cooking
-  if (searchText.includes('төмс') || searchText.includes('сонгино') || searchText.includes('томат')) {
-    return { prepTime: 10, cookTime: 20 };
   }
   
   // Fruits - minimal prep, no cooking
@@ -286,8 +239,62 @@ function estimateCookingTimes(recipeName: string, ingredients: string): { prepTi
     return { prepTime: 5, cookTime: 0 };
   }
   
-  // Default estimate for unknown recipes
-  return { prepTime: 15, cookTime: 20 };
+  // Salads - prep only, no cooking (easy)
+  if (searchText.includes('салат') || searchText.includes('цөцгий')) {
+    return { prepTime: 7, cookTime: 0 };
+  }
+  
+  // MODERATE RECIPES (10-15 minutes total)
+  
+  // Eggs - quick prep and cooking
+  if (searchText.includes('өндөг') && !searchText.includes('шөл')) {
+    return { prepTime: 5, cookTime: 10 };
+  }
+  
+  // Pasta - moderate cooking
+  if (searchText.includes('макарон')) {
+    return { prepTime: 5, cookTime: 10 };
+  }
+  
+  // Rice/Grain dishes - moderate cooking
+  if (searchText.includes('будаа') || searchText.includes('гарнир')) {
+    return { prepTime: 5, cookTime: 10 };
+  }
+  
+  // COMPLEX RECIPES (20-25 minutes total)
+  
+  // Soups - longer cooking time
+  if (searchText.includes('шөл') || searchText.includes('нэрс')) {
+    return { prepTime: 5, cookTime: 20 };
+  }
+  
+  // Fish - moderate prep and cooking
+  if (searchText.includes('загас')) {
+    return { prepTime: 5, cookTime: 20 };
+  }
+  
+  // Chicken - moderate prep and cooking
+  if (searchText.includes('цыпилон') || (searchText.includes('мах') && searchText.includes('цыпилон'))) {
+    return { prepTime: 5, cookTime: 20 };
+  }
+  
+  // Meat dishes - longer cooking
+  if (searchText.includes('мах') && !searchText.includes('салат')) {
+    return { prepTime: 5, cookTime: 20 };
+  }
+  
+  // Vegetables - moderate prep and cooking
+  if (searchText.includes('төмс') || searchText.includes('сонгино') || searchText.includes('томат')) {
+    return { prepTime: 5, cookTime: 15 };
+  }
+  
+  // Bread - longer cooking
+  if (searchText.includes('талх')) {
+    return { prepTime: 5, cookTime: 20 };
+  }
+  
+  // Default estimate for unknown recipes (moderate complexity)
+  return { prepTime: 5, cookTime: 10 };
 }
 
 function parseRecipesText(text: string): ParsedRecipe[] {
