@@ -151,6 +151,47 @@ function correctIngredient(ingredient: string): string {
   return INGREDIENT_CORRECTIONS[lower] || ingredient;
 }
 
+// Determine meal type/health goal tag based on recipe name and ingredients
+function getMealTypeTag(recipeName: string, ingredients: string): string {
+  const searchText = `${recipeName} ${ingredients}`.toLowerCase();
+  
+  // Breakfast indicators
+  if (searchText.includes('өглөө') || searchText.includes('цай') || 
+      (searchText.includes('өндөг') && !searchText.includes('үдийн')) ||
+      searchText.includes('үр') || searchText.includes('гарнир')) {
+    return 'Өглөөний цай';
+  }
+  
+  // Lunch indicators
+  if (searchText.includes('үдийн') || searchText.includes('үдээс') ||
+      searchText.includes('шөл') || searchText.includes('нэрс') ||
+      (searchText.includes('мах') && searchText.includes('шөл'))) {
+    return 'Үдийн хоол';
+  }
+  
+  // Weight loss indicators
+  if (searchText.includes('жин хасах') || searchText.includes('диет') ||
+      searchText.includes('салат') || searchText.includes('цөцгий') ||
+      (searchText.includes('авокадо') && searchText.includes('салат'))) {
+    return 'Жин хасах';
+  }
+  
+  // Healthy food indicators
+  if (searchText.includes('эрүүл') || searchText.includes('органик') ||
+      searchText.includes('жимс') || searchText.includes('ногоо')) {
+    return 'Эрүүл хоол';
+  }
+  
+  // Drink indicators
+  if (searchText.includes('смүүси') || searchText.includes('жүүс') ||
+      searchText.includes('уух')) {
+    return 'Уух';
+  }
+  
+  // Default to healthy food
+  return 'Эрүүл хоол';
+}
+
 function generateHealthyTags(recipeName: string, ingredients: string[]): string[] {
   const tags: string[] = [];
   const nameAndIngredients = `${recipeName} ${ingredients.join(' ')}`.toLowerCase();
@@ -593,7 +634,7 @@ function CMSRecipeCard({ recipe, onCardClick }: { recipe: HealthyRecipesandSnack
             
             {/* Tag - Thin red border */}
             <div className="border border-destructive text-destructive rounded-full px-3 py-1 text-xs font-paragraph">
-              Үдийн хоол
+              {getMealTypeTag(recipe.recipeName || '', recipe.ingredients || '')}
             </div>
           </div>
 
