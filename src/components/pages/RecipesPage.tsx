@@ -878,6 +878,38 @@ export default function RecipesPage() {
             </p>
           </div>
 
+          {/* Success/Error Messages */}
+          {successMessage && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              className="mb-6"
+            >
+              <Alert className="bg-green-50 border-green-200">
+                <Sparkles className="h-4 w-4 text-green-600" />
+                <AlertDescription className="text-green-800 font-paragraph font-bold">
+                  {successMessage}
+                </AlertDescription>
+              </Alert>
+            </motion.div>
+          )}
+          {error && !successMessage && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              className="mb-6"
+            >
+              <Alert className="bg-red-50 border-red-200">
+                <AlertCircle className="h-4 w-4 text-red-600" />
+                <AlertDescription className="text-red-800 font-paragraph">
+                  {error}
+                </AlertDescription>
+              </Alert>
+            </motion.div>
+          )}
+
           {/* Tab Navigation */}
           <div className="flex gap-4 mb-8 justify-center flex-wrap">
             <Button
@@ -907,6 +939,23 @@ export default function RecipesPage() {
             {cmsRecipes.length > 0 && (
               <>
                 <Button
+                  onClick={handleRegenerateAllImages}
+                  disabled={regeneratingImages}
+                  className="rounded-xl font-paragraph bg-primary text-primary-foreground hover:bg-primary/90 font-bold shadow-lg"
+                >
+                  {regeneratingImages ? (
+                    <>
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      Зургийг дахин үүсгэж байна...
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="w-4 h-4 mr-2" />
+                      🔄 Бүх зургийг дахин үүсгэх
+                    </>
+                  )}
+                </Button>
+                <Button
                   onClick={handleGenerateMissingImages}
                   disabled={generatingMissingImages || cmsRecipes.every(r => r.dishImage)}
                   variant="outline"
@@ -921,24 +970,6 @@ export default function RecipesPage() {
                     <>
                       <Sparkles className="w-4 h-4 mr-2" />
                       Дутуу зургийг үүсгэх
-                    </>
-                  )}
-                </Button>
-                <Button
-                  onClick={handleRegenerateAllImages}
-                  disabled={regeneratingImages}
-                  variant="outline"
-                  className="rounded-xl font-paragraph border-primary/20 hover:bg-primary/10"
-                >
-                  {regeneratingImages ? (
-                    <>
-                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                      Зургийг дахин үүсгэж байна...
-                    </>
-                  ) : (
-                    <>
-                      <Sparkles className="w-4 h-4 mr-2" />
-                      Бүх зургийг дахин үүсгэх
                     </>
                   )}
                 </Button>
