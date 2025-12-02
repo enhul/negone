@@ -7,7 +7,7 @@ import { Progress } from '@/components/ui/progress';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Calendar, Target, Droplets, Activity, TrendingUp, Plus, MessageSquare } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
 
 interface DailyEntry {
   date: string;
@@ -100,6 +100,23 @@ export default function DashboardPage() {
       }));
   };
 
+  const getCompactStatsData = () => {
+    const weekEntries = currentWeek.map(date => {
+      const dateStr = date.toISOString().split('T')[0];
+      return dailyEntries.find(entry => entry.date === dateStr);
+    });
+
+    return currentWeek.map((date, index) => {
+      const entry = weekEntries[index];
+      return {
+        day: date.toLocaleDateString('mn-MN', { weekday: 'short' }),
+        exercise: entry?.exerciseCompleted ? 1 : 0,
+        water: entry?.waterIntake ? Math.min(100, (entry.waterIntake / (profile.dailyWater || 2000)) * 100) : 0,
+        notes: entry?.mentalNote ? 1 : 0
+      };
+    });
+  };
+
   const handleDayClick = (fullDate: string) => {
     const entry = dailyEntries.find(e => e.date === fullDate);
     if (entry) {
@@ -111,6 +128,7 @@ export default function DashboardPage() {
   const todayEntry = getTodayEntry();
   const { exerciseCount, avgWater, targetExerciseDays } = getWeeklyProgress();
   const weightData = getWeightData();
+  const compactStatsData = getCompactStatsData();
 
   if (!profile.height || !profile.weight) {
     return (
@@ -250,7 +268,90 @@ export default function DashboardPage() {
                 </CardContent>
               </Card>
 
-              {/* Weight Progress Chart */}
+              {/* Compact Statistics Chart */}
+              <Card className="bg-white/70 backdrop-blur-sm border-soft-light-green/30 shadow-lg">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2 text-xl font-heading text-foreground">
+                    <TrendingUp className="w-5 h-5 text-soft-light-green" />
+                    Долоо хоногийн статистик
+                  </CardTitle>
+                  <p className="text-sm font-paragraph text-foreground/60 mt-2">Гүйцэтгэлийн хэмжээ</p>
+                </CardHeader>
+                <CardContent>
+                  <div className="h-40">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <BarChart data={compactStatsData}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="#FCE4EC" vertical={false} />
+                        <XAxis 
+                          dataKey="day" 
+                          stroke="#424242"
+                          fontSize={11}
+                          tick={{ fill: '#666' }}
+                        />
+                        <YAxis 
+                          stroke="#424242"
+                          fontSize={11}
+                          domain={[0, 100]}
+                          hide={true}
+                        />
+                        <Tooltip 
+                          contentStyle={{
+                            backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                            border: '1px solid #FCE4EC',
+                            borderRadius: '8px',
+                            fontSize: '12px',
+                            padding: '8px'
+                          }}
+                          formatter={(value: number) => {
+                            if (value === 1) return 'Хийсэн';
+                            if (value === 0) return 'Хийгээгүй';
+                            return `${Math.round(value)}%`;
+                          }}
+                        />
+                        <Bar 
+                          dataKey="exercise" 
+                          fill="#dfb8e9" 
+                          radius={[4, 4, 0, 0]}
+                          name="Дасгал"
+                          maxBarSize={20}
+                        />
+                        <Bar 
+                          dataKey="water" 
+                          fill="#60a5fa" 
+                          radius={[4, 4, 0, 0]}
+                          name="Ус"
+                          maxBarSize={20}
+                        />
+                        <Bar 
+                          dataKey="notes" 
+                          fill="#f592ab" 
+                          radius={[4, 4, 0, 0]}
+                          name="Тэмдэглэл"
+                          maxBarSize={20}
+                        />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </div>
+                  
+                  {/* Legend */}
+                  <div className="mt-4 pt-3 border-t border-gray-200">
+                    <div className="grid grid-cols-3 gap-2 text-xs font-paragraph text-foreground/60">
+                      <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 rounded-sm bg-soft-light-green"></div>
+                        <span>Дасгал</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 rounded-sm bg-blue-400"></div>
+                        <span>Ус</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 rounded-sm bg-secondary"></div>
+                        <span>Тэмдэглэл</span>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
               {weightData.length > 0 && (
                 <Card className="bg-white/70 backdrop-blur-sm border-secondary/20 shadow-lg">
                   <CardHeader>
