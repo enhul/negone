@@ -7,7 +7,7 @@ import { Progress } from '@/components/ui/progress';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Calendar, Target, Droplets, Activity, TrendingUp, Plus, MessageSquare } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell } from 'recharts';
 
 interface DailyEntry {
   date: string;
@@ -117,6 +117,21 @@ export default function DashboardPage() {
     });
   };
 
+  const getGoalCompletionData = () => {
+    const weekEntries = currentWeek.map(date => {
+      const dateStr = date.toISOString().split('T')[0];
+      return dailyEntries.find(entry => entry.date === dateStr);
+    });
+
+    const exerciseCompleted = weekEntries.filter(entry => entry?.exerciseCompleted).length;
+    const exerciseNotCompleted = 7 - exerciseCompleted;
+
+    return [
+      { name: 'Хийсэн', value: exerciseCompleted, color: '#dfb8e9' },
+      { name: 'Хийгээгүй', value: exerciseNotCompleted, color: '#e5e7eb' }
+    ];
+  };
+
   const handleDayClick = (fullDate: string) => {
     const entry = dailyEntries.find(e => e.date === fullDate);
     if (entry) {
@@ -129,6 +144,7 @@ export default function DashboardPage() {
   const { exerciseCount, avgWater, targetExerciseDays } = getWeeklyProgress();
   const weightData = getWeightData();
   const compactStatsData = getCompactStatsData();
+  const goalCompletionData = getGoalCompletionData();
 
   if (!profile.height || !profile.weight) {
     return (
@@ -407,6 +423,70 @@ export default function DashboardPage() {
                   </CardContent>
                 </Card>
               )}
+
+              {/* Exercise Goal Completion Pie Chart */}
+              <Card className="bg-white/70 backdrop-blur-sm border-primary/20 shadow-lg">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2 text-2xl font-heading text-foreground">
+                    <Target className="w-6 h-6 text-primary" />
+                    Долоо хоногийн дасгалын зорилго
+                  </CardTitle>
+                  <p className="text-sm font-paragraph text-foreground/60 mt-2">Дасгалын гүйцэтгэлийн хувь</p>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex items-center justify-center h-64">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <PieChart>
+                        <Pie
+                          data={goalCompletionData}
+                          cx="50%"
+                          cy="50%"
+                          innerRadius={60}
+                          outerRadius={100}
+                          paddingAngle={2}
+                          dataKey="value"
+                        >
+                          {goalCompletionData.map((entry, index) => (
+                            <Cell key={`cell-${index}`} fill={entry.color} />
+                          ))}
+                        </Pie>
+                        <Tooltip 
+                          contentStyle={{
+                            backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                            border: '1px solid #FCE4EC',
+                            borderRadius: '8px',
+                            fontSize: '12px',
+                            padding: '8px'
+                          }}
+                          formatter={(value: number) => `${value} өдөр`}
+                        />
+                      </PieChart>
+                    </ResponsiveContainer>
+                  </div>
+                  
+                  {/* Stats Below Pie Chart */}
+                  <div className="mt-6 pt-4 border-t border-gray-200 grid grid-cols-2 gap-4\">
+                    <div className="text-center">
+                      <div className="text-2xl font-heading text-soft-light-green mb-1\">
+                        {exerciseCount}
+                      </div>
+                      <div className="text-sm font-paragraph text-foreground/80\">Хийсэн өдөр</div>
+                      <div className="text-xs font-paragraph text-foreground/60\">
+                        {Math.round((exerciseCount / 7) * 100)}%
+                      </div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-2xl font-heading text-gray-400 mb-1\">
+                        {7 - exerciseCount}
+                      </div>
+                      <div className="text-sm font-paragraph text-foreground/80\">Хийгээгүй өдөр</div>
+                      <div className="text-xs font-paragraph text-foreground/60\">
+                        {Math.round(((7 - exerciseCount) / 7) * 100)}%
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
             </div>
 
             {/* Weekly Calendar */}
