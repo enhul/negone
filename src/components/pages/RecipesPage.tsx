@@ -774,6 +774,7 @@ export default function RecipesPage() {
   const [regeneratingImages, setRegeneratingImages] = useState(false);
   const [generatingMissingImages, setGeneratingMissingImages] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
+  const [improvingInstructions, setImprovingInstructions] = useState(false);
 
   // Load recipes from CMS on component mount
   useEffect(() => {
@@ -1014,6 +1015,43 @@ export default function RecipesPage() {
     }
   };
 
+  const handleImproveRecipeInstructions = async () => {
+    if (cmsRecipes.length === 0) {
+      setError('Жор байхгүй байна');
+      return;
+    }
+
+    setImprovingInstructions(true);
+    setError('');
+    setSuccessMessage('');
+
+    try {
+      const response = await fetch('/api/improve-recipe-instructions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.message || 'Жорын заавар сайжруулахад алдаа гарлаа');
+      }
+
+      const data = await response.json();
+      
+      // Reload recipes to show updated instructions
+      const { items } = await BaseCrudService.getAll<HealthyRecipesandSnacks>('healthyrecipes');
+      setCmsRecipes(items || []);
+      
+      // Show success message
+      setSuccessMessage(data.message || `${data.updatedCount} жорын заавар сайжруулагдлаа`);
+      setError('');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Уучлаарай, алдаа гарлаа');
+    } finally {
+      setImprovingInstructions(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -1058,7 +1096,23 @@ export default function RecipesPage() {
               <Sparkles className="w-4 h-4 mr-2" />
               AI-ээр үүсгэх
             </Button>
-{/* ... keep existing code (removed "Generate Missing Images" button) ... */}
+            <Button
+              onClick={handleImproveRecipeInstructions}
+              disabled={cmsRecipes.length === 0 || improvingInstructions}
+              className="rounded-xl font-paragraph bg-secondary text-secondary-foreground hover:bg-secondary/90"
+            >
+              {improvingInstructions ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Сайжруулж байна...
+                </>
+              ) : (
+                <>
+                  <Zap className="w-4 h-4 mr-2" />
+                  Заавар сайжруулах
+                </>
+              )}
+            </Button>
           </div>
 
           {/* Browse Recipes Tab */}
