@@ -773,8 +773,8 @@ export default function RecipesPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [regeneratingImages, setRegeneratingImages] = useState(false);
   const [generatingMissingImages, setGeneratingMissingImages] = useState(false);
-  const [successMessage, setSuccessMessage] = useState('');
   const [improvingInstructions, setImprovingInstructions] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
 
   // Load recipes from CMS on component mount
   useEffect(() => {
@@ -1095,23 +1095,6 @@ export default function RecipesPage() {
             >
               <Sparkles className="w-4 h-4 mr-2" />
               AI-ээр үүсгэх
-            </Button>
-            <Button
-              onClick={handleImproveRecipeInstructions}
-              disabled={cmsRecipes.length === 0 || improvingInstructions}
-              className="rounded-xl font-paragraph bg-secondary text-secondary-foreground hover:bg-secondary/90"
-            >
-              {improvingInstructions ? (
-                <>
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  Сайжруулж байна...
-                </>
-              ) : (
-                <>
-                  <Zap className="w-4 h-4 mr-2" />
-                  Заавар сайжруулах
-                </>
-              )}
             </Button>
           </div>
 
