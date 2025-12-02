@@ -6,7 +6,6 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Utensils, Sparkles, X, Loader2, AlertCircle, Flame, Clock, Zap } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Image } from '@/components/ui/image';
 import { BaseCrudService } from '@/integrations';
 import { HealthyRecipesandSnacks } from '@/entities';
 
@@ -204,16 +203,16 @@ function parseRecipesText(text: string): ParsedRecipe[] {
       } else if (trimmed.startsWith('Тайлбар:')) {
         recipe.description = trimmed.replace('Тайлбар:', '').trim();
       } else if (trimmed.startsWith('Бэлтгэл:')) {
-        const prepMatch = trimmed.match(/Бэлтгэл:\\s*(\\d+)/);
+        const prepMatch = trimmed.match(/Бэлтгэл:\\s*(\d+)/);
         if (prepMatch) recipe.prepTime = parseInt(prepMatch[1]);
       } else if (trimmed.startsWith('Уураг:')) {
-        const proteinMatch = trimmed.match(/Уураг:\\s*(\\d+)/);
+        const proteinMatch = trimmed.match(/Уураг:\\s*(\d+)/);
         if (proteinMatch) recipe.protein = parseInt(proteinMatch[1]);
       } else if (trimmed.startsWith('Нүүрс:')) {
-        const carbsMatch = trimmed.match(/Нүүрс:\\s*(\\d+)/);
+        const carbsMatch = trimmed.match(/Нүүрс:\\s*(\d+)/);
         if (carbsMatch) recipe.carbs = parseInt(carbsMatch[1]);
       } else if (trimmed.startsWith('Өөх:')) {
-        const fatMatch = trimmed.match(/Өөх:\\s*(\\d+)/);
+        const fatMatch = trimmed.match(/Өөх:\\s*(\d+)/);
         if (fatMatch) recipe.fat = parseInt(fatMatch[1]);
       } else if (trimmed.startsWith('Шошго:')) {
         const tagsText = trimmed.replace('Шошго:', '').trim();
@@ -278,7 +277,6 @@ function RecipeModal({ recipe, isOpen, onClose }: RecipeModalProps) {
   if (!isOpen || !recipe) return null;
 
   const isCmsRecipe = 'dishImage' in recipe;
-  const image = isCmsRecipe ? (recipe as HealthyRecipesandSnacks).dishImage : (recipe as ParsedRecipe).image;
   const name = isCmsRecipe ? (recipe as HealthyRecipesandSnacks).recipeName : (recipe as ParsedRecipe).name;
   const description = isCmsRecipe ? (recipe as HealthyRecipesandSnacks).description : (recipe as ParsedRecipe).description;
   const ingredients = isCmsRecipe ? (recipe as HealthyRecipesandSnacks).ingredients?.split('\n') || [] : (recipe as ParsedRecipe).ingredients;
@@ -302,19 +300,6 @@ function RecipeModal({ recipe, isOpen, onClose }: RecipeModalProps) {
           onClick={(e) => e.stopPropagation()}
           className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
         >
-          {/* Image */}
-          {image && (
-            <div className="w-full h-64 overflow-hidden bg-foreground/5">
-              <Image
-                src={image}
-                alt={name || 'Recipe'}
-                width={800}
-                height={400}
-                className="w-full h-full object-cover"
-              />
-            </div>
-          )}
-
           <div className="p-6 md:p-8 space-y-6">
             {/* Header */}
             <div className="flex items-start justify-between gap-4">
@@ -429,23 +414,6 @@ function RecipeCard({ recipe, onCardClick }: { recipe: ParsedRecipe; onCardClick
       className="cursor-pointer group"
     >
       <div className="bg-white rounded-3xl overflow-hidden shadow-md hover:shadow-lg transition-shadow h-full flex flex-col">
-        {/* Image Container - Full width with rounded corners */}
-        <div className="w-full h-48 overflow-hidden bg-gradient-to-br from-primary/5 to-primary/10 relative rounded-t-3xl">
-          {recipe.image ? (
-            <Image
-              src={recipe.image}
-              alt={recipe.name}
-              width={400}
-              height={192}
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-            />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center">
-              <Utensils className="w-12 h-12 text-primary/30" />
-            </div>
-          )}
-        </div>
-
         {/* Content Container */}
         <div className="p-5 flex flex-col flex-1">
           {/* Header: Title + Calorie Chip */}
@@ -536,17 +504,6 @@ function CMSRecipeCard({ recipe, onCardClick }: { recipe: HealthyRecipesandSnack
       className="cursor-pointer group"
     >
       <div className="bg-white rounded-3xl overflow-hidden shadow-md hover:shadow-lg transition-shadow h-full flex flex-col">
-        {/* Image Container - Full width with rounded corners */}
-        <div className="w-full h-48 overflow-hidden bg-gradient-to-br from-primary/5 to-primary/10 rounded-t-3xl">
-          <Image
-            src={recipe.dishImage || getFallbackImage(recipe.recipeName, recipe.ingredients)}
-            alt={recipe.recipeName || 'Recipe'}
-            width={400}
-            height={192}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-          />
-        </div>
-
         {/* Content Container */}
         <div className="p-5 flex flex-col flex-1">
           {/* Header: Title + Calorie Chip */}
@@ -652,26 +609,6 @@ export default function RecipesPage() {
         setLoadingCms(true);
         const { items } = await BaseCrudService.getAll<HealthyRecipesandSnacks>('healthyrecipes');
         setCmsRecipes(items || []);
-        
-        // Update the image for 'Тахианы Цээж Махтай Салат' if it doesn't have one
-        const chickenSaladRecipe = items?.find(r => r.recipeName === 'Тахианы Цээж Махтай Салат');
-        if (chickenSaladRecipe && !chickenSaladRecipe.dishImage) {
-          try {
-            await fetch('/api/update-recipe-image', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                recipeName: 'Тахианы Цээж Махтай Салат',
-                imageUrl: 'https://static.wixstatic.com/media/906313_57f20b273ddf4c1db8fb23de0bc60050~mv2.png?originWidth=768&originHeight=384'
-              })
-            });
-            // Reload recipes to show the updated image
-            const { items: updatedItems } = await BaseCrudService.getAll<HealthyRecipesandSnacks>('healthyrecipes');
-            setCmsRecipes(updatedItems || []);
-          } catch (err) {
-            console.error('Failed to update recipe image:', err);
-          }
-        }
       } catch (err) {
         console.error('Failed to load recipes:', err);
       } finally {
@@ -769,35 +706,6 @@ export default function RecipesPage() {
 
       const data = await response.json();
       const parsedRecipes = parseRecipesText(data.recipes);
-      
-      // Generate images for recipes with image prompts
-      if (parsedRecipes.length > 0 && parsedRecipes.some(r => r.imagePrompt)) {
-        try {
-          const recipesWithPrompts = parsedRecipes
-            .filter(r => r.imagePrompt)
-            .map(r => ({ recipeName: r.name, imagePrompt: r.imagePrompt! }));
-          
-          const imageResponse = await fetch('/api/generate-recipe-images-ai', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ recipes: recipesWithPrompts }),
-          });
-          
-          if (imageResponse.ok) {
-            const imageData = await imageResponse.json();
-            // Assign generated images to recipes
-            parsedRecipes.forEach(recipe => {
-              if (imageData.images[recipe.name]) {
-                recipe.image = imageData.images[recipe.name];
-              }
-            });
-          }
-        } catch (err) {
-          console.error('Failed to generate images:', err);
-          // Continue without images if generation fails
-        }
-      }
-      
       setRecipes(parsedRecipes);
 
       if (parsedRecipes.length === 0) {
