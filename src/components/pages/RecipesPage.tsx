@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Utensils, Sparkles, X, Loader2, AlertCircle, Flame, Clock, Zap } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Image } from '@/components/ui/image';
 import { BaseCrudService } from '@/integrations';
 import { HealthyRecipesandSnacks } from '@/entities';
 
@@ -272,11 +273,12 @@ function parseRecipesText(text: string): ParsedRecipe[] {
   return recipes;
 }
 
-// Recipe Modal Component
+  // Recipe Modal Component
 function RecipeModal({ recipe, isOpen, onClose }: RecipeModalProps) {
   if (!isOpen || !recipe) return null;
 
   const isCmsRecipe = 'dishImage' in recipe;
+  const image = isCmsRecipe ? (recipe as HealthyRecipesandSnacks).dishImage : (recipe as ParsedRecipe).image;
   const name = isCmsRecipe ? (recipe as HealthyRecipesandSnacks).recipeName : (recipe as ParsedRecipe).name;
   const description = isCmsRecipe ? (recipe as HealthyRecipesandSnacks).description : (recipe as ParsedRecipe).description;
   const ingredients = isCmsRecipe ? (recipe as HealthyRecipesandSnacks).ingredients?.split('\n') || [] : (recipe as ParsedRecipe).ingredients;
@@ -300,6 +302,19 @@ function RecipeModal({ recipe, isOpen, onClose }: RecipeModalProps) {
           onClick={(e) => e.stopPropagation()}
           className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto"
         >
+          {/* Image */}
+          {image && (
+            <div className="w-full h-64 overflow-hidden bg-foreground/5">
+              <Image
+                src={image}
+                alt={name || 'Recipe'}
+                width={800}
+                height={400}
+                className="w-full h-full object-cover"
+              />
+            </div>
+          )}
+
           <div className="p-6 md:p-8 space-y-6">
             {/* Header */}
             <div className="flex items-start justify-between gap-4">
@@ -414,6 +429,23 @@ function RecipeCard({ recipe, onCardClick }: { recipe: ParsedRecipe; onCardClick
       className="cursor-pointer group"
     >
       <div className="bg-white rounded-3xl overflow-hidden shadow-md hover:shadow-lg transition-shadow h-full flex flex-col">
+        {/* Image Container */}
+        <div className="w-full h-48 overflow-hidden bg-gradient-to-br from-primary/5 to-primary/10 rounded-t-3xl">
+          {recipe.image ? (
+            <Image
+              src={recipe.image}
+              alt={recipe.name}
+              width={400}
+              height={192}
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+            />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center">
+              <Utensils className="w-12 h-12 text-primary/30" />
+            </div>
+          )}
+        </div>
+
         {/* Content Container */}
         <div className="p-5 flex flex-col flex-1">
           {/* Header: Title + Calorie Chip */}
@@ -504,6 +536,23 @@ function CMSRecipeCard({ recipe, onCardClick }: { recipe: HealthyRecipesandSnack
       className="cursor-pointer group"
     >
       <div className="bg-white rounded-3xl overflow-hidden shadow-md hover:shadow-lg transition-shadow h-full flex flex-col">
+        {/* Image Container */}
+        <div className="w-full h-48 overflow-hidden bg-gradient-to-br from-primary/5 to-primary/10 rounded-t-3xl">
+          {recipe.dishImage ? (
+            <Image
+              src={recipe.dishImage}
+              alt={recipe.recipeName || 'Recipe'}
+              width={400}
+              height={192}
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+            />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center">
+              <Utensils className="w-12 h-12 text-primary/30" />
+            </div>
+          )}
+        </div>
+
         {/* Content Container */}
         <div className="p-5 flex flex-col flex-1">
           {/* Header: Title + Calorie Chip */}
@@ -609,6 +658,25 @@ export default function RecipesPage() {
         setLoadingCms(true);
         const { items } = await BaseCrudService.getAll<HealthyRecipesandSnacks>('healthyrecipes');
         setCmsRecipes(items || []);
+        
+        // Auto-generate images for all recipes to ensure they have new AI-generated images
+        if (items && items.length > 0) {
+          try {
+            setRegeneratingImages(true);
+            await fetch('/api/regenerate-all-recipe-images', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+            });
+            // Reload recipes to show the newly generated images
+            const { items: updatedItems } = await BaseCrudService.getAll<HealthyRecipesandSnacks>('healthyrecipes');
+            setCmsRecipes(updatedItems || []);
+            setSuccessMessage('✓ All recipe images have been generated successfully!');
+          } catch (err) {
+            console.error('Failed to auto-generate images:', err);
+          } finally {
+            setRegeneratingImages(false);
+          }
+        }
       } catch (err) {
         console.error('Failed to load recipes:', err);
       } finally {
