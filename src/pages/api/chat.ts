@@ -1,4 +1,6 @@
 import type { APIRoute } from 'astro';
+import { BaseCrudService } from '@/integrations';
+import { ChatMessages } from '@/entities';
 
 const SYSTEM_PROMPT = `You are NegOne AI, a supportive and empathetic health and wellness assistant for women. You provide personalized advice on fitness, nutrition, mental health, and self-love. 
 
@@ -23,10 +25,10 @@ Always be supportive and never judgmental.`;
 export const POST: APIRoute = async ({ request }) => {
   try {
     // Check if API key is available
-    const apiKey = process.env.OPENAI_API_KEY;
+    const apiKey = process.env.GROQ_API_KEY;
     
     if (!apiKey) {
-      console.error('OpenAI API key not found in environment variables');
+      console.error('GROQ API key not found in environment variables');
       return new Response(
         JSON.stringify({ 
           error: 'API key not configured',
@@ -42,6 +44,7 @@ export const POST: APIRoute = async ({ request }) => {
     // Parse request body
     const body = await request.json();
     const userMessage = body.message;
+    const conversationId = body.conversationId || crypto.randomUUID();
 
     if (!userMessage || typeof userMessage !== 'string') {
       return new Response(
@@ -53,15 +56,15 @@ export const POST: APIRoute = async ({ request }) => {
       );
     }
 
-    // Call OpenAI API
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+    // Call GROQ API
+    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        model: 'gpt-3.5-turbo',
+        model: 'llama-3.3-70b-versatile',
         messages: [
           {
             role: 'system',
@@ -79,7 +82,7 @@ export const POST: APIRoute = async ({ request }) => {
 
     if (!response.ok) {
       const error = await response.json();
-      console.error('OpenAI API error:', error);
+      console.error('GROQ API error:', error);
       
       if (response.status === 429) {
         return new Response(
@@ -109,7 +112,7 @@ export const POST: APIRoute = async ({ request }) => {
 
       return new Response(
         JSON.stringify({ 
-          error: 'OpenAI API error',
+          error: 'GROQ API error',
           message: 'Уучлаарай, хариулт авахад алдаа гарлаа. Дахин оролдоорой.' 
         }),
         { 
@@ -125,7 +128,7 @@ export const POST: APIRoute = async ({ request }) => {
     if (!botMessage) {
       return new Response(
         JSON.stringify({ 
-          error: 'No response from OpenAI',
+          error: 'No response from GROQ',
           message: 'Хариулт авахад алдаа гарлаа.' 
         }),
         { 
@@ -135,8 +138,27 @@ export const POST: APIRoute = async ({ request }) => {
       );
     }
 
+    // Store user message in database
+    try {
+      await BaseCrudService.create<ChatMessages>('chatmessages', {
+        _id: crypto.randomUUID(),
+        userMessageText: userMessage,
+        aiResponseText: botMessage,
+        timestamp: new Date(),
+        senderType: 'user',
+        conversationId: conversationId,
+        modelUsed: 'llama-3.3-70b-versatile',
+      });
+    } catch (dbError) {
+      console.error('Error saving message to database:', dbError);
+      // Continue even if database save fails - don't block the response
+    }
+
     return new Response(
-      JSON.stringify({ message: botMessage }),
+      JSON.stringify({ 
+        message: botMessage,
+        conversationId: conversationId,
+      }),
       { 
         status: 200,
         headers: { 'Content-Type': 'application/json' }
