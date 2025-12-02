@@ -512,7 +512,7 @@ function RecipeCard({ recipe, onCardClick }: { recipe: ParsedRecipe; onCardClick
               e.stopPropagation();
               onCardClick();
             }}
-            className="w-full bg-pink-500 text-white hover:bg-pink-600 rounded-full font-paragraph font-bold h-11 mt-auto"
+            className="w-full bg-soft-light-green text-foreground hover:bg-soft-light-green/80 rounded-full font-paragraph font-bold h-11 mt-auto"
           >
             Жор харах
           </Button>
@@ -619,7 +619,7 @@ function CMSRecipeCard({ recipe, onCardClick }: { recipe: HealthyRecipesandSnack
               e.stopPropagation();
               onCardClick();
             }}
-            className="w-full bg-pink-500 text-white hover:bg-pink-600 rounded-full font-paragraph font-bold h-11 mt-auto"
+            className="w-full bg-soft-light-green text-foreground hover:bg-soft-light-green/80 rounded-full font-paragraph font-bold h-11 mt-auto"
           >
             Жор харах
           </Button>
@@ -928,26 +928,7 @@ export default function RecipesPage() {
               <Sparkles className="w-4 h-4 mr-2" />
               AI-ээр үүсгэх
             </Button>
-            {cmsRecipes.length > 0 && (
-              <Button
-                onClick={handleGenerateMissingImages}
-                disabled={generatingMissingImages || cmsRecipes.every(r => r.dishImage)}
-                variant="outline"
-                className="rounded-xl font-paragraph border-primary/20 hover:bg-primary/10"
-              >
-                {generatingMissingImages ? (
-                  <>
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    Зургийг үүсгэж байна...
-                  </>
-                ) : (
-                  <>
-                    <Sparkles className="w-4 h-4 mr-2" />
-                    Дутуу зургийг үүсгэх
-                  </>
-                )}
-              </Button>
-            )}
+{/* ... keep existing code (removed "Generate Missing Images" button) ... */}
           </div>
 
           {/* Browse Recipes Tab */}
@@ -1045,7 +1026,7 @@ export default function RecipesPage() {
               {/* Recipes Grid */}
               {!loadingCms && filteredCmsRecipes.length > 0 && (
                 <div>
-                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
                     {filteredCmsRecipes.map((recipe) => (
                       <CMSRecipeCard
                         key={recipe._id}
@@ -1189,7 +1170,7 @@ export default function RecipesPage() {
                     </p>
                   </div>
 
-                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
                     {recipes.map((recipe, index) => (
                       <RecipeCard
                         key={index}
