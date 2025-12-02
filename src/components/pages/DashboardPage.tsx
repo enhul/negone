@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Calendar, Droplets, Activity, TrendingUp, Plus, MessageSquare } from 'lucide-react';
+import { Calendar, Droplets, Activity, TrendingUp, Plus, MessageSquare, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
@@ -35,6 +35,7 @@ export default function DashboardPage() {
   const [currentWeek, setCurrentWeek] = useState<Date[]>([]);
   const [selectedDay, setSelectedDay] = useState<DailyEntry | null>(null);
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
+  const [currentMonth, setCurrentMonth] = useState<Date>(new Date());
 
 
   useEffect(() => {
@@ -100,23 +101,53 @@ export default function DashboardPage() {
       }));
   };
 
-  const getCalendarTableData = () => {
-    return currentWeek.map(date => {
-      const dateStr = date.toISOString().split('T')[0];
-      const entry = dailyEntries.find(e => e.date === dateStr);
-      return {
-        date: dateStr,
-        dateDisplay: date.toLocaleDateString('mn-MN', { month: 'short', day: 'numeric' }),
-        dayName: date.toLocaleDateString('mn-MN', { weekday: 'short' }),
-        exercise: entry?.exerciseCompleted ? 'Хийсэн' : 'Хийгээгүй',
-        exerciseStatus: entry?.exerciseCompleted,
-        water: entry?.waterIntake || 0,
-        waterGoal: profile.dailyWater || 2000,
-        waterPercent: entry?.waterIntake ? Math.round((entry.waterIntake / (profile.dailyWater || 2000)) * 100) : 0,
-        weight: entry?.weight || '-',
-        notes: entry?.mentalNote ? 'Байна' : 'Байхгүй'
-      };
-    });
+  const getCalendarDays = () => {
+    const year = currentMonth.getFullYear();
+    const month = currentMonth.getMonth();
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+    const daysInMonth = lastDay.getDate();
+    const startingDayOfWeek = firstDay.getDay();
+
+    const days = [];
+    
+    // Add empty cells for days before month starts
+    for (let i = 0; i < startingDayOfWeek; i++) {
+      days.push(null);
+    }
+    
+    // Add days of the month
+    for (let day = 1; day <= daysInMonth; day++) {
+      days.push(new Date(year, month, day));
+    }
+    
+    return days;
+  };
+
+  const getEntryForDate = (date: Date | null) => {
+    if (!date) return null;
+    const dateStr = date.toISOString().split('T')[0];
+    return dailyEntries.find(e => e.date === dateStr);
+  };
+
+  const getDateStatus = (date: Date | null) => {
+    if (!date) return { hasExercise: false, hasWater: false, hasNotes: false };
+    const entry = getEntryForDate(date);
+    if (!entry) return { hasExercise: false, hasWater: false, hasNotes: false };
+    
+    return {
+      hasExercise: entry.exerciseCompleted,
+      hasWater: entry.waterIntake >= (profile.dailyWater || 2000) * 0.8,
+      hasNotes: !!entry.mentalNote
+    };
+  };
+
+  const previousMonth = () => {
+    setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1));
+  };
+
+  const nextMonth = () => {
+    setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1));
   };
 
   const handleDayClick = (fullDate: string) => {
@@ -130,7 +161,7 @@ export default function DashboardPage() {
   const todayEntry = getTodayEntry();
   const { exerciseCount, avgWater, targetExerciseDays } = getWeeklyProgress();
   const weightData = getWeightData();
-  const calendarTableData = getCalendarTableData();
+  const calendarDays = getCalendarDays();
 
   if (!profile.height || !profile.weight) {
     return (
@@ -270,67 +301,123 @@ export default function DashboardPage() {
                 </CardContent>
               </Card>
 
-              {/* Weekly Statistics Calendar Table */}
+              {/* Modern Grid Calendar */}
               <Card className="bg-white/70 backdrop-blur-sm border-soft-light-green/30 shadow-lg">
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-xl font-heading text-foreground">
-                    <Calendar className="w-5 h-5 text-soft-light-green" />
-                    Долоо хоногийн статистик
-                  </CardTitle>
-                  <p className="text-sm font-paragraph text-foreground/60 mt-2">Өдрийн мэдээлэл</p>
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="flex items-center gap-2 text-xl font-heading text-foreground">
+                      <Calendar className="w-5 h-5 text-soft-light-green" />
+                      Сарын календарь
+                    </CardTitle>
+                    <div className="flex gap-2">
+                      <button
+                        onClick={previousMonth}
+                        className="p-2 hover:bg-primary/10 rounded-lg transition-colors"
+                        aria-label="Previous month"
+                      >
+                        <ChevronLeft className="w-5 h-5 text-foreground" />
+                      </button>
+                      <button
+                        onClick={nextMonth}
+                        className="p-2 hover:bg-primary/10 rounded-lg transition-colors"
+                        aria-label="Next month"
+                      >
+                        <ChevronRight className="w-5 h-5 text-foreground" />
+                      </button>
+                    </div>
+                  </div>
+                  <p className="text-sm font-paragraph text-foreground/60 mt-2">
+                    {currentMonth.toLocaleDateString('mn-MN', { month: 'long', year: 'numeric' })}
+                  </p>
                 </CardHeader>
                 <CardContent>
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-sm">
-                      <thead>
-                        <tr className="border-b border-gray-200">
-                          <th className="text-left py-3 px-3 font-heading text-foreground/80">Өдөр</th>
-                          <th className="text-left py-3 px-3 font-heading text-foreground/80">Дасгал</th>
-                          <th className="text-left py-3 px-3 font-heading text-foreground/80">Ус</th>
-                          <th className="text-left py-3 px-3 font-heading text-foreground/80">Жин</th>
-                          <th className="text-left py-3 px-3 font-heading text-foreground/80">Тэмдэглэл</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {calendarTableData.map((row, index) => (
-                          <tr 
-                            key={index} 
-                            className="border-b border-gray-100 hover:bg-primary/5 transition-colors cursor-pointer"
-                            onClick={() => handleDayClick(row.date)}
-                          >
-                            <td className="py-3 px-3 font-paragraph text-foreground">
-                              <div className="font-medium">{row.dayName}</div>
-                              <div className="text-xs text-foreground/60">{row.dateDisplay}</div>
-                            </td>
-                            <td className="py-3 px-3">
-                              <span className={`inline-block px-2 py-1 rounded-full text-xs font-paragraph ${
-                                row.exerciseStatus 
-                                  ? 'bg-soft-light-green/20 text-soft-light-green font-medium' 
-                                  : 'bg-gray-100 text-gray-600'
-                              }`}>
-                                {row.exercise}
-                              </span>
-                            </td>
-                            <td className="py-3 px-3">
-                              <div className="font-paragraph text-foreground">{row.water}мл</div>
-                              <div className="text-xs text-foreground/60">{row.waterPercent}%</div>
-                            </td>
-                            <td className="py-3 px-3 font-paragraph text-foreground">
-                              {row.weight === '-' ? '-' : `${row.weight}кг`}
-                            </td>
-                            <td className="py-3 px-3">
-                              <span className={`text-xs font-paragraph ${
-                                row.notes === 'Байна' 
-                                  ? 'text-secondary font-medium' 
-                                  : 'text-foreground/60'
-                              }`}>
-                                {row.notes}
-                              </span>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
+                  {/* Weekday Headers */}
+                  <div className="grid grid-cols-7 gap-2 mb-4">
+                    {['Ня', 'Да', 'Мя', 'Лх', 'Пү', 'Ба', 'Бя'].map((day) => (
+                      <div key={day} className="text-center py-2 font-heading text-sm text-foreground/60">
+                        {day}
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Calendar Grid */}
+                  <div className="grid grid-cols-7 gap-2">
+                    {calendarDays.map((date, index) => {
+                      const status = getDateStatus(date);
+                      const isToday = date && date.toISOString().split('T')[0] === new Date().toISOString().split('T')[0];
+                      const dateStr = date ? date.toISOString().split('T')[0] : null;
+                      const entry = date ? getEntryForDate(date) : null;
+
+                      if (!date) {
+                        return <div key={`empty-${index}`} className="aspect-square" />;
+                      }
+
+                      return (
+                        <button
+                          key={dateStr}
+                          onClick={() => {
+                            if (entry) {
+                              setSelectedDay(entry);
+                              setSelectedDate(dateStr);
+                            }
+                          }}
+                          className={`aspect-square rounded-xl border-2 transition-all flex flex-col items-center justify-center p-2 relative group ${
+                            isToday
+                              ? 'border-primary bg-primary/10 shadow-md'
+                              : entry
+                              ? 'border-soft-light-green/30 bg-white/50 hover:border-soft-light-green/60 hover:shadow-md'
+                              : 'border-gray-200 bg-gray-50/50 hover:border-gray-300'
+                          }`}
+                        >
+                          {/* Date Number */}
+                          <div className={`text-sm font-heading ${
+                            isToday ? 'text-primary font-bold' : 'text-foreground'
+                          }`}>
+                            {date.getDate()}
+                          </div>
+
+                          {/* Status Indicators */}
+                          {entry && (
+                            <div className="flex gap-1 mt-1">
+                              {status.hasExercise && (
+                                <div className="w-1.5 h-1.5 rounded-full bg-soft-light-green" title="Дасгал" />
+                              )}
+                              {status.hasWater && (
+                                <div className="w-1.5 h-1.5 rounded-full bg-blue-500" title="Ус" />
+                              )}
+                              {status.hasNotes && (
+                                <div className="w-1.5 h-1.5 rounded-full bg-secondary" title="Тэмдэглэл" />
+                              )}
+                            </div>
+                          )}
+
+                          {/* Tooltip on Hover */}
+                          {entry && (
+                            <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block bg-foreground text-white text-xs rounded-lg px-2 py-1 whitespace-nowrap z-10">
+                              {entry.exerciseCompleted ? '✓ Дасгал' : '✗ Дасгал'}
+                            </div>
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  {/* Legend */}
+                  <div className="mt-6 pt-4 border-t border-gray-200">
+                    <div className="grid grid-cols-3 gap-3 text-xs font-paragraph text-foreground/60">
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full bg-soft-light-green"></div>
+                        <span>Дасгал</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full bg-blue-500"></div>
+                        <span>Ус</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full bg-secondary"></div>
+                        <span>Тэмдэглэл</span>
+                      </div>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
