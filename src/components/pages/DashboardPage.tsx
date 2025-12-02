@@ -261,7 +261,7 @@ export default function DashboardPage() {
                     Өнөөдрийн байдал
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-4">
+                <CardContent className="space-y-6">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <Activity className="w-5 h-5 text-secondary" />
@@ -276,7 +276,7 @@ export default function DashboardPage() {
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-center justify-between pb-4 border-b border-gray-200">
                     <div className="flex items-center gap-2">
                       <Droplets className="w-5 h-5 text-blue-500" />
                       <span className="font-paragraph text-foreground">Усны хэрэглээ</span>
