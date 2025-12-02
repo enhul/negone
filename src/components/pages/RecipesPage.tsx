@@ -217,6 +217,79 @@ function generateMacros(caloriesPerServing: number): { protein: number; carbs: n
   return { protein, carbs, fat };
 }
 
+// Estimate realistic prep and cook times based on recipe type and ingredients
+function estimateCookingTimes(recipeName: string, ingredients: string): { prepTime: number; cookTime: number } {
+  const searchText = `${recipeName} ${ingredients}`.toLowerCase();
+  
+  // Drinks & Smoothies - minimal prep, no cooking
+  if (searchText.includes('смүүси') || searchText.includes('жүүс') || searchText.includes('цай')) {
+    return { prepTime: 5, cookTime: 0 };
+  }
+  
+  // Salads - prep only, no cooking
+  if (searchText.includes('салат') || searchText.includes('цөцгий')) {
+    return { prepTime: 10, cookTime: 0 };
+  }
+  
+  // Soups - longer cooking time
+  if (searchText.includes('шөл') || searchText.includes('нэрс')) {
+    return { prepTime: 10, cookTime: 30 };
+  }
+  
+  // Eggs - quick prep and cooking
+  if (searchText.includes('өндөг') && !searchText.includes('шөл')) {
+    return { prepTime: 5, cookTime: 10 };
+  }
+  
+  // Fish - moderate prep and cooking
+  if (searchText.includes('загас')) {
+    return { prepTime: 15, cookTime: 20 };
+  }
+  
+  // Chicken - moderate prep and cooking
+  if (searchText.includes('цыпилон') || (searchText.includes('мах') && searchText.includes('цыпилон'))) {
+    return { prepTime: 15, cookTime: 25 };
+  }
+  
+  // Meat dishes - longer cooking
+  if (searchText.includes('мах') && !searchText.includes('салат')) {
+    return { prepTime: 15, cookTime: 30 };
+  }
+  
+  // Rice/Grain dishes - moderate cooking
+  if (searchText.includes('будаа') || searchText.includes('гарнир')) {
+    return { prepTime: 10, cookTime: 20 };
+  }
+  
+  // Pasta - moderate cooking
+  if (searchText.includes('макарон')) {
+    return { prepTime: 10, cookTime: 15 };
+  }
+  
+  // Bread - longer cooking
+  if (searchText.includes('талх')) {
+    return { prepTime: 20, cookTime: 40 };
+  }
+  
+  // Vegetables - moderate prep and cooking
+  if (searchText.includes('төмс') || searchText.includes('сонгино') || searchText.includes('томат')) {
+    return { prepTime: 10, cookTime: 20 };
+  }
+  
+  // Fruits - minimal prep, no cooking
+  if (searchText.includes('жимс') || searchText.includes('алим') || searchText.includes('банан')) {
+    return { prepTime: 5, cookTime: 0 };
+  }
+  
+  // Snacks - quick prep
+  if (searchText.includes('зууш') || searchText.includes('түрэмгий') || searchText.includes('үр')) {
+    return { prepTime: 5, cookTime: 0 };
+  }
+  
+  // Default estimate for unknown recipes
+  return { prepTime: 15, cookTime: 20 };
+}
+
 function parseRecipesText(text: string): ParsedRecipe[] {
   const recipes: ParsedRecipe[] = [];
   const recipeBlocks = text.split('---').filter(block => block.trim());
@@ -291,6 +364,9 @@ function parseRecipesText(text: string): ParsedRecipe[] {
         fat: recipe.fat || generateMacros(caloriesPerServing).fat,
       };
       
+      // Estimate realistic cooking times based on recipe type
+      const cookingTimes = estimateCookingTimes(recipe.name || '', recipe.ingredients.join(' '));
+      
       recipes.push({
         name: recipe.name || 'Үл мэдэгдэх жор',
         type: recipe.type || 'Үл мэдэгдэх',
@@ -300,8 +376,8 @@ function parseRecipesText(text: string): ParsedRecipe[] {
         totalCalories: recipe.totalCalories || 0,
         caloriesPerServing: caloriesPerServing,
         servings: recipe.servings || 1,
-        prepTime: recipe.prepTime || 15,
-        cookTime: recipe.cookTime || 20,
+        prepTime: recipe.prepTime || cookingTimes.prepTime,
+        cookTime: recipe.cookTime || cookingTimes.cookTime,
         protein: macros.protein,
         carbs: macros.carbs,
         fat: macros.fat,
@@ -509,11 +585,18 @@ function RecipeCard({ recipe, onCardClick }: { recipe: ParsedRecipe; onCardClick
 
           {/* Time + Tag Row */}
           <div className="flex items-center justify-between gap-2 mb-4">
-            {/* Time Info */}
-            {recipe.prepTime && (
+            {/* Time Info - Show total time */}
+            {(recipe.prepTime || recipe.cookTime) && (
               <div className="flex items-center gap-1 text-foreground/70">
                 <Clock className="w-4 h-4 text-foreground/70" />
-                <span className="font-paragraph text-xs">{recipe.prepTime} мин</span>
+                <span className="font-paragraph text-xs">
+                  {recipe.prepTime && recipe.cookTime 
+                    ? `${recipe.prepTime + recipe.cookTime} мин`
+                    : recipe.prepTime 
+                    ? `${recipe.prepTime} мин`
+                    : `${recipe.cookTime} мин`
+                  }
+                </span>
               </div>
             )}
             
@@ -622,7 +705,12 @@ function CMSRecipeCard({ recipe, onCardClick }: { recipe: HealthyRecipesandSnack
             ) : (
               <div className="flex items-center gap-1 text-foreground/70">
                 <Clock className="w-4 h-4 text-foreground/70" />
-                <span className="font-paragraph text-xs">30 мин</span>
+                <span className="font-paragraph text-xs">
+                  {(() => {
+                    const times = estimateCookingTimes(recipe.recipeName || '', recipe.ingredients || '');
+                    return `${times.prepTime + times.cookTime} мин`;
+                  })()}
+                </span>
               </div>
             )}
             
