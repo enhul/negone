@@ -131,14 +131,15 @@ export default function DashboardPage() {
   };
 
   const getDateStatus = (date: Date | null) => {
-    if (!date) return { hasExercise: false, hasWater: false, hasNotes: false };
+    if (!date) return { hasExercise: false, hasWater: false, hasNotes: false, hasWeight: false };
     const entry = getEntryForDate(date);
-    if (!entry) return { hasExercise: false, hasWater: false, hasNotes: false };
+    if (!entry) return { hasExercise: false, hasWater: false, hasNotes: false, hasWeight: false };
     
     return {
       hasExercise: entry.exerciseCompleted,
       hasWater: entry.waterIntake >= (profile.dailyWater || 2000) * 0.8,
-      hasNotes: !!entry.mentalNote
+      hasNotes: !!entry.mentalNote,
+      hasWeight: entry.weight > 0
     };
   };
 
@@ -388,6 +389,9 @@ export default function DashboardPage() {
                               {status.hasNotes && (
                                 <div className="w-1.5 h-1.5 rounded-full bg-secondary" title="Тэмдэглэл" />
                               )}
+                              {status.hasWeight && (
+                                <div className="w-1.5 h-1.5 rounded-full bg-primary" title="Жин" />
+                              )}
                             </div>
                           )}
 
@@ -404,7 +408,7 @@ export default function DashboardPage() {
 
                   {/* Legend */}
                   <div className="mt-6 pt-4 border-t border-gray-200">
-                    <div className="grid grid-cols-3 gap-3 text-xs font-paragraph text-foreground/60">
+                    <div className="grid grid-cols-4 gap-3 text-xs font-paragraph text-foreground/60">
                       <div className="flex items-center gap-2">
                         <div className="w-2 h-2 rounded-full bg-soft-light-green"></div>
                         <span>Дасгал</span>
@@ -416,6 +420,10 @@ export default function DashboardPage() {
                       <div className="flex items-center gap-2">
                         <div className="w-2 h-2 rounded-full bg-secondary"></div>
                         <span>Тэмдэглэл</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full bg-primary"></div>
+                        <span>Жин</span>
                       </div>
                     </div>
                   </div>
@@ -525,6 +533,9 @@ export default function DashboardPage() {
                             <div className={`w-3 h-3 rounded-full ${
                               entry?.mentalNote ? 'bg-secondary' : 'bg-gray-300'
                             }`} title="Тэмдэглэл" />
+                            <div className={`w-3 h-3 rounded-full ${
+                              entry?.weight && entry.weight > 0 ? 'bg-primary' : 'bg-gray-300'
+                            }`} title="Жин" />
                           </div>
                         </button>
                       );
@@ -544,6 +555,10 @@ export default function DashboardPage() {
                       <div className="flex items-center gap-2">
                         <div className="w-3 h-3 rounded-full bg-secondary"></div>
                         <span>Тэмдэглэл бичсэн</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 rounded-full bg-primary"></div>
+                        <span>Жин оруулсан</span>
                       </div>
                     </div>
                   </div>
