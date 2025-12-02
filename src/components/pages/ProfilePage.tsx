@@ -53,6 +53,7 @@ export default function ProfilePage() {
   const { toast } = useToast();
   const [profile, setProfile] = useState<UserProfile>({});
   const [loading, setLoading] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
 
   useEffect(() => {
     if (!member?.loginEmail) return;
@@ -126,9 +127,8 @@ export default function ProfilePage() {
       localStorage.setItem(`profile_${member?.loginEmail}`, JSON.stringify(updatedProfile));
       setProfile(updatedProfile);
 
-      toast({
-        title: 'Таны мэдээлэл хадгалагдлаа',
-      });
+      setShowSuccess(true);
+      setTimeout(() => setShowSuccess(false), 3000);
     } catch (error) {
       toast({
         title: 'Алдаа гарлаа',
@@ -353,6 +353,17 @@ export default function ProfilePage() {
             >
               {loading ? 'Хадгалж байна...' : 'Профайл хадгалах'}
             </Button>
+            {showSuccess && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.3 }}
+                className="mt-4 text-primary font-paragraph text-lg"
+              >
+                Таны мэдээлэл хадгалагдлаа
+              </motion.div>
+            )}
           </div>
         </motion.div>
       </div>
