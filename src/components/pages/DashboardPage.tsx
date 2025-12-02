@@ -5,9 +5,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Calendar, Target, Droplets, Activity, TrendingUp, Plus, MessageSquare } from 'lucide-react';
+import { Calendar, Droplets, Activity, TrendingUp, Plus, MessageSquare } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 interface DailyEntry {
   date: string;
@@ -100,36 +100,23 @@ export default function DashboardPage() {
       }));
   };
 
-  const getCompactStatsData = () => {
-    const weekEntries = currentWeek.map(date => {
+  const getCalendarTableData = () => {
+    return currentWeek.map(date => {
       const dateStr = date.toISOString().split('T')[0];
-      return dailyEntries.find(entry => entry.date === dateStr);
-    });
-
-    return currentWeek.map((date, index) => {
-      const entry = weekEntries[index];
+      const entry = dailyEntries.find(e => e.date === dateStr);
       return {
-        day: date.toLocaleDateString('mn-MN', { weekday: 'short' }),
-        exercise: entry?.exerciseCompleted ? 1 : 0,
-        water: entry?.waterIntake ? Math.min(100, (entry.waterIntake / (profile.dailyWater || 2000)) * 100) : 0,
-        notes: entry?.mentalNote ? 1 : 0
+        date: dateStr,
+        dateDisplay: date.toLocaleDateString('mn-MN', { month: 'short', day: 'numeric' }),
+        dayName: date.toLocaleDateString('mn-MN', { weekday: 'short' }),
+        exercise: entry?.exerciseCompleted ? 'Хийсэн' : 'Хийгээгүй',
+        exerciseStatus: entry?.exerciseCompleted,
+        water: entry?.waterIntake || 0,
+        waterGoal: profile.dailyWater || 2000,
+        waterPercent: entry?.waterIntake ? Math.round((entry.waterIntake / (profile.dailyWater || 2000)) * 100) : 0,
+        weight: entry?.weight || '-',
+        notes: entry?.mentalNote ? 'Байна' : 'Байхгүй'
       };
     });
-  };
-
-  const getGoalCompletionData = () => {
-    const weekEntries = currentWeek.map(date => {
-      const dateStr = date.toISOString().split('T')[0];
-      return dailyEntries.find(entry => entry.date === dateStr);
-    });
-
-    const exerciseCompleted = weekEntries.filter(entry => entry?.exerciseCompleted).length;
-    const exerciseNotCompleted = 7 - exerciseCompleted;
-
-    return [
-      { name: 'Хийсэн', value: exerciseCompleted, color: '#dfb8e9' },
-      { name: 'Хийгээгүй', value: exerciseNotCompleted, color: '#e5e7eb' }
-    ];
   };
 
   const handleDayClick = (fullDate: string) => {
@@ -143,8 +130,7 @@ export default function DashboardPage() {
   const todayEntry = getTodayEntry();
   const { exerciseCount, avgWater, targetExerciseDays } = getWeeklyProgress();
   const weightData = getWeightData();
-  const compactStatsData = getCompactStatsData();
-  const goalCompletionData = getGoalCompletionData();
+  const calendarTableData = getCalendarTableData();
 
   if (!profile.height || !profile.weight) {
     return (
@@ -284,90 +270,71 @@ export default function DashboardPage() {
                 </CardContent>
               </Card>
 
-              {/* Compact Statistics Chart */}
+              {/* Weekly Statistics Calendar Table */}
               <Card className="bg-white/70 backdrop-blur-sm border-soft-light-green/30 shadow-lg">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 text-xl font-heading text-foreground">
-                    <TrendingUp className="w-5 h-5 text-soft-light-green" />
+                    <Calendar className="w-5 h-5 text-soft-light-green" />
                     Долоо хоногийн статистик
                   </CardTitle>
-                  <p className="text-sm font-paragraph text-foreground/60 mt-2">Гүйцэтгэлийн хэмжээ</p>
+                  <p className="text-sm font-paragraph text-foreground/60 mt-2">Өдрийн мэдээлэл</p>
                 </CardHeader>
                 <CardContent>
-                  <div className="h-40">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <BarChart data={compactStatsData}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="#FCE4EC" vertical={false} />
-                        <XAxis 
-                          dataKey="day" 
-                          stroke="#424242"
-                          fontSize={11}
-                          tick={{ fill: '#666' }}
-                        />
-                        <YAxis 
-                          stroke="#424242"
-                          fontSize={11}
-                          domain={[0, 100]}
-                          hide={true}
-                        />
-                        <Tooltip 
-                          contentStyle={{
-                            backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                            border: '1px solid #FCE4EC',
-                            borderRadius: '8px',
-                            fontSize: '12px',
-                            padding: '8px'
-                          }}
-                          formatter={(value: number) => {
-                            if (value === 1) return 'Хийсэн';
-                            if (value === 0) return 'Хийгээгүй';
-                            return `${Math.round(value)}%`;
-                          }}
-                        />
-                        <Bar 
-                          dataKey="exercise" 
-                          fill="#dfb8e9" 
-                          radius={[4, 4, 0, 0]}
-                          name="Дасгал"
-                          maxBarSize={20}
-                        />
-                        <Bar 
-                          dataKey="water" 
-                          fill="#60a5fa" 
-                          radius={[4, 4, 0, 0]}
-                          name="Ус"
-                          maxBarSize={20}
-                        />
-                        <Bar 
-                          dataKey="notes" 
-                          fill="#f592ab" 
-                          radius={[4, 4, 0, 0]}
-                          name="Тэмдэглэл"
-                          maxBarSize={20}
-                        />
-                      </BarChart>
-                    </ResponsiveContainer>
-                  </div>
-                  
-                  {/* Legend */}
-                  <div className="mt-4 pt-3 border-t border-gray-200">
-                    <div className="grid grid-cols-3 gap-2 text-xs font-paragraph text-foreground/60">
-                      <div className="flex items-center gap-2">
-                        <div className="w-3 h-3 rounded-sm bg-soft-light-green"></div>
-                        <span>Дасгал</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <div className="w-3 h-3 rounded-sm bg-blue-400"></div>
-                        <span>Ус</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <div className="w-3 h-3 rounded-sm bg-secondary"></div>
-                        <span>Тэмдэглэл</span>
-                      </div>
-                    </div>
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-sm">
+                      <thead>
+                        <tr className="border-b border-gray-200">
+                          <th className="text-left py-3 px-3 font-heading text-foreground/80">Өдөр</th>
+                          <th className="text-left py-3 px-3 font-heading text-foreground/80">Дасгал</th>
+                          <th className="text-left py-3 px-3 font-heading text-foreground/80">Ус</th>
+                          <th className="text-left py-3 px-3 font-heading text-foreground/80">Жин</th>
+                          <th className="text-left py-3 px-3 font-heading text-foreground/80">Тэмдэглэл</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {calendarTableData.map((row, index) => (
+                          <tr 
+                            key={index} 
+                            className="border-b border-gray-100 hover:bg-primary/5 transition-colors cursor-pointer"
+                            onClick={() => handleDayClick(row.date)}
+                          >
+                            <td className="py-3 px-3 font-paragraph text-foreground">
+                              <div className="font-medium">{row.dayName}</div>
+                              <div className="text-xs text-foreground/60">{row.dateDisplay}</div>
+                            </td>
+                            <td className="py-3 px-3">
+                              <span className={`inline-block px-2 py-1 rounded-full text-xs font-paragraph ${
+                                row.exerciseStatus 
+                                  ? 'bg-soft-light-green/20 text-soft-light-green font-medium' 
+                                  : 'bg-gray-100 text-gray-600'
+                              }`}>
+                                {row.exercise}
+                              </span>
+                            </td>
+                            <td className="py-3 px-3">
+                              <div className="font-paragraph text-foreground">{row.water}мл</div>
+                              <div className="text-xs text-foreground/60">{row.waterPercent}%</div>
+                            </td>
+                            <td className="py-3 px-3 font-paragraph text-foreground">
+                              {row.weight === '-' ? '-' : `${row.weight}кг`}
+                            </td>
+                            <td className="py-3 px-3">
+                              <span className={`text-xs font-paragraph ${
+                                row.notes === 'Байна' 
+                                  ? 'text-secondary font-medium' 
+                                  : 'text-foreground/60'
+                              }`}>
+                                {row.notes}
+                              </span>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
                   </div>
                 </CardContent>
               </Card>
+
               {weightData.length > 0 && (
                 <Card className="bg-white/70 backdrop-blur-sm border-secondary/20 shadow-lg">
                   <CardHeader>
@@ -423,70 +390,6 @@ export default function DashboardPage() {
                   </CardContent>
                 </Card>
               )}
-
-              {/* Exercise Goal Completion Pie Chart */}
-              <Card className="bg-white/70 backdrop-blur-sm border-primary/20 shadow-lg">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-2xl font-heading text-foreground">
-                    <Target className="w-6 h-6 text-primary" />
-                    Долоо хоногийн дасгалын зорилго
-                  </CardTitle>
-                  <p className="text-sm font-paragraph text-foreground/60 mt-2">Дасгалын гүйцэтгэлийн хувь</p>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex items-center justify-center h-64">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <PieChart>
-                        <Pie
-                          data={goalCompletionData}
-                          cx="50%"
-                          cy="50%"
-                          innerRadius={60}
-                          outerRadius={100}
-                          paddingAngle={2}
-                          dataKey="value"
-                        >
-                          {goalCompletionData.map((entry, index) => (
-                            <Cell key={`cell-${index}`} fill={entry.color} />
-                          ))}
-                        </Pie>
-                        <Tooltip 
-                          contentStyle={{
-                            backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                            border: '1px solid #FCE4EC',
-                            borderRadius: '8px',
-                            fontSize: '12px',
-                            padding: '8px'
-                          }}
-                          formatter={(value: number) => `${value} өдөр`}
-                        />
-                      </PieChart>
-                    </ResponsiveContainer>
-                  </div>
-                  
-                  {/* Stats Below Pie Chart */}
-                  <div className="mt-6 pt-4 border-t border-gray-200 grid grid-cols-2 gap-4\">
-                    <div className="text-center">
-                      <div className="text-2xl font-heading text-soft-light-green mb-1\">
-                        {exerciseCount}
-                      </div>
-                      <div className="text-sm font-paragraph text-foreground/80\">Хийсэн өдөр</div>
-                      <div className="text-xs font-paragraph text-foreground/60\">
-                        {Math.round((exerciseCount / 7) * 100)}%
-                      </div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-2xl font-heading text-gray-400 mb-1\">
-                        {7 - exerciseCount}
-                      </div>
-                      <div className="text-sm font-paragraph text-foreground/80\">Хийгээгүй өдөр</div>
-                      <div className="text-xs font-paragraph text-foreground/60\">
-                        {Math.round(((7 - exerciseCount) / 7) * 100)}%
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
             </div>
 
             {/* Weekly Calendar */}
