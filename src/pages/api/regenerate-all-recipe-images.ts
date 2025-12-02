@@ -23,11 +23,21 @@ export const POST: APIRoute = async ({ request }) => {
       );
     }
 
-    // Prepare recipes for image generation
-    const recipesForImageGeneration: RecipeImageUpdate[] = items.map(recipe => ({
-      recipeName: recipe.recipeName || 'Unknown Recipe',
-      imagePrompt: `A delicious and appetizing photo of ${recipe.recipeName || 'a healthy dish'}, professional food photography, high quality, well-lit, mouth-watering presentation`
-    }));
+    // Prepare recipes for image generation with detailed prompts
+    const recipesForImageGeneration: RecipeImageUpdate[] = items.map(recipe => {
+      // Extract key details from recipe for better image generation
+      const recipeName = recipe.recipeName || 'Unknown Recipe';
+      const ingredients = recipe.ingredients ? recipe.ingredients.split('\n').slice(0, 3).join(', ') : '';
+      const description = recipe.description || '';
+      
+      // Create detailed image prompt matching user requirements
+      const imagePrompt = `Зураг: ${recipeName} – AI realistic food photo, top-view, detailed, well-lit, appetizing. Professional food photography showing ${recipeName}${ingredients ? ` with ${ingredients}` : ''}. High resolution, vibrant colors, mouth-watering presentation, studio lighting, shallow depth of field, food styling, commercial quality`;
+      
+      return {
+        recipeName,
+        imagePrompt
+      };
+    });
 
     // Generate images using the AI image generation endpoint
     const imageResponse = await fetch(new URL('/api/generate-recipe-images-ai', request.url), {

@@ -25,14 +25,16 @@ export const POST: APIRoute = async ({ request }) => {
     // Generate unique IDs for each recipe image
     for (const recipe of recipes) {
       if (recipe.imagePrompt) {
-        // Create a unique ID based on the recipe name and prompt
+        // Create a unique ID based on the recipe name and timestamp for uniqueness
+        const timestamp = Date.now();
         const uniqueId = `${recipe.recipeName}`
           .toLowerCase()
           .replace(/\s+/g, '-')
           .replace(/[^a-z0-9-]/g, '')
-          .substring(0, 40);
+          .substring(0, 30) + `-${timestamp}`;
         
         // Create the image URL in the expected format for post-processing
+        // The prompt is encoded in the URL for the image generation service
         const imageUrl = `https://static.wixstatic.com/media/12d367_71ebdd7141d041e4be3d91d80d4578dd~mv2.png?id=${uniqueId}`;
         images[recipe.recipeName] = imageUrl;
       }
