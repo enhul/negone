@@ -387,13 +387,13 @@ function RecipeModal({ recipe, isOpen, onClose }: RecipeModalProps) {
               )}
               {parsedRecipe.carbs && (
                 <div className="flex items-center justify-between">
-                  <span className="font-paragraph text-foreground/70">Нүүрс:</span>
+                  <span className="font-paragraph text-foreground/70">Нүүрс ус:</span>
                   <span className="font-heading font-bold text-foreground">{parsedRecipe.carbs}г</span>
                 </div>
               )}
               {parsedRecipe.fat && (
                 <div className="flex items-center justify-between">
-                  <span className="font-paragraph text-foreground/70">Өөх:</span>
+                  <span className="font-paragraph text-foreground/70">Өөх тос:</span>
                   <span className="font-heading font-bold text-foreground">{parsedRecipe.fat}г</span>
                 </div>
               )}
@@ -527,24 +527,18 @@ function RecipeCard({ recipe, onCardClick }: { recipe: ParsedRecipe; onCardClick
 
           {/* Macros - 3 Columns */}
           <div className="grid grid-cols-3 gap-2 mb-4 text-center">
-            {recipe.protein && (
-              <div>
-                <div className="text-xs font-paragraph text-foreground/60">Уураг</div>
-                <div className="text-sm font-heading font-bold text-foreground">{recipe.protein}г</div>
-              </div>
-            )}
-            {recipe.carbs && (
-              <div>
-                <div className="text-xs font-paragraph text-foreground/60">Нүүрс</div>
-                <div className="text-sm font-heading font-bold text-foreground">{recipe.carbs}г</div>
-              </div>
-            )}
-            {recipe.fat && (
-              <div>
-                <div className="text-xs font-paragraph text-foreground/60">Өөх</div>
-                <div className="text-sm font-heading font-bold text-foreground">{recipe.fat}г</div>
-              </div>
-            )}
+            <div>
+              <div className="text-xs font-paragraph text-foreground/60">Уураг</div>
+              <div className="text-sm font-heading font-bold text-foreground">{recipe.protein}г</div>
+            </div>
+            <div>
+              <div className="text-xs font-paragraph text-foreground/60">Нүүрс ус</div>
+              <div className="text-sm font-heading font-bold text-foreground">{recipe.carbs}г</div>
+            </div>
+            <div>
+              <div className="text-xs font-paragraph text-foreground/60">Өөх тос</div>
+              <div className="text-sm font-heading font-bold text-foreground">{recipe.fat}г</div>
+            </div>
           </div>
 
           {/* View Details Button - Large rounded */}
@@ -645,11 +639,11 @@ function CMSRecipeCard({ recipe, onCardClick }: { recipe: HealthyRecipesandSnack
               <div className="text-sm font-heading font-bold text-foreground">{macros.protein}г</div>
             </div>
             <div>
-              <div className="text-xs font-paragraph text-foreground/60">Нүүрс</div>
+              <div className="text-xs font-paragraph text-foreground/60">Нүүрс ус</div>
               <div className="text-sm font-heading font-bold text-foreground">{macros.carbs}г</div>
             </div>
             <div>
-              <div className="text-xs font-paragraph text-foreground/60">Өөх</div>
+              <div className="text-xs font-paragraph text-foreground/60">Өөх тос</div>
               <div className="text-sm font-heading font-bold text-foreground">{macros.fat}г</div>
             </div>
           </div>
