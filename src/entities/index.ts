@@ -103,4 +103,3 @@ export interface TeamMembers {
   /** @wixFieldType url */
   socialLink?: string;
 }
-
