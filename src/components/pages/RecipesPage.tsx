@@ -642,6 +642,7 @@ export default function RecipesPage() {
   const [selectedRecipe, setSelectedRecipe] = useState<ParsedRecipe | HealthyRecipesandSnacks | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [regeneratingImages, setRegeneratingImages] = useState(false);
+  const [generatingMissingImages, setGeneratingMissingImages] = useState(false);
 
   // Load recipes from CMS on component mount
   useEffect(() => {
@@ -842,6 +843,43 @@ export default function RecipesPage() {
     }
   };
 
+  const handleGenerateMissingImages = async () => {
+    // Count recipes without images
+    const recipesWithoutImages = cmsRecipes.filter(recipe => !recipe.dishImage);
+    
+    if (recipesWithoutImages.length === 0) {
+      setError('Бүх жорууд аль хэдийн зургийг агуулж байна');
+      return;
+    }
+
+    setGeneratingMissingImages(true);
+    setError('');
+
+    try {
+      const response = await fetch('/api/generate-missing-recipe-images', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.message || 'Зургийг үүсгэхэд алдаа гарлаа');
+      }
+
+      const data = await response.json();
+      
+      // Reload recipes to show updated images
+      const { items } = await BaseCrudService.getAll<HealthyRecipesandSnacks>('healthyrecipes');
+      setCmsRecipes(items || []);
+      
+      setError('');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Уучлаарай, алдаа гарлаа');
+    } finally {
+      setGeneratingMissingImages(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -887,24 +925,44 @@ export default function RecipesPage() {
               AI-ээр үүсгэх
             </Button>
             {cmsRecipes.length > 0 && (
-              <Button
-                onClick={handleRegenerateAllImages}
-                disabled={regeneratingImages}
-                variant="outline"
-                className="rounded-xl font-paragraph border-primary/20 hover:bg-primary/10"
-              >
-                {regeneratingImages ? (
-                  <>
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    Зургийг дахин үүсгэж байна...
-                  </>
-                ) : (
-                  <>
-                    <Sparkles className="w-4 h-4 mr-2" />
-                    Бүх зургийг дахин үүсгэх
-                  </>
-                )}
-              </Button>
+              <>
+                <Button
+                  onClick={handleGenerateMissingImages}
+                  disabled={generatingMissingImages || cmsRecipes.every(r => r.dishImage)}
+                  variant="outline"
+                  className="rounded-xl font-paragraph border-primary/20 hover:bg-primary/10"
+                >
+                  {generatingMissingImages ? (
+                    <>
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      Зургийг үүсгэж байна...
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="w-4 h-4 mr-2" />
+                      Дутуу зургийг үүсгэх
+                    </>
+                  )}
+                </Button>
+                <Button
+                  onClick={handleRegenerateAllImages}
+                  disabled={regeneratingImages}
+                  variant="outline"
+                  className="rounded-xl font-paragraph border-primary/20 hover:bg-primary/10"
+                >
+                  {regeneratingImages ? (
+                    <>
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      Зургийг дахин үүсгэж байна...
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="w-4 h-4 mr-2" />
+                      Бүх зургийг дахин үүсгэх
+                    </>
+                  )}
+                </Button>
+              </>
             )}
           </div>
 
