@@ -261,7 +261,7 @@ export default function ProfilePage() {
                     />
                   </div>
                   <div>
-                    <Label htmlFor="exerciseMinutes" className="font-paragraph text-foreground">Өдөрт хэдэн минут</Label>
+                    <Label htmlFor="exerciseMinutes" className="font-paragraph text-foreground">Өдөрт дунджаар хэр их хугацаа (минут)</Label>
                     <Input
                       id="exerciseMinutes"
                       type="number"
