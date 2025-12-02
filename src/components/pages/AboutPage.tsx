@@ -16,7 +16,19 @@ export default function AboutPage() {
         // Filter out specific team members
         const excludedNames = ['Ариунзаяа Батбаяр', 'Уранчимэг Дорж', 'Нарантуяа Ганбаатар', 'Энхтуул Цэрэндорж'];
         const filteredMembers = items.filter(member => !excludedNames.includes(member.name || ''));
-        setTeamMembers(filteredMembers);
+        
+        // Hardcode specific name and role changes
+        const updatedMembers = filteredMembers.map(member => {
+          if (member.name === 'Эрдэнэболд Энхцэцэг') {
+            return { ...member, name: 'Эрдэнэболд Эрхцэцэг' };
+          }
+          if (member.name === 'Энхбаясгалан Энххүслэн') {
+            return { ...member, name: 'Мөнхбаясгалан Энххүслэн', role: 'Судалгаа хариуцагч, хөгжүүлэгч' };
+          }
+          return member;
+        });
+        
+        setTeamMembers(updatedMembers);
       } catch (error) {
         console.error('Error fetching team members:', error);
       } finally {
