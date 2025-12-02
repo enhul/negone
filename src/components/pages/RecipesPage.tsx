@@ -662,7 +662,7 @@ export default function RecipesPage() {
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
                 recipeName: 'Тахианы Цээж Махтай Салат',
-                imageUrl: 'https://static.wixstatic.com/media/906313_20853d4fbdb54172a14103f1d4be5dc8~mv2.png?originWidth=384&originHeight=256'
+                imageUrl: 'https://static.wixstatic.com/media/906313_57f20b273ddf4c1db8fb23de0bc60050~mv2.png?originWidth=768&originHeight=384'
               })
             });
             // Reload recipes to show the updated image
