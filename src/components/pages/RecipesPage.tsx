@@ -643,6 +643,7 @@ export default function RecipesPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [regeneratingImages, setRegeneratingImages] = useState(false);
   const [generatingMissingImages, setGeneratingMissingImages] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
 
   // Load recipes from CMS on component mount
   useEffect(() => {
@@ -817,6 +818,7 @@ export default function RecipesPage() {
 
     setRegeneratingImages(true);
     setError('');
+    setSuccessMessage('');
 
     try {
       const response = await fetch('/api/regenerate-all-recipe-images', {
@@ -835,6 +837,8 @@ export default function RecipesPage() {
       const { items } = await BaseCrudService.getAll<HealthyRecipesandSnacks>('healthyrecipes');
       setCmsRecipes(items || []);
       
+      // Show success message
+      setSuccessMessage(data.message || `DONE – All ${cmsRecipes.length} recipe images updated`);
       setError('');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Уучлаарай, алдаа гарлаа');
@@ -1036,6 +1040,26 @@ export default function RecipesPage() {
                   <Loader2 className="w-8 h-8 animate-spin text-primary mx-auto mb-4" />
                   <p className="text-foreground/60 font-paragraph">Жорууд ачаалж байна...</p>
                 </div>
+              )}
+
+              {/* Error Alert */}
+              {error && (
+                <Alert variant="destructive" className="bg-destructive/10 border-destructive/30">
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertDescription className="font-paragraph text-destructive">
+                    {error}
+                  </AlertDescription>
+                </Alert>
+              )}
+
+              {/* Success Alert */}
+              {successMessage && (
+                <Alert className="bg-primary/10 border-primary/30">
+                  <AlertCircle className="h-4 w-4 text-primary" />
+                  <AlertDescription className="font-paragraph text-primary font-bold">
+                    {successMessage}
+                  </AlertDescription>
+                </Alert>
               )}
 
               {/* Recipes Grid */}

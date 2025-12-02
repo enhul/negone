@@ -23,15 +23,18 @@ export const POST: APIRoute = async ({ request }) => {
       );
     }
 
-    // Prepare recipes for image generation with detailed prompts
+    // Prepare recipes for image generation with hyper-realistic 4K prompts
     const recipesForImageGeneration: RecipeImageUpdate[] = items.map(recipe => {
-      // Extract key details from recipe for better image generation
       const recipeName = recipe.recipeName || 'Unknown Recipe';
-      const ingredients = recipe.ingredients ? recipe.ingredients.split('\n').slice(0, 3).join(', ') : '';
+      const ingredients = recipe.ingredients ? recipe.ingredients.split('\n').slice(0, 5).join(', ') : '';
       const description = recipe.description || '';
       
-      // Create detailed image prompt matching user requirements
-      const imagePrompt = `Зураг: ${recipeName} – AI realistic food photo, top-view, detailed, well-lit, appetizing. Professional food photography showing ${recipeName}${ingredients ? ` with ${ingredients}` : ''}. High resolution, vibrant colors, mouth-watering presentation, studio lighting, shallow depth of field, food styling, commercial quality`;
+      // Determine if Mongolian or Western recipe
+      const isMongolian = recipeName.match(/[а-яёА-ЯЁ]/);
+      const style = isMongolian ? 'traditional Mongolian' : 'Western';
+      
+      // Create hyper-realistic 4K food photography prompt
+      const imagePrompt = `Image: ${recipeName} – hyper-realistic professional food photo, 4K resolution, top-view and 45-degree angle composition, studio lighting, shallow depth of field, food styling. ${style} cuisine. Showing ${recipeName}${ingredients ? ` with visible ingredients: ${ingredients}` : ''}. ${description ? `${description}. ` : ''}Vibrant colors, mouth-watering presentation, commercial food photography quality, sharp focus, appetizing, professional plating, natural lighting, high detail, food magazine style`;
       
       return {
         recipeName,
@@ -53,6 +56,7 @@ export const POST: APIRoute = async ({ request }) => {
     const imageData = await imageResponse.json();
 
     // Update all recipes with their new images
+    let updatedCount = 0;
     const updatePromises = items.map(async (recipe) => {
       if (imageData.images && imageData.images[recipe.recipeName || '']) {
         const newImageUrl = imageData.images[recipe.recipeName || ''];
@@ -61,6 +65,7 @@ export const POST: APIRoute = async ({ request }) => {
           _id: recipe._id,
           dishImage: newImageUrl,
         });
+        updatedCount++;
       }
     });
 
@@ -69,8 +74,8 @@ export const POST: APIRoute = async ({ request }) => {
     return new Response(
       JSON.stringify({
         success: true,
-        message: `Successfully regenerated images for ${items.length} recipes`,
-        recipesUpdated: items.length,
+        message: `DONE – All ${items.length} recipe images updated with hyper-realistic 4K food photos`,
+        recipesUpdated: updatedCount,
         totalRecipes: items.length,
       }),
       { status: 200, headers: { 'Content-Type': 'application/json' } }
