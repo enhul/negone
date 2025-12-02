@@ -479,9 +479,9 @@ export default function DashboardPage() {
               )}
             </div>
 
-            {/* Weekly Calendar */}
-            <div>
-              <Card className="bg-white/70 backdrop-blur-sm border-soft-light-green/30 shadow-lg">
+            {/* Weekly Calendar & Additional Actions */}
+            <div className="flex flex-col gap-8 h-full">
+              <Card className="bg-white/70 backdrop-blur-sm border-soft-light-green/30 shadow-lg flex-1 flex flex-col">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 text-xl font-heading text-foreground">
                     <Calendar className="w-5 h-5 text-soft-light-green" />
@@ -489,7 +489,7 @@ export default function DashboardPage() {
                   </CardTitle>
                   <p className="text-sm font-paragraph text-foreground/60 mt-2">Өдрийг дарж дэлгэрэнгүй үзээрэй</p>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="flex-1 flex flex-col">
                   <div className="space-y-2">
                     {currentWeek.map((date, index) => {
                       const dateStr = date.toISOString().split('T')[0];
@@ -550,29 +550,31 @@ export default function DashboardPage() {
                 </CardContent>
               </Card>
 
-              {/* Quick Actions */}
-              <Card className="bg-white/70 backdrop-blur-sm border-primary/20 shadow-lg mt-6">
+              {/* Additional Actions */}
+              <Card className="bg-white/70 backdrop-blur-sm border-primary/20 shadow-lg flex flex-col h-full">
                 <CardHeader>
                   <CardTitle className="text-xl font-heading text-foreground">
-                    Хурдан үйлдлүүд
+                    Нэмэлт
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-3">
-                  <Link to="/recipes">
-                    <Button variant="outline" className="w-full justify-start rounded-[20px] border-secondary/30 hover:bg-secondary/10 font-paragraph">
-                      🥗 Эрүүл жорууд үзэх
-                    </Button>
-                  </Link>
-                  <Link to="/progress">
-                    <Button variant="outline" className="w-full justify-start rounded-[20px] border-primary/30 hover:bg-primary/10 font-paragraph">
-                      📊 Ахиц дэвшил оруулах
-                    </Button>
-                  </Link>
-                  <Link to="/profile">
-                    <Button variant="outline" className="w-full justify-start rounded-[20px] border-soft-light-green/30 hover:bg-soft-light-green/10 font-paragraph">
-                      ⚙️ Профайл засах
-                    </Button>
-                  </Link>
+                <CardContent className="space-y-3 flex-1 flex flex-col justify-between">
+                  <div className="space-y-3">
+                    <Link to="/recipes">
+                      <Button variant="outline" className="w-full justify-start rounded-[20px] border-secondary/30 hover:bg-secondary/10 font-paragraph">
+                        🥗 Эрүүл жорууд үзэх
+                      </Button>
+                    </Link>
+                    <Link to="/progress">
+                      <Button variant="outline" className="w-full justify-start rounded-[20px] border-primary/30 hover:bg-primary/10 font-paragraph">
+                        📊 Ахиц дэвшил оруулах
+                      </Button>
+                    </Link>
+                    <Link to="/profile">
+                      <Button variant="outline" className="w-full justify-start rounded-[20px] border-soft-light-green/30 hover:bg-soft-light-green/10 font-paragraph">
+                        ⚙️ Профайл засах
+                      </Button>
+                    </Link>
+                  </div>
                 </CardContent>
               </Card>
             </div>
