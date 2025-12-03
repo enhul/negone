@@ -4,29 +4,6 @@
  */
 
 /**
- * Collection ID: chatmessages
- * Interface for ChatMessages
- */
-export interface ChatMessages {
-  _id: string;
-  _createdDate?: Date;
-  _updatedDate?: Date;
-  /** @wixFieldType text */
-  userMessageText?: string;
-  /** @wixFieldType text */
-  aiResponseText?: string;
-  /** @wixFieldType datetime */
-  timestamp?: Date | string;
-  /** @wixFieldType text */
-  senderType?: string;
-  /** @wixFieldType text */
-  conversationId?: string;
-  /** @wixFieldType text */
-  modelUsed?: string;
-}
-
-
-/**
  * Collection ID: curatedexercises
  * Interface for CuratedExercises
  */

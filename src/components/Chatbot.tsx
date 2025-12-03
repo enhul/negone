@@ -13,9 +13,9 @@ interface Message {
   timestamp: Date;
 }
 
-async function getGroqResponse(userMessage: string, conversationId: string): Promise<{ message: string; conversationId: string }> {
+async function getChatGPTResponse(userMessage: string): Promise<string> {
   try {
-    // Call the backend API route to use GROQ AI
+    // Call the backend API route instead of directly calling OpenAI
     const response = await fetch('/api/chat', {
       method: 'POST',
       headers: {
@@ -23,7 +23,6 @@ async function getGroqResponse(userMessage: string, conversationId: string): Pro
       },
       body: JSON.stringify({
         message: userMessage,
-        conversationId: conversationId,
       }),
     });
 
@@ -32,43 +31,27 @@ async function getGroqResponse(userMessage: string, conversationId: string): Pro
       console.error('Chat API error:', error);
       
       if (response.status === 401) {
-        return { 
-          message: 'Уучлаарай, API түлхүүр олдсонгүй. Админтай холбогдоорой.',
-          conversationId: conversationId,
-        };
+        return 'Уучлаарай, API түлхүүр олдсонгүй. Админтай холбогдоорой.';
       }
       
       if (response.status === 429) {
-        return { 
-          message: 'Уучлаарай, хэтэрхий олон асуулт ирлээ. Хэсэг хугацаа хүлээнэ үү.',
-          conversationId: conversationId,
-        };
+        return 'Уучлаарай, хэтэрхий олон асуулт ирлээ. Хэсэг хугацаа хүлээнэ үү.';
       }
       
-      return { 
-        message: 'Уучлаарай, хариулт авахад алдаа гарлаа. Дахин оролдоорой.',
-        conversationId: conversationId,
-      };
+      return 'Уучлаарай, хариулт авахад алдаа гарлаа. Дахин оролдоорой.';
     }
 
     const data = await response.json();
-    return {
-      message: data.message || 'Хариулт авахад алдаа гарлаа.',
-      conversationId: data.conversationId || conversationId,
-    };
+    return data.message || 'Хариулт авахад алдаа гарлаа.';
   } catch (error) {
     console.error('Error calling chat API:', error);
-    return { 
-      message: 'Уучлаарай, сүлжээний алдаа гарлаа. Дахин оролдоорой.',
-      conversationId: conversationId,
-    };
+    return 'Уучлаарай, сүлжээний алдаа гарлаа. Дахин оролдоорой.';
   }
 }
 
 export default function Chatbot() {
   const { isAuthenticated } = useMember();
   const [isOpen, setIsOpen] = useState(false);
-  const [conversationId] = useState(crypto.randomUUID());
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
@@ -106,8 +89,8 @@ export default function Chatbot() {
     setInputValue('');
     setIsLoading(true);
 
-    // Get response from GROQ AI
-    const { message: botResponseText } = await getGroqResponse(userMessageText, conversationId);
+    // Get response from ChatGPT
+    const botResponseText = await getChatGPTResponse(userMessageText);
     
     const botResponse: Message = {
       id: (Date.now() + 1).toString(),
