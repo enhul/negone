@@ -553,8 +553,6 @@ function RecipeCard({ recipe, onCardClick }: { recipe: ParsedRecipe; onCardClick
       className="cursor-pointer group"
     >
       <div className="bg-white rounded-3xl overflow-hidden shadow-md hover:shadow-lg transition-shadow h-full flex flex-col">
-        {/* Image Container - Hidden */}
-
         {/* Content Container */}
         <div className="p-5 flex flex-col flex-1">
           {/* Header: Title + Calorie Chip */}
