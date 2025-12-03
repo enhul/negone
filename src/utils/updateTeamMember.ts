@@ -47,6 +47,16 @@ export async function updateTeamMemberInfo() {
       console.log('Тунамал-Эрдэнэ Алтантуяа updated successfully');
     }
     
+    // Update Эрдэнэболд Эрхцэцэг
+    const member5 = items.find(member => member.name === 'Эрдэнэболд Эрхцэцэг');
+    if (member5) {
+      await BaseCrudService.update<TeamMembers>('teammembers', {
+        _id: member5._id,
+        photo: 'https://static.wixstatic.com/media/906313_4c5c60b0b7b84192be9eb117a9365807~mv2.jpg'
+      });
+      console.log('Эрдэнэболд Эрхцэцэг updated successfully');
+    }
+    
     return true;
   } catch (error) {
     console.error('Error updating team members:', error);
