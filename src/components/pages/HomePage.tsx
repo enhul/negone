@@ -335,18 +335,13 @@ export default function HomePage() {
                 transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
                 className="flex-shrink-0"
               >
-                <motion.div
-                  animate={{ y: [0, -12, 0] }}
-                  transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                >
-                  <Image
-                    src="https://static.wixstatic.com/media/906313_fde07a9e5a6a47b3a737e76c7b6676bc~mv2.png"
-                    alt="NegOne mascot waving"
-                    width={100}
-                    height={120}
-                    className="w-20 md:w-28 lg:w-32 h-auto object-contain"
-                  />
-                </motion.div>
+                <Image
+                  src="https://static.wixstatic.com/media/906313_fde07a9e5a6a47b3a737e76c7b6676bc~mv2.png"
+                  alt="NegOne mascot waving"
+                  width={160}
+                  height={180}
+                  className="w-32 md:w-44 lg:w-56 h-auto object-contain"
+                />
               </motion.div>
             </div>
             <motion.p 
