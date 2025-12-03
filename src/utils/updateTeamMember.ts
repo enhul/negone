@@ -52,7 +52,7 @@ export async function updateTeamMemberInfo() {
     if (member5) {
       await BaseCrudService.update<TeamMembers>('teammembers', {
         _id: member5._id,
-        photo: 'https://static.wixstatic.com/media/906313_4c5c60b0b7b84192be9eb117a9365807~mv2.jpg'
+        photo: 'https://static.wixstatic.com/media/906313_ef17ffc339b54001b24602b4d7809ebe~mv2.jpg'
       });
       console.log('Эрдэнэболд Эрхцэцэг updated successfully');
     }
