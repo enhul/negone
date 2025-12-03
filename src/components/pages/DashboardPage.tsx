@@ -8,7 +8,6 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Calendar, Droplets, Activity, TrendingUp, Plus, MessageSquare, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { Image } from '@/components/ui/image';
 
 interface DailyEntry {
   date: string;
@@ -573,8 +572,8 @@ export default function DashboardPage() {
                     Нэмэлт
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="flex-1 flex flex-col justify-between">
-                  <div className="space-y-4">
+                <CardContent className="space-y-3 flex-1 flex flex-col justify-between">
+                  <div className="space-y-3">
                     <Link to="/recipes">
                       <Button variant="outline" className="w-full justify-start rounded-[20px] border-secondary/30 hover:bg-secondary/10 font-paragraph">
                         🥗 Эрүүл жорууд үзэх
@@ -591,23 +590,6 @@ export default function DashboardPage() {
                       </Button>
                     </Link>
                   </div>
-                  
-                  {/* Mascot Image */}
-                  <motion.div
-                    className="flex justify-center pt-4"
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.5, ease: "easeOut" }}
-                    viewport={{ once: true }}
-                  >
-                    <Image
-                      src="https://static.wixstatic.com/media/906313_a82ed37afb8c447483f31d21ee750534~mv2.png"
-                      alt="NegOne mascot"
-                      width={120}
-                      height={140}
-                      className="w-28 h-auto object-contain"
-                    />
-                  </motion.div>
                 </CardContent>
               </Card>
             </div>

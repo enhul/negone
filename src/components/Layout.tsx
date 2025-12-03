@@ -6,7 +6,6 @@ import { motion } from 'framer-motion';
 import { Home, User, BarChart3, BookOpen, Utensils, Menu, X, Facebook, Instagram } from 'lucide-react';
 import { useState } from 'react';
 import Chatbot from '@/components/Chatbot';
-import { Image } from '@/components/ui/image';
 
 export default function Layout() {
   const { member, isAuthenticated, isLoading, actions } = useMember();
@@ -209,22 +208,11 @@ export default function Layout() {
       >
         <div className="max-w-[100rem] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-3 gap-8">
-            <div className="flex items-start gap-4">
-              <div className="flex-1">
-                <h3 className="text-2xl font-heading text-primary mb-4">NegOne</h3>
-                <p className="text-foreground/80 font-paragraph">
-                  Эмэгтэйчүүдийн эрүүл мэнд, сэтгэлзүй, өөрийгөө хайрлахад зориулсан AI платформ
-                </p>
-              </div>
-              <motion.div
-                initial={{ opacity: 0, scale: 0.8 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.5, ease: "easeOut" }}
-                viewport={{ once: true }}
-                className="flex-shrink-0 hidden md:block"
-              >
-                <Image src="https://static.wixstatic.com/media/906313_be6ef06446934f22acad4c6661be0e1f~mv2.png" alt="NegOne mascot" width={80} height={100} className="w-20 h-auto object-contain" />
-              </motion.div>
+            <div>
+              <h3 className="text-2xl font-heading text-primary mb-4">NegOne</h3>
+              <p className="text-foreground/80 font-paragraph">
+                Эмэгтэйчүүдийн эрүүл мэнд, сэтгэлзүй, өөрийгөө хайрлахад зориулсан AI платформ
+              </p>
             </div>
             <div>
               <h4 className="text-lg font-heading text-foreground mb-4">Холбоосууд</h4>
