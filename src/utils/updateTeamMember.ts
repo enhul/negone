@@ -57,6 +57,16 @@ export async function updateTeamMemberInfo() {
       console.log('Эрдэнэболд Эрхцэцэг updated successfully');
     }
     
+    // Update Цэвээнсүрэн Мишээл
+    const member6 = items.find(member => member.name === 'Цэвээнсүрэн Мишээл');
+    if (member6) {
+      await BaseCrudService.update<TeamMembers>('teammembers', {
+        _id: member6._id,
+        photo: 'https://static.wixstatic.com/media/906313_96e28cefe67f452c9947905124051417~mv2.jpg'
+      });
+      console.log('Цэвээнсүрэн Мишээл updated successfully');
+    }
+    
     return true;
   } catch (error) {
     console.error('Error updating team members:', error);
