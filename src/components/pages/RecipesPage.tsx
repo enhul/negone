@@ -1036,8 +1036,21 @@ export default function RecipesPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          {/* Header */}
+          {/* Header with Mascot */}
           <div className="text-center mb-12">
+            <motion.div
+              className="flex justify-center mb-6"
+              animate={{ rotate: [0, -5, 5, 0] }}
+              transition={{ duration: 4, repeat: Infinity }}
+            >
+              <Image
+                src="https://static.wixstatic.com/media/906313_6078689b7f6a4d5a87b4c1a252b7e9aa~mv2.png"
+                alt="NegOne mascot eating"
+                width={100}
+                height={100}
+                className="w-24 h-24 object-contain"
+              />
+            </motion.div>
             <h1 className="text-4xl md:text-5xl font-heading text-foreground mb-4">
               Эрүүл жорууд ба зууш
             </h1>
