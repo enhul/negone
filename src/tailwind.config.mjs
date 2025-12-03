@@ -27,7 +27,7 @@ export default {
                 "primary-foreground": "#333333",
                 secondary: "#f592ab",
                 "secondary-foreground": "#333333",
-                background: "#ffffff",
+                background: "#fff9fb",
                 "soft-light-green": "#dfb8e9",
                 destructive: "#DF3131",
                 "destructive-foreground": "#FFFFFF",
