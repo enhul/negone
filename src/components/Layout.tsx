@@ -2,6 +2,7 @@ import { useMember } from '@/integrations';
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Button } from '@/components/ui/button';
+import { Image } from '@/components/ui/image';
 import { motion } from 'framer-motion';
 import { Home, User, BarChart3, BookOpen, Utensils, Menu, X, Facebook, Instagram } from 'lucide-react';
 import { useState } from 'react';
@@ -209,7 +210,16 @@ export default function Layout() {
         <div className="max-w-[100rem] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-3 gap-8">
             <div>
-              <h3 className="text-2xl font-heading text-primary mb-4">NegOne</h3>
+              <div className="flex items-center gap-3 mb-4">
+                <Image 
+                  src="https://static.wixstatic.com/media/906313_38a4221e712a499d97abfd0ac4a49d5d~mv2.png"
+                  alt="NegOne mascot"
+                  width={48}
+                  height={48}
+                  className="w-12 h-12"
+                />
+                <h3 className="text-2xl font-heading text-primary">NegOne</h3>
+              </div>
               <p className="text-foreground/80 font-paragraph">
                 Эмэгтэйчүүдийн эрүүл мэнд, сэтгэлзүй, өөрийгөө хайрлахад зориулсан AI платформ
               </p>
