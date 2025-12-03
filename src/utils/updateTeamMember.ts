@@ -11,7 +11,8 @@ export async function updateTeamMemberInfo() {
     if (member1) {
       await BaseCrudService.update<TeamMembers>('teammembers', {
         _id: member1._id,
-        school: 'Төгсдэлгэрэх бүрэн дунд сургууль 10A анги'
+        school: 'Төгсдэлгэрэх бүрэн дунд сургууль 10A анги',
+        photo: 'https://static.wixstatic.com/media/906313_3410ef614ab14aa5a9308c86e89588aa~mv2.jpeg'
       });
       console.log('Сансарбаяр Хулан updated successfully');
     }
