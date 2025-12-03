@@ -600,13 +600,7 @@ export default function DashboardPage() {
                     transition={{ duration: 0.5, ease: "easeOut" }}
                     viewport={{ once: true }}
                   >
-                    <Image
-                      src="https://static.wixstatic.com/media/906313_a82ed37afb8c447483f31d21ee750534~mv2.png"
-                      alt="NegOne mascot"
-                      width={120}
-                      height={140}
-                      className="w-28 h-auto object-contain"
-                    />
+
                   </motion.div>
                 </CardContent>
               </Card>
