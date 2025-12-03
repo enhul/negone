@@ -553,22 +553,7 @@ function RecipeCard({ recipe, onCardClick }: { recipe: ParsedRecipe; onCardClick
       className="cursor-pointer group"
     >
       <div className="bg-white rounded-3xl overflow-hidden shadow-md hover:shadow-lg transition-shadow h-full flex flex-col">
-        {/* Image Container - Full width with rounded corners */}
-        <div className="w-full h-48 overflow-hidden bg-gradient-to-br from-primary/5 to-primary/10 relative rounded-t-3xl">
-          {recipe.image ? (
-            <Image
-              src={recipe.image}
-              alt={recipe.name}
-              width={400}
-              height={192}
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-            />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center">
-              <Utensils className="w-12 h-12 text-primary/30" />
-            </div>
-          )}
-        </div>
+        {/* Image Container - Hidden */}
 
         {/* Content Container */}
         <div className="p-5 flex flex-col flex-1">
@@ -661,16 +646,7 @@ function CMSRecipeCard({ recipe, onCardClick }: { recipe: HealthyRecipesandSnack
       className="cursor-pointer group"
     >
       <div className="bg-white rounded-3xl overflow-hidden shadow-md hover:shadow-lg transition-shadow h-full flex flex-col">
-        {/* Image Container - Full width with rounded corners */}
-        <div className="w-full h-48 overflow-hidden bg-gradient-to-br from-primary/5 to-primary/10 rounded-t-3xl">
-          <Image
-            src={recipe.dishImage || getFallbackImage(recipe.recipeName, recipe.ingredients)}
-            alt={recipe.recipeName || 'Recipe'}
-            width={400}
-            height={192}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-          />
-        </div>
+        {/* Image Container - Hidden */}
 
         {/* Content Container */}
         <div className="p-5 flex flex-col flex-1">
