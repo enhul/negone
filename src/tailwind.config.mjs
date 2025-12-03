@@ -27,7 +27,7 @@ export default {
                 "primary-foreground": "#333333",
                 secondary: "#f592ab",
                 "secondary-foreground": "#333333",
-                background: "#fff9fb",
+                background: "#fff4f8",
                 "soft-light-green": "#dfb8e9",
                 destructive: "#DF3131",
                 "destructive-foreground": "#FFFFFF",
@@ -36,7 +36,7 @@ export default {
                 linkcolor: "#e1b9eb",
                 buttonborder: "#B9D6E8",
                 darktext: "#333333",
-                contentblockbackground: "#F9FAFB"
+                contentblockbackground: "#fff8fb"
             },
         },
     },
