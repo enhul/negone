@@ -1036,9 +1036,18 @@ export default function RecipesPage() {
         >
           {/* Header */}
           <div className="text-center mb-12">
-            <h1 className="text-4xl md:text-5xl font-heading text-foreground mb-4">
-              Эрүүл жорууд ба зууш
-            </h1>
+            <div className="flex items-center justify-center gap-4 mb-4">
+              <Image
+                src="https://static.wixstatic.com/media/906313_8df107e7784a4c98a21ac2e4b4b2d311~mv2.png"
+                alt="NegOne mascot"
+                width={72}
+                height={86}
+                className="w-16 md:w-20 h-auto object-contain"
+              />
+              <h1 className="text-4xl md:text-5xl font-heading text-foreground">
+                Эрүүл жорууд ба зууш
+              </h1>
+            </div>
             <p className="text-lg text-foreground/80 font-paragraph max-w-3xl mx-auto">
               Таны байгаа орцуу ашиглан AI-ээр үүсгэсэн эрүүл жорууд эсвэл сонгосон жорууд
             </p>
