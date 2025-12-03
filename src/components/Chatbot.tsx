@@ -16,7 +16,7 @@ interface Message {
 async function getGroqResponse(userMessage: string, conversationId: string): Promise<{ message: string; conversationId: string }> {
   try {
     // Call the backend API route to use GROQ AI
-    const response = await fetch('/api/chat', {
+    const response = await fetch('pages/api/chat', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
