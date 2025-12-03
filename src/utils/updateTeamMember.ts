@@ -67,6 +67,16 @@ export async function updateTeamMemberInfo() {
       console.log('Цэвээнсүрэн Мишээл updated successfully');
     }
     
+    // Update Мөнхбаясгалан Энххүслэн (displayed as Энхбаясгалан Энххүслэн in database)
+    const member7 = items.find(member => member.name === 'Энхбаясгалан Энххүслэн');
+    if (member7) {
+      await BaseCrudService.update<TeamMembers>('teammembers', {
+        _id: member7._id,
+        photo: 'https://static.wixstatic.com/media/906313_ba6ce43602e746cd909c8dc0560098dd~mv2.jpg'
+      });
+      console.log('Мөнхбаясгалан Энххүслэн updated successfully');
+    }
+    
     return true;
   } catch (error) {
     console.error('Error updating team members:', error);
