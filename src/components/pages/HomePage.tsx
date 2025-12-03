@@ -321,7 +321,7 @@ export default function HomePage() {
             style={{ opacity: heroTextOpacity, y: heroTextY }}
             className="relative z-10 px-4 max-w-5xl"
           >
-            <div className="flex items-center justify-center gap-4 md:gap-6 mb-6">
+            <div className="flex items-center justify-center gap-1 md:gap-2 mb-6">
               <motion.h1 
                 className="text-5xl md:text-7xl lg:text-8xl font-heading text-foreground text-balance"
                 initial={{ y: 20, opacity: 0 }}
