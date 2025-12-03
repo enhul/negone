@@ -168,24 +168,26 @@ export default function ProgressPage() {
           transition={{ duration: 0.5 }}
         >
           {/* Header */}
-          <div className="text-center mb-8 flex flex-col items-center gap-4">
-            <motion.div
-              initial={{ y: 20, opacity: 0, scale: 0.8 }}
-              animate={{ y: 0, opacity: 1, scale: 1 }}
-              transition={{ duration: 0.6, ease: "easeOut" }}
-            >
-              <Image
-                src="https://static.wixstatic.com/media/906313_15e5c29215414cffb1c8d2f8919a606d~mv2.png"
-                alt="NegOne mascot"
-                width={120}
-                height={140}
-                className="w-24 md:w-32 h-auto object-contain mx-auto"
-              />
-            </motion.div>
-            <h1 className="text-4xl md:text-5xl font-heading text-foreground mb-4">
-              Ахиц дэвшил бүртгэх
-            </h1>
-            <p className="text-lg text-foreground/80 font-paragraph">
+          <div className="mb-8">
+            <div className="flex items-center justify-center gap-4 mb-4">
+              <motion.div
+                initial={{ x: -20, opacity: 0, scale: 0.8 }}
+                animate={{ x: 0, opacity: 1, scale: 1 }}
+                transition={{ duration: 0.6, ease: "easeOut" }}
+              >
+                <Image
+                  src="https://static.wixstatic.com/media/906313_15e5c29215414cffb1c8d2f8919a606d~mv2.png"
+                  alt="NegOne mascot"
+                  width={100}
+                  height={120}
+                  className="w-20 md:w-28 h-auto object-contain"
+                />
+              </motion.div>
+              <h1 className="text-4xl md:text-5xl font-heading text-foreground">
+                Ахиц дэвшил бүртгэх
+              </h1>
+            </div>
+            <p className="text-lg text-foreground/80 font-paragraph text-center">
               Өнөөдрийн дасгал, усны хэрэглээ, сэтгэлзүйн байдлыг бүртгээрэй
             </p>
           </div>
