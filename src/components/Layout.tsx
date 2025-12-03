@@ -233,6 +233,9 @@ export default function Layout() {
               <p className="text-foreground/80 font-paragraph mb-4">
                 Асуулт, санал хүсэлт байвал бидэнтэй холбогдоорой
               </p>
+              <p className="text-foreground/80 font-paragraph mb-4">
+                Холбоо барих утас: (+976) 94509027
+              </p>
               <div className="flex gap-3">
                 <a 
                   href="https://facebook.com" 
