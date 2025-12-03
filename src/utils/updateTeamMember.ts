@@ -32,7 +32,7 @@ export async function updateTeamMemberInfo() {
     if (member3) {
       await BaseCrudService.update<TeamMembers>('teammembers', {
         _id: member3._id,
-        photo: 'https://static.wixstatic.com/media/906313_d7b0c2677a544eaeb5f08145bda191e6~mv2.jpg'
+        photo: 'https://static.wixstatic.com/media/906313_ff46ce20609f4ae4a20579c4f935fb40~mv2.jpg'
       });
       console.log('Амардалай Содбилэг updated successfully');
     }
