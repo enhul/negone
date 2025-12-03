@@ -23,12 +23,12 @@ export default {
                 paragraph: ["madefor-display"]
             },
             colors: {
-                primary: "#829463",
+                primary: "#aec88d",
                 "primary-foreground": "#333333",
-                secondary: "#efcbd4",
+                secondary: "#fbc3cb",
                 "secondary-foreground": "#333333",
                 background: "#fff7fa",
-                "soft-light-green": "#225914",
+                "soft-light-green": "#dfcbe5",
                 destructive: "#DF3131",
                 "destructive-foreground": "#FFFFFF",
                 foreground: "#333333",
