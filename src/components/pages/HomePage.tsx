@@ -380,10 +380,7 @@ export default function HomePage() {
           <div className="max-w-[100rem] mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-16 items-start">
             <div className="md:sticky md:top-24">
               <AnimatedElement>
-                <div className="flex items-center gap-1 md:gap-2 mb-6">
-                  <h2 className="text-4xl md:text-5xl lg:text-6xl font-heading text-foreground text-balance">
-                    Таны эрүүл мэндийн цогц хөтөч
-                  </h2>
+                <div className="flex items-center gap-0 md:gap-0 mb-6 -ml-8 md:-ml-12 lg:-ml-16">
                   <motion.div
                     initial={{ y: 20, opacity: 0, scale: 0.8 }}
                     whileInView={{ y: 0, opacity: 1, scale: 1 }}
@@ -396,9 +393,12 @@ export default function HomePage() {
                       alt="NegOne mascot waving"
                       width={140}
                       height={160}
-                      className="w-28 md:w-32 lg:w-40 h-auto object-contain"
+                      className="w-24 md:w-28 lg:w-36 h-auto object-contain"
                     />
                   </motion.div>
+                  <h2 className="text-4xl md:text-5xl lg:text-6xl font-heading text-foreground text-balance">
+                    Таны эрүүл мэндийн цогц хөтөч
+                  </h2>
                 </div>
                 <p className="text-lg text-foreground/70 mb-8 max-w-xl">
                   AI технологи ашиглан таны биеийн галбир, зорилго, хэрэгцээнд тохирсон дасгал, хооллолт, сэтгэлзүйн дэмжлэг үзүүлнэ.
