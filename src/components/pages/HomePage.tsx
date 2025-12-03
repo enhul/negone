@@ -321,29 +321,13 @@ export default function HomePage() {
             style={{ opacity: heroTextOpacity, y: heroTextY }}
             className="relative z-10 px-4 max-w-5xl"
           >
-            <div className="flex items-center justify-center gap-4 md:gap-6 lg:gap-8 mb-6">
-              <motion.h1 
-                className="text-5xl md:text-7xl lg:text-8xl font-heading text-foreground text-balance"
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1, transition: { duration: 0.8, delay: 0.2, ease: "easeOut" } }}
-              >
-                NegOne
-              </motion.h1>
-              <motion.div
-                initial={{ y: 20, opacity: 0, scale: 0.8 }}
-                animate={{ y: 0, opacity: 1, scale: 1 }}
-                transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
-                className="flex-shrink-0"
-              >
-                <Image
-                  src="https://static.wixstatic.com/media/906313_5492f5225b8243529cc3b547ad8f44e9~mv2.png"
-                  alt="NegOne mascot waving"
-                  width={200}
-                  height={220}
-                  className="w-32 md:w-48 lg:w-64 h-auto object-contain"
-                />
-              </motion.div>
-            </div>
+            <motion.h1 
+              className="text-5xl md:text-7xl lg:text-8xl font-heading text-foreground mb-6 text-balance"
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1, transition: { duration: 0.8, delay: 0.2, ease: "easeOut" } }}
+            >
+              NegOne
+            </motion.h1>
             <motion.p 
               className="text-lg md:text-xl text-foreground/80 mb-10 max-w-3xl mx-auto text-balance"
               initial={{ y: 20, opacity: 0 }}
