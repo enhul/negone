@@ -260,7 +260,7 @@ export default function Layout() {
           </div>
           <div className="mt-8 pt-8 border-t border-primary/10 text-center">
             <p className="text-foreground/60 font-paragraph">
-              © 2024 NegOne. Бүх эрх хуулиар хамгаалагдсан.
+              © 2025 NegOne.
             </p>
           </div>
         </div>
