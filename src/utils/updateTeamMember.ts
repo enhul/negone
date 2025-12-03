@@ -37,6 +37,16 @@ export async function updateTeamMemberInfo() {
       console.log('Амардалай Содбилэг updated successfully');
     }
     
+    // Update Тунамал-Эрдэнэ Алтантуяа
+    const member4 = items.find(member => member.name === 'Тунамал-Эрдэнэ Алтантуяа');
+    if (member4) {
+      await BaseCrudService.update<TeamMembers>('teammembers', {
+        _id: member4._id,
+        photo: 'https://static.wixstatic.com/media/906313_fc57e8ca92014cdfaede60f9ab5c7cee~mv2.jpg'
+      });
+      console.log('Тунамал-Эрдэнэ Алтантуяа updated successfully');
+    }
+    
     return true;
   } catch (error) {
     console.error('Error updating team members:', error);
