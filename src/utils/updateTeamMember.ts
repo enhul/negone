@@ -27,6 +27,16 @@ export async function updateTeamMemberInfo() {
       console.log('Содгэрэл Биндэръяа updated successfully');
     }
     
+    // Update Амардалай Содбилэг
+    const member3 = items.find(member => member.name === 'Амардалай Содбилэг');
+    if (member3) {
+      await BaseCrudService.update<TeamMembers>('teammembers', {
+        _id: member3._id,
+        photo: 'https://static.wixstatic.com/media/906313_d7b0c2677a544eaeb5f08145bda191e6~mv2.jpg'
+      });
+      console.log('Амардалай Содбилэг updated successfully');
+    }
+    
     return true;
   } catch (error) {
     console.error('Error updating team members:', error);
