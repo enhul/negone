@@ -117,7 +117,7 @@ export default function AboutPage() {
         </div>
       </motion.section>
 
-      {/* Mission Section with Mascot */}
+      {/* Mission Section */}
       <motion.section 
         className="py-16 px-8 max-w-[100rem] mx-auto"
         initial={{ opacity: 0, y: 50 }}
@@ -129,19 +129,6 @@ export default function AboutPage() {
           <h2 className="text-4xl md:text-5xl font-heading text-foreground mb-6">
             Манай эрхэм зорилго
           </h2>
-          <motion.div
-            className="flex justify-center mb-8"
-            animate={{ y: [0, -10, 0] }}
-            transition={{ duration: 3, repeat: Infinity }}
-          >
-            <Image
-              src="https://static.wixstatic.com/media/906313_76cf671770fd4c2b8bc53dac3c0ad805~mv2.png"
-              alt="NegOne mascot"
-              width={120}
-              height={120}
-              className="w-32 h-32 object-contain"
-            />
-          </motion.div>
         </div>
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
           <motion.div 

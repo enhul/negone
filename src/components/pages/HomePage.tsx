@@ -436,31 +436,11 @@ export default function HomePage() {
           <ParallaxImage id="visual-breather-calm-water" alt="Calm, serene water with pastel reflections" />
           <div className="absolute inset-0 bg-gradient-to-t from-white via-white/50 to-transparent z-10"></div>
           <div className="absolute inset-0 flex items-center justify-center z-20">
-            <div className="flex items-center justify-center gap-8 max-w-5xl mx-auto px-4">
-              <AnimatedElement className="hidden md:flex">
-                <Image
-                  src="https://static.wixstatic.com/media/906313_76cf671770fd4c2b8bc53dac3c0ad805~mv2.png"
-                  alt="NegOne mascot waving"
-                  width={200}
-                  height={200}
-                  className="w-40 h-40 object-contain"
-                />
-              </AnimatedElement>
-              <AnimatedElement>
-                <h3 className="text-3xl md:text-4xl font-heading text-foreground/90 text-center max-w-3xl mx-auto text-balance">
-                  "Өөрийгөө хайрлах аялал бол хамгийн чухал аялал юм."
-                </h3>
-              </AnimatedElement>
-              <AnimatedElement className="hidden md:flex">
-                <Image
-                  src="https://static.wixstatic.com/media/906313_6078689b7f6a4d5a87b4c1a252b7e9aa~mv2.png"
-                  alt="NegOne mascot eating"
-                  width={200}
-                  height={200}
-                  className="w-40 h-40 object-contain"
-                />
-              </AnimatedElement>
-            </div>
+            <AnimatedElement>
+              <h3 className="text-3xl md:text-4xl font-heading text-foreground/90 text-center max-w-3xl mx-auto px-4 text-balance">
+                "Өөрийгөө хайрлах аялал бол хамгийн чухал аялал юм."
+              </h3>
+            </AnimatedElement>
           </div>
         </section>
 
