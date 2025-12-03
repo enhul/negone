@@ -23,9 +23,9 @@ export default {
                 paragraph: ["madefor-display"]
             },
             colors: {
-                primary: "#aed979",
+                primary: "#829463",
                 "primary-foreground": "#333333",
-                secondary: "#f592ab",
+                secondary: "#efcbd4",
                 "secondary-foreground": "#333333",
                 background: "#fff7fa",
                 "soft-light-green": "#dfb8e9",
