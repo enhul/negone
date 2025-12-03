@@ -200,11 +200,26 @@ export default function DashboardPage() {
           transition={{ duration: 0.5 }}
         >
           {/* Header */}
-          <div className="text-center mb-8">
-            <h1 className="text-4xl md:text-5xl font-heading text-foreground mb-4">
-              Хяналтын самбар
-            </h1>
-            <p className="text-lg text-foreground/80 font-paragraph">
+          <div className="mb-8">
+            <div className="flex items-center justify-center gap-4 mb-4">
+              <motion.div
+                initial={{ x: -20, opacity: 0, scale: 0.8 }}
+                animate={{ x: 0, opacity: 1, scale: 1 }}
+                transition={{ duration: 0.6, ease: "easeOut" }}
+              >
+                <Image
+                  src="https://static.wixstatic.com/media/906313_2f35ae8bb46f462a919000e362b4784b~mv2.png"
+                  alt="NegOne mascot"
+                  width={100}
+                  height={120}
+                  className="w-20 md:w-28 h-auto object-contain"
+                />
+              </motion.div>
+              <h1 className="text-4xl md:text-5xl font-heading text-foreground">
+                Хяналтын самбар
+              </h1>
+            </div>
+            <p className="text-lg text-foreground/80 font-paragraph text-center">
               Сайн байна уу, {member?.profile?.nickname || member?.contact?.firstName}! Өнөөдрийн ахиц дэвшлээ харцгаая
             </p>
           </div>
