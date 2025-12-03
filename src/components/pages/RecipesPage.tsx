@@ -1040,9 +1040,9 @@ export default function RecipesPage() {
               <Image
                 src="https://static.wixstatic.com/media/906313_8df107e7784a4c98a21ac2e4b4b2d311~mv2.png"
                 alt="NegOne mascot"
-                width={56}
-                height={67}
-                className="w-12 md:w-14 h-auto object-contain"
+                width={64}
+                height={76}
+                className="w-14 md:w-16 h-auto object-contain"
               />
               <h1 className="text-4xl md:text-5xl font-heading text-foreground">
                 Эрүүл жорууд ба зууш

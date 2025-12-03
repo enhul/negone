@@ -210,9 +210,9 @@ export default function DashboardPage() {
                 <Image
                   src="https://static.wixstatic.com/media/906313_2f35ae8bb46f462a919000e362b4784b~mv2.png"
                   alt="NegOne mascot"
-                  width={56}
-                  height={67}
-                  className="w-12 md:w-14 h-auto object-contain"
+                  width={64}
+                  height={76}
+                  className="w-14 md:w-16 h-auto object-contain"
                 />
               </motion.div>
               <h1 className="text-4xl md:text-5xl font-heading text-foreground">
