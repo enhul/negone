@@ -1036,13 +1036,13 @@ export default function RecipesPage() {
         >
           {/* Header */}
           <div className="text-center mb-12">
-            <div className="flex items-center justify-center gap-2 mb-4">
+            <div className="flex items-center justify-center gap-3 mb-4">
               <Image
                 src="https://static.wixstatic.com/media/906313_8df107e7784a4c98a21ac2e4b4b2d311~mv2.png"
                 alt="NegOne mascot"
-                width={40}
-                height={48}
-                className="w-8 md:w-10 h-auto object-contain"
+                width={56}
+                height={67}
+                className="w-12 md:w-14 h-auto object-contain"
               />
               <h1 className="text-4xl md:text-5xl font-heading text-foreground">
                 Эрүүл жорууд ба зууш
