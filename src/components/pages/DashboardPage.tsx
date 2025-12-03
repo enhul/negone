@@ -201,7 +201,7 @@ export default function DashboardPage() {
         >
           {/* Header */}
           <div className="mb-8">
-            <div className="flex items-center justify-center gap-4 mb-4">
+            <div className="flex items-center justify-center gap-3 mb-4">
               <motion.div
                 initial={{ x: -20, opacity: 0, scale: 0.8 }}
                 animate={{ x: 0, opacity: 1, scale: 1 }}
@@ -210,9 +210,9 @@ export default function DashboardPage() {
                 <Image
                   src="https://static.wixstatic.com/media/906313_2f35ae8bb46f462a919000e362b4784b~mv2.png"
                   alt="NegOne mascot"
-                  width={100}
-                  height={120}
-                  className="w-20 md:w-28 h-auto object-contain"
+                  width={80}
+                  height={96}
+                  className="w-16 md:w-20 h-auto object-contain"
                 />
               </motion.div>
               <h1 className="text-4xl md:text-5xl font-heading text-foreground">
