@@ -14,6 +14,7 @@ import { Slider } from '@/components/ui/slider';
 import { Badge } from '@/components/ui/badge';
 import { Calendar, Droplets, Activity, Weight, MessageSquare, ExternalLink, Play } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { Image } from '@/components/ui/image';
 
 interface DailyEntry {
   date: string;
@@ -167,7 +168,20 @@ export default function ProgressPage() {
           transition={{ duration: 0.5 }}
         >
           {/* Header */}
-          <div className="text-center mb-8">
+          <div className="text-center mb-8 flex flex-col items-center gap-4">
+            <motion.div
+              initial={{ y: 20, opacity: 0, scale: 0.8 }}
+              animate={{ y: 0, opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6, ease: "easeOut" }}
+            >
+              <Image
+                src="https://static.wixstatic.com/media/906313_15e5c29215414cffb1c8d2f8919a606d~mv2.png"
+                alt="NegOne mascot"
+                width={120}
+                height={140}
+                className="w-24 md:w-32 h-auto object-contain mx-auto"
+              />
+            </motion.div>
             <h1 className="text-4xl md:text-5xl font-heading text-foreground mb-4">
               Ахиц дэвшил бүртгэх
             </h1>
