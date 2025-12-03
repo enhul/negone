@@ -636,6 +636,7 @@ function RecipeCard({ recipe, onCardClick }: { recipe: ParsedRecipe; onCardClick
 function CMSRecipeCard({ recipe, onCardClick }: { recipe: HealthyRecipesandSnacks; onCardClick: () => void }) {
   const calories = recipe.caloriesPerServing || 0;
   const macros = generateMacros(calories);
+  const imageUrl = recipe.dishImage || getFallbackImage(recipe.recipeName, recipe.ingredients);
   
   return (
     <motion.div
@@ -646,7 +647,16 @@ function CMSRecipeCard({ recipe, onCardClick }: { recipe: HealthyRecipesandSnack
       className="cursor-pointer group"
     >
       <div className="bg-white rounded-3xl overflow-hidden shadow-md hover:shadow-lg transition-shadow h-full flex flex-col">
-        {/* Image Container - Hidden */}
+        {/* Image Container */}
+        <div className="w-full h-48 overflow-hidden bg-foreground/5 group-hover:opacity-90 transition-opacity">
+          <Image
+            src={imageUrl}
+            alt={recipe.recipeName || 'Recipe'}
+            width={400}
+            height={300}
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+          />
+        </div>
 
         {/* Content Container */}
         <div className="p-5 flex flex-col flex-1">
