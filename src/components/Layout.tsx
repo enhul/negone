@@ -3,7 +3,7 @@ import { Outlet, Link, useLocation } from 'react-router-dom';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
-import { Home, User, BarChart3, BookOpen, Utensils, Menu, X } from 'lucide-react';
+import { Home, User, BarChart3, BookOpen, Utensils, Menu, X, Facebook, Instagram } from 'lucide-react';
 import { useState } from 'react';
 import Chatbot from '@/components/Chatbot';
 
@@ -230,9 +230,29 @@ export default function Layout() {
             </div>
             <div>
               <h4 className="text-lg font-heading text-foreground mb-4">Холбоо барих</h4>
-              <p className="text-foreground/80 font-paragraph">
+              <p className="text-foreground/80 font-paragraph mb-4">
                 Асуулт, санал хүсэлт байвал бидэнтэй холбогдоорой
               </p>
+              <div className="flex gap-3">
+                <a 
+                  href="https://facebook.com" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-foreground/70 hover:text-primary transition-colors"
+                  aria-label="Facebook"
+                >
+                  <Facebook className="w-5 h-5" />
+                </a>
+                <a 
+                  href="https://instagram.com" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-foreground/70 hover:text-primary transition-colors"
+                  aria-label="Instagram"
+                >
+                  <Instagram className="w-5 h-5" />
+                </a>
+              </div>
             </div>
           </div>
           <div className="mt-8 pt-8 border-t border-primary/10 text-center">
