@@ -380,7 +380,7 @@ export default function HomePage() {
           <div className="max-w-[100rem] mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-16 items-start">
             <div className="md:sticky md:top-24">
               <AnimatedElement>
-                <div className="flex items-center gap-6 mb-6">
+                <div className="flex items-center gap-1 md:gap-2 mb-6">
                   <h2 className="text-4xl md:text-5xl lg:text-6xl font-heading text-foreground text-balance">
                     Таны эрүүл мэндийн цогц хөтөч
                   </h2>
