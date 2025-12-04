@@ -32,7 +32,7 @@ export const POST: APIRoute = async ({ request }) => {
       return new Response(
         JSON.stringify({ 
           error: 'API key not configured',
-          message: 'Уучлаарай, API түлхүүр олдсонгүй. Админтай холбогдоорой.' 
+          message: 'Уучлаарай, API түлхүүр олдсонгүй ээээ. Админтай холбогдоорой.' 
         }),
         { 
           status: 401,
