@@ -29,29 +29,22 @@ export default function Chatbot() {
     scrollToBottom();
   }, [messages]);
 
-  const getChatGPTResponse = async (userMessage) => {
-    try {
-      const response = await fetch('/_functions/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: userMessage }),
-      });
+const getChatGPTResponse = async (userMessage) => {
+  try {
+    const response = await fetch('/_functions/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: userMessage }), // message key backend-тэй таарна
+    });
 
-      if (!response.ok) {
-        const error = await response.json();
-        console.error('Chat API error:', error);
-        if (response.status === 401) return 'Уучлаарай, API түлхүүр олдсонгүй.';
-        if (response.status === 429) return 'Хэтэрхий олон асуулт ирлээ. Хүлээнэ үү.';
-        return 'Хариулт авахад алдаа гарлаа. Дахин оролдоорой.';
-      }
+    const data = await response.json();
+    return data.message || 'Хариулт авахад алдаа гарлаа.';
+  } catch (error) {
+    console.error('Error calling chat API:', error);
+    return 'Сүлжээний алдаа гарлаа. Дахин оролдоорой.';
+  }
+};
 
-      const data = await response.json();
-      return data.message || 'Хариулт авахад алдаа гарлаа.';
-    } catch (error) {
-      console.error('Error calling chat API:', error);
-      return 'Сүлжээний алдаа гарлаа. Дахин оролдоорой.';
-    }
-  };
 
   const handleSendMessage = async () => {
     if (!inputValue.trim()) return;
