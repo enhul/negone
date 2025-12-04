@@ -1,15 +1,11 @@
 // backend/chat.jsw
 import { secrets } from 'wix-secrets-backend';
 
-export async function chat({ userMessage }) {
-  if (!userMessage) {
-    return { message: 'Асуулт хоосон байна.' };
-  }
+export async function chat({ message }) {
+  if (!message) return { message: 'Асуулт хоосон байна.' };
 
   const apiKey = await secrets.getSecret("GROQ_API_KEY");
-  if (!apiKey) {
-    return { message: 'API түлхүүр олдсонгүй.' };
-  }
+  if (!apiKey) return { message: 'API түлхүүр олдсонгүй.' };
 
   try {
     const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
@@ -22,7 +18,7 @@ export async function chat({ userMessage }) {
         model: "llama-3.3-70b-versatile",
         messages: [
           { role: "system", content: "You are NegOne AI..." },
-          { role: "user", content: userMessage }
+          { role: "user", content: message }
         ],
         temperature: 0.7,
         max_tokens: 500
