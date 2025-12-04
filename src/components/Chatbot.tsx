@@ -15,13 +15,13 @@ interface Message {
 
 async function getChatResponse(userMessage: string): Promise<string> {
   try {
-    // Call the Wix backend API
+    // Call the Wix backend API using the correct endpoint format
     const response = await fetch('/_functions/chat', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(userMessage),
+      body: JSON.stringify({ message: userMessage }),
     });
 
     if (!response.ok) {
