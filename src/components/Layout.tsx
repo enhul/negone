@@ -7,6 +7,7 @@ import { Home, User, BarChart3, BookOpen, Utensils, Menu, X, Facebook, Instagram
 import { useState } from 'react';
 import Chatbot from '@/components/Chatbot';
 import { Image } from '@/components/ui/image';
+import UpdateExerciseVideo from '@/components/UpdateExerciseVideo';
 
 export default function Layout() {
   const { member, isAuthenticated, isLoading, actions } = useMember();
@@ -27,6 +28,7 @@ export default function Layout() {
 
   return (
     <div className="min-h-screen bg-background">
+      <UpdateExerciseVideo />
       {/* Header */}
       <motion.header 
         className="bg-white/80 backdrop-blur-md shadow-lg border-b border-primary/10 sticky top-0 z-50"
