@@ -23,7 +23,8 @@ Always be supportive and never judgmental.`;
 export const POST: APIRoute = async ({ request }) => {
   try {
     // Check if API key is available
-    const apiKey = process.env.OPENAI_API_KEY;
+   const apiKey = process.env.GROQ_API_KEY; 
+
     
     if (!apiKey) {
       console.error('OpenAI API key not found in environment variables');
@@ -54,7 +55,7 @@ export const POST: APIRoute = async ({ request }) => {
     }
 
     // Call OpenAI API
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+    const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
