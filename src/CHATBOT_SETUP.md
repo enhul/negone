@@ -44,7 +44,8 @@ The NegOne chatbot has been integrated with OpenAI's ChatGPT API to provide real
 Create a `.env.local` file in the root of your project (same level as `package.json`):
 
 ```env
-OPENAI_API_KEY=sk-your-api-key-here
+OPENAI_API_KEY=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
+
 ```
 
 Replace `sk-your-api-key-here` with your actual OpenAI API key.
