@@ -62,7 +62,7 @@ export const POST: APIRoute = async ({ request }) => {
         'Authorization': `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        model: 'gpt-3.5-turbo',
+        model: 'llama-3.3-70b-versatile',
         messages: [
           {
             role: 'system',
