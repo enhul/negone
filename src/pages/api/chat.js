@@ -1,56 +1,37 @@
-// Frontend-only chatbot - no backend secrets needed
-// This file is kept for future API integration
+// backend/chat.jsw
+import { fetch } from 'wix-fetch';
 
-const SYSTEM_PROMPT = `
-You are NegOne AI, a supportive and empathetic health and wellness assistant for women. 
-Your characteristics:
-- Empathetic, encouraging, and informative tone
-- Supportive and empowering
-- Knowledgeable about fitness, nutrition, mental health, and wellness
-- Always respond in Mongolian language
-- Provide practical, actionable advice
-- Be warm and friendly
-- Focus on women's health and wellness
-- Encourage self-love and body positivity
-`;
+export async function chat(request) {
+  const { message } = request.body;
 
-export async function chatAI(userMessage) {
+  if (!message) {
+    return { status: 400, body: { error: 'Message missing' } };
+  }
+
+  // Жишээ API call (тоглоомын хувилбар)
   try {
-    const apiKey = await secrets.getSecret("GROQ_API_KEY");
-
-    if (!apiKey) {
-      return {
-        error: "API key missing",
-        message: "Уучлаарай, API түлхүүр олдсонгүй."
-      };
-    }
-
-    if (!userMessage || typeof userMessage !== "string") {
-      return { error: "Invalid message" };
-    }
-
-    const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-      method: "POST",
+    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
       headers: {
-        "Authorization": `Bearer ${apiKey}`,
-        "Content-Type": "application/json"
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${process.env.GROQ_API_KEY}`,
       },
       body: JSON.stringify({
-        model: "llama-3.3-70b-versatile",
+        model: 'llama-3.3-70b-versatile',
         messages: [
-          { role: "system", content: SYSTEM_PROMPT },
-          { role: "user", content: userMessage }
+          { role: 'system', content: 'You are NegOne AI, answer in Mongolian.' },
+          { role: 'user', content: message }
         ],
         temperature: 0.7,
         max_tokens: 500
-      })
+      }),
     });
 
     const data = await response.json();
+    const botMessage = data.choices?.[0]?.message?.content || 'Хариулт олдсонгүй';
+    return { status: 200, body: { message: botMessage } };
 
-    return data;
-  } catch (error) {
-    console.error("Chat API Error:", error);
-    return { error: "Server error" };
+  } catch (err) {
+    return { status: 500, body: { error: 'Server error', details: err.message } };
   }
 }
