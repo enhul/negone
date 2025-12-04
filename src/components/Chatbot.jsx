@@ -6,42 +6,6 @@ import { Card } from '@/components/ui/card';
 import { MessageCircle, X, Send, Loader } from 'lucide-react';
 import { useMember } from '@/integrations';
 
-async function getChatGPTResponse(userMessage) {
-  try {
-    // Call the backend API route instead of directly calling OpenAI
-    const response = await fetch('/api/chat', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        message: userMessage,
-      }),
-    });
-
-    if (!response.ok) {
-      const error = await response.json();
-      console.error('Chat API error:', error);
-      
-      if (response.status === 401) {
-        return 'Уучлаарай, API түлхүүл олдсонгүй. Админтай холбогдоорой.';
-      }
-      
-      if (response.status === 429) {
-        return 'Уучлаарай, хэтэрхий олон асуулт ирлээ. Хэсэг хугацаа хүлээнэ үү.';
-      }
-      
-      return 'Уучлаарай, хариулт авахад алдаа гарлаа. Дахин оролдоорой.';
-    }
-
-    const data = await response.json();
-    return data.message || 'Хариулт авахад алдаа гарлаа.';
-  } catch (error) {
-    console.error('Error calling chat API:', error);
-    return 'Уучлаарай, сүлжээний алдаа гарлаа. Дахин оролдоорой.';
-  }
-}
-
 export default function Chatbot() {
   const { isAuthenticated } = useMember();
   const [isOpen, setIsOpen] = useState(false);
@@ -65,12 +29,34 @@ export default function Chatbot() {
     scrollToBottom();
   }, [messages]);
 
+  const getChatGPTResponse = async (userMessage) => {
+    try {
+      const response = await fetch('/_functions/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: userMessage }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        console.error('Chat API error:', error);
+        if (response.status === 401) return 'Уучлаарай, API түлхүүр олдсонгүй.';
+        if (response.status === 429) return 'Хэтэрхий олон асуулт ирлээ. Хүлээнэ үү.';
+        return 'Хариулт авахад алдаа гарлаа. Дахин оролдоорой.';
+      }
+
+      const data = await response.json();
+      return data.message || 'Хариулт авахад алдаа гарлаа.';
+    } catch (error) {
+      console.error('Error calling chat API:', error);
+      return 'Сүлжээний алдаа гарлаа. Дахин оролдоорой.';
+    }
+  };
+
   const handleSendMessage = async () => {
     if (!inputValue.trim()) return;
 
     const userMessageText = inputValue;
-
-    // Add user message
     const userMessage = {
       id: Date.now().toString(),
       text: userMessageText,
@@ -82,16 +68,14 @@ export default function Chatbot() {
     setInputValue('');
     setIsLoading(true);
 
-    // Get response from ChatGPT
     const botResponseText = await getChatGPTResponse(userMessageText);
-    
     const botResponse = {
       id: (Date.now() + 1).toString(),
       text: botResponseText,
       sender: 'bot',
       timestamp: new Date(),
     };
-    
+
     setMessages(prev => [...prev, botResponse]);
     setIsLoading(false);
   };
@@ -113,11 +97,7 @@ export default function Chatbot() {
         whileTap={{ scale: 0.95 }}
         aria-label="Open chatbot"
       >
-        {isOpen ? (
-          <X className="w-6 h-6" />
-        ) : (
-          <MessageCircle className="w-6 h-6" />
-        )}
+        {isOpen ? <X className="w-6 h-6" /> : <MessageCircle className="w-6 h-6" />}
       </motion.button>
 
       {/* Chat Window */}
