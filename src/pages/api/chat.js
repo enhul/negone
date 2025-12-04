@@ -1,6 +1,3 @@
-import type { APIRoute } from 'astro';
-// import type {secrets} from 'wix-secrets';
-
 const SYSTEM_PROMPT = `You are NegOne AI, a supportive and empathetic health and wellness assistant for women. You provide personalized advice on fitness, nutrition, mental health, and self-love. 
 
 Your characteristics:
@@ -21,20 +18,19 @@ When users ask about:
 
 Always be supportive and never judgmental.`;
 
-export const POST: APIRoute = async ({ request }) => {
+export const POST = async ({ request }) => {
   try {
     // Check if API key is available
-   const apiKey = process.env.GROQ_API_KEY; 
+    const apiKey = process.env.GROQ_API_KEY;
 
-    
     if (!apiKey) {
       console.error('OpenAI API key not found in environment variables');
       return new Response(
-        JSON.stringify({ 
+        JSON.stringify({
           error: 'API key not configured',
-          message: 'Уучлаарай, API түлхүүр олдсонгүй ээээ. Админтай холбогдоорой.' 
+          message: 'Уучлаарай, API түлхүүр олдсонгүй ээээ. Админтай холбогдоорой.'
         }),
-        { 
+        {
           status: 401,
           headers: { 'Content-Type': 'application/json' }
         }
@@ -48,14 +44,14 @@ export const POST: APIRoute = async ({ request }) => {
     if (!userMessage || typeof userMessage !== 'string') {
       return new Response(
         JSON.stringify({ error: 'Invalid message' }),
-        { 
+        {
           status: 400,
           headers: { 'Content-Type': 'application/json' }
         }
       );
     }
 
-    // Call OpenAI API
+    // Call Groq API
     const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
       method: 'POST',
       headers: {
@@ -81,15 +77,15 @@ export const POST: APIRoute = async ({ request }) => {
 
     if (!response.ok) {
       const error = await response.json();
-      console.error('OpenAI API error:', error);
-      
+      console.error('Groq API error:', error);
+
       if (response.status === 429) {
         return new Response(
-          JSON.stringify({ 
+          JSON.stringify({
             error: 'Rate limited',
-            message: 'Уучлаарай, хэтэрхий олон асуулт ирлээ. Хэсэг хугацаа хүлээнэ үү.' 
+            message: 'Уучлаарай, хэтэрхий олон асуулт ирлээ. Хэсэг хугацаа хүлээнэ үү.'
           }),
-          { 
+          {
             status: 429,
             headers: { 'Content-Type': 'application/json' }
           }
@@ -98,11 +94,11 @@ export const POST: APIRoute = async ({ request }) => {
 
       if (response.status === 401) {
         return new Response(
-          JSON.stringify({ 
+          JSON.stringify({
             error: 'Unauthorized',
-            message: 'Уучлаарай, API түлхүүр буруу байна. Админтай холбогдоорой.' 
+            message: 'Уучлаарай, API түлхүүр буруу байна. Админтай холбогдоорой.'
           }),
-          { 
+          {
             status: 401,
             headers: { 'Content-Type': 'application/json' }
           }
@@ -110,11 +106,11 @@ export const POST: APIRoute = async ({ request }) => {
       }
 
       return new Response(
-        JSON.stringify({ 
-          error: 'OpenAI API error',
-          message: 'Уучлаарай, хариулт авахад алдаа гарлаа. Дахин оролдоорой.' 
+        JSON.stringify({
+          error: 'Groq API error',
+          message: 'Уучлаарай, хариулт авахад алдаа гарлаа. Дахин оролдоорой.'
         }),
-        { 
+        {
           status: 500,
           headers: { 'Content-Type': 'application/json' }
         }
@@ -126,11 +122,11 @@ export const POST: APIRoute = async ({ request }) => {
 
     if (!botMessage) {
       return new Response(
-        JSON.stringify({ 
-          error: 'No response from OpenAI',
-          message: 'Хариулт авахад алдаа гарлаа.' 
+        JSON.stringify({
+          error: 'No response from Groq',
+          message: 'Хариулт авахад алдаа гарлаа.'
         }),
-        { 
+        {
           status: 500,
           headers: { 'Content-Type': 'application/json' }
         }
@@ -139,7 +135,7 @@ export const POST: APIRoute = async ({ request }) => {
 
     return new Response(
       JSON.stringify({ message: botMessage }),
-      { 
+      {
         status: 200,
         headers: { 'Content-Type': 'application/json' }
       }
@@ -147,11 +143,11 @@ export const POST: APIRoute = async ({ request }) => {
   } catch (error) {
     console.error('Chat API error:', error);
     return new Response(
-      JSON.stringify({ 
+      JSON.stringify({
         error: 'Internal server error',
-        message: 'Уучлаарай, сүлжээний алдаа гарлаа. Дахин оролдоорой.' 
+        message: 'Уучлаарай, сүлжээний алдаа гарлаа. Дахин оролдоорой.'
       }),
-      { 
+      {
         status: 500,
         headers: { 'Content-Type': 'application/json' }
       }
