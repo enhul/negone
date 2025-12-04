@@ -6,14 +6,7 @@ import { Card } from '@/components/ui/card';
 import { MessageCircle, X, Send, Loader } from 'lucide-react';
 import { useMember } from '@/integrations';
 
-interface Message {
-  id: string;
-  text: string;
-  sender: 'user' | 'bot';
-  timestamp: Date;
-}
-
-async function getChatGPTResponse(userMessage: string): Promise<string> {
+async function getChatGPTResponse(userMessage) {
   try {
     // Call the backend API route instead of directly calling OpenAI
     const response = await fetch('/api/chat', {
@@ -31,7 +24,7 @@ async function getChatGPTResponse(userMessage: string): Promise<string> {
       console.error('Chat API error:', error);
       
       if (response.status === 401) {
-        return 'Уучлаарай, API түлхүүр олдсонгүй. Админтай холбогдоорой.';
+        return 'Уучлаарай, API түлхүүл олдсонгүй. Админтай холбогдоорой.';
       }
       
       if (response.status === 429) {
@@ -52,7 +45,7 @@ async function getChatGPTResponse(userMessage: string): Promise<string> {
 export default function Chatbot() {
   const { isAuthenticated } = useMember();
   const [isOpen, setIsOpen] = useState(false);
-  const [messages, setMessages] = useState<Message[]>([
+  const [messages, setMessages] = useState([
     {
       id: '1',
       text: 'Сайн байна уу! Би NegOne AI туслах юм. Та эрүүл мэнд, фитнес, хооллолт, сэтгэлзүйн талаар асуулт байвал асууж болно.',
@@ -62,7 +55,7 @@ export default function Chatbot() {
   ]);
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const messagesEndRef = useRef(null);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -78,7 +71,7 @@ export default function Chatbot() {
     const userMessageText = inputValue;
 
     // Add user message
-    const userMessage: Message = {
+    const userMessage = {
       id: Date.now().toString(),
       text: userMessageText,
       sender: 'user',
@@ -92,7 +85,7 @@ export default function Chatbot() {
     // Get response from ChatGPT
     const botResponseText = await getChatGPTResponse(userMessageText);
     
-    const botResponse: Message = {
+    const botResponse = {
       id: (Date.now() + 1).toString(),
       text: botResponseText,
       sender: 'bot',
@@ -103,7 +96,7 @@ export default function Chatbot() {
     setIsLoading(false);
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
+  const handleKeyPress = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       handleSendMessage();
