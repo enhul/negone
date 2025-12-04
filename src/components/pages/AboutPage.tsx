@@ -20,7 +20,7 @@ export default function AboutPage() {
         // Hardcode specific name and role changes
         const updatedMembers = filteredMembers.map(member => {
           if (member.name === 'Эрдэнэболд Энхцэцэг') {
-            return { ...member, name: 'Эрдэнэболд Эрхцэцэг', photo: 'https://static.wixstatic.com/media/906313_82e38ca0d15e480eb59f848ebfb5afb7~mv2.jpeg' };
+            return { ...member, name: 'Эрдэнэболд Эрхцэцэг', photo: 'https://static.wixstatic.com/media/906313_fb092811fd4b4979b40927641c552adb~mv2.jpeg' };
           }
           if (member.name === 'Энхбаясгалан Энххүслэн') {
             return { ...member, name: 'Мөнхбаясгалан Энххүслэн', role: 'Судалгаа хариуцагч, хөгжүүлэгч' };
