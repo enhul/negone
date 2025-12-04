@@ -525,7 +525,7 @@ export default function HomePage() {
                   className="bg-primary text-primary-foreground hover:bg-primary/80 rounded-full px-10 py-7 text-xl font-semibold transition-transform duration-300 hover:scale-105 shadow-lg shadow-primary/30"
                 >
                   Бидэнтэй нэгдэх
-                </Button>\
+                </Button>
               </AnimatedElement>
             </div>
           </section>
