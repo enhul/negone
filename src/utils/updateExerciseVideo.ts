@@ -26,6 +26,16 @@ export async function updateExerciseVideo() {
       console.log('Exercise 2 video link updated successfully');
     }
     
+    // Update third exercise: 'Хэвлийн булчингийн дасгал'
+    const exercise3 = items.find(ex => ex.exerciseName === 'Хэвлийн булчингийн дасгал');
+    if (exercise3) {
+      await BaseCrudService.update<CuratedExercises>('curatedexercises', {
+        _id: exercise3._id,
+        youtubeLink: 'https://www.youtube.com/watch?v=K3GLIs6yNp4'
+      });
+      console.log('Exercise 3 video link updated successfully');
+    }
+    
     return true;
   } catch (error) {
     console.error('Error updating exercise video:', error);
