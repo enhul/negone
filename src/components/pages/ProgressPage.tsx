@@ -101,11 +101,8 @@ export default function ProgressPage() {
   useEffect(() => {
     // Filter recommended exercises based on user profile
     if (exercises.length > 0) {
-      // Always include "Beginner 20min" exercise for all users
-      const beginnerExercise = exercises.find(ex => ex.exerciseName?.toLowerCase() === 'beginner 20min');
-      
       if (profile.bodyShape && profile.focusAreas && profile.fitnessGoal) {
-        // User has profile - show profile-matched exercises + beginner exercise
+        // User has profile - show profile-matched exercises
         const filtered = exercises.filter(exercise => {
           const matchesBodyShape = exercise.suitableBodyShapes?.toLowerCase().includes(profile.bodyShape?.toLowerCase() || '');
           const matchesFocusAreas = profile.focusAreas?.some(area => 
@@ -116,15 +113,10 @@ export default function ProgressPage() {
           return matchesBodyShape || matchesFocusAreas || matchesGoal;
         });
         
-        // Combine with beginner exercise if not already in filtered list
-        const combined = beginnerExercise && !filtered.find(ex => ex._id === beginnerExercise._id)
-          ? [beginnerExercise, ...filtered]
-          : filtered;
-        
-        setRecommendedExercises(combined.slice(0, 6)); // Show top 6 recommendations
-      } else if (beginnerExercise) {
-        // User doesn't have profile - show only beginner exercise
-        setRecommendedExercises([beginnerExercise]);
+        setRecommendedExercises(filtered.slice(0, 6)); // Show top 6 recommendations
+      } else {
+        // User doesn't have profile - show no exercises
+        setRecommendedExercises([]);
       }
     }
   }, [exercises, profile]);
