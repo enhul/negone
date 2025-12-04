@@ -1,27 +1,7 @@
-interface ChatMessage {
-  role: 'system' | 'user' | 'assistant';
-  content: string;
-}
+import type { APIRoute } from 'astro';
 
-interface GroqResponse {
-  choices?: Array<{
-    message?: {
-      content?: string;
-    };
-  }>;
-}
+const SYSTEM_PROMPT = `You are NegOne AI, a supportive and empathetic health and wellness assistant for women. You provide personalized advice on fitness, nutrition, mental health, and self-love. 
 
-interface ChatRequest {
-  message?: string;
-  userMessage?: string;
-}
-
-interface ChatResponse {
-  message: string;
-}
-
-const SYSTEM_PROMPT = `
-You are NegOne AI, a supportive and empathetic health and wellness assistant for women. 
 Your characteristics:
 - Empathetic, encouraging, and informative tone
 - Supportive and empowering
@@ -31,56 +11,71 @@ Your characteristics:
 - Be warm and friendly
 - Focus on women's health and wellness
 - Encourage self-love and body positivity
-`;
 
-export async function chat(message: string | ChatRequest): Promise<ChatResponse> {
-  const userMessage = typeof message === 'string' ? message : message?.message || message?.userMessage;
+When users ask about:
+- Fitness: Provide exercise tips, workout recommendations, and motivation
+- Nutrition: Offer healthy eating advice, calorie information, and recipe suggestions
+- Mental Health: Provide stress management tips, self-care advice, and emotional support
+- General Wellness: Give holistic health guidance
 
-  if (!userMessage || typeof userMessage !== 'string') {
-    return { message: 'Асуулт хоосон байна.' };
-  }
+Always be supportive and never judgmental.`;
 
-  const apiKey = process.env.GROQ_API_KEY;
-  if (!apiKey) {
-    console.error('GROQ_API_KEY not found in environment variables');
-    return { message: 'API түлхүүр олдсонгүй.' };
-  }
-
+export const POST: APIRoute = async ({ request }) => {
   try {
-    const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${apiKey}`,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        model: "llama-3.3-70b-versatile",
-        messages: [
-          { role: "system", content: SYSTEM_PROMPT },
-          { role: "user", content: userMessage }
-        ] as ChatMessage[],
-        temperature: 0.7,
-        max_tokens: 500
-      })
-    });
+    // Check if API key is available
+   const apiKey = process.env.GROQ_API_KEY; 
 
-    if (!res.ok) {
-      let errorData;
-      try {
-        errorData = await res.json();
-      } catch {
-        errorData = { status: res.status, statusText: res.statusText };
-      }
-      console.error('Groq API error:', errorData);
-      return { message: 'Уучлаарай, хариулт авахад алдаа гарлаа.' };
+    
+    if (!apiKey) {
+      console.error('OpenAI API key not found in environment variables');
+      return new Response(
+        JSON.stringify({ 
+          error: 'API key not configured',
+          message: 'Уучлаарай, API түлхүүр олдсонгүй. Админтай холбогдоорой.' 
+        }),
+        { 
+          status: 401,
+          headers: { 'Content-Type': 'application/json' }
+        }
+      );
     }
 
-    const data = await res.json() as GroqResponse;
-    const responseMessage = data.choices?.[0]?.message?.content || 'Хариулт авахад алдаа гарлаа.';
-    return { message: responseMessage };
+    // Parse request body
+    const body = await request.json();
+    const userMessage = body.message;
 
-  } catch (err) {
-    console.error('Chat error:', err);
-    return { message: 'Уучлаарай, сүлжээний алдаа гарлаа.' };
-  }
-}
+    if (!userMessage || typeof userMessage !== 'string') {
+      return new Response(
+        JSON.stringify({ error: 'Invalid message' }),
+        { 
+          status: 400,
+          headers: { 'Content-Type': 'application/json' }
+        }
+      );
+    }
+
+    // Call OpenAI API
+    const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        model: 'llama-3.3-70b-versatile',
+        messages: [
+          {
+            role: 'system',
+            content: SYSTEM_PROMPT,
+          },
+          {
+            role: 'user',
+            content: userMessage,
+          },
+        ],
+        temperature: 0.7,
+        max_tokens: 500,
+      }),
+    }); 
+
+broo ene groq api key barij avj chadahgui baih ym wix ai ashiglaad dotor nni hiij baigaa
