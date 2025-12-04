@@ -1,5 +1,5 @@
-// Frontend-only chatbot - no backend secrets needed
-// This file is kept for future API integration
+// Wix backend web module for chatbot API
+// This file handles AI chat requests using the Groq API
 
 const SYSTEM_PROMPT = `
 You are NegOne AI, a supportive and empathetic health and wellness assistant for women. 
