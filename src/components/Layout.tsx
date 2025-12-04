@@ -223,7 +223,7 @@ export default function Layout() {
                 viewport={{ once: true }}
                 className="flex-shrink-0 hidden md:block"
               >
-                <Image src="https://static.wixstatic.com/media/906313_be6ef06446934f22acad4c6661be0e1f~mv2.png" alt="NegOne mascot" width={80} height={100} className="w-20 h-auto object-contain" />
+                <Image src="https://static.wixstatic.com/media/906313_be6ef06446934f22acad4c6661be0e1f~mv2.png" alt="NegOne mascot" width={76} height={95} className="w-16 md:w-[76px] h-auto object-contain" />
               </motion.div>
             </div>
             <div>

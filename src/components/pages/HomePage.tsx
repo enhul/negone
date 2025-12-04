@@ -391,9 +391,9 @@ export default function HomePage() {
                     <Image
                       src="https://static.wixstatic.com/media/906313_c148e6b7569343a799c35f1c9472ac3d~mv2.png"
                       alt="NegOne mascot waving"
-                      width={140}
-                      height={160}
-                      className="w-24 md:w-28 lg:w-36 h-auto object-contain"
+                      width={152}
+                      height={174}
+                      className="w-16 md:w-[152px] h-auto object-contain"
                     />
                   </motion.div>
                   <h2 className="text-4xl md:text-5xl lg:text-6xl font-heading text-foreground text-balance">
