@@ -2,7 +2,7 @@
 import { SEO } from '@wix/seo/components';
 import { loadSEOTagsServiceConfig } from '@wix/seo/services';
 import { Head } from "@/components/Head";
-import AppRouter from "@/components/Router";
+import AppRouterWrapper from "@/components/AppRouterWrapper";
 import "@wix/wix-vibe-plugins/plugins-vars.css";
 import "@wix/wix-vibe-plugins/plugins-theme.css";
 import "@/styles/global.css";
@@ -22,7 +22,7 @@ const seoTagsServiceConfig = await loadSEOTagsServiceConfig({
   </head>
   <body class="w-full h-full">
     <div id="root" class="w-full h-full">
-      <AppRouter client:only="react" />
+      <AppRouterWrapper client:only="react" />
     </div>
   </body>
 </html>
