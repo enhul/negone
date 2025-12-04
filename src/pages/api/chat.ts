@@ -1,4 +1,5 @@
 import type { APIRoute } from 'astro';
+// import type {secrets} from 'wix-secrets';
 
 const SYSTEM_PROMPT = `You are NegOne AI, a supportive and empathetic health and wellness assistant for women. You provide personalized advice on fitness, nutrition, mental health, and self-love. 
 
@@ -31,7 +32,7 @@ export const POST: APIRoute = async ({ request }) => {
       return new Response(
         JSON.stringify({ 
           error: 'API key not configured',
-          message: 'Уучлаарай, API түлхүүр олдсонгүй. Админтай холбогдоорой.' 
+          message: 'Уучлаарай, API түлхүүр олдсонгүй ээээ. Админтай холбогдоорой.' 
         }),
         { 
           status: 401,
@@ -79,37 +80,76 @@ export const POST: APIRoute = async ({ request }) => {
     });
 
     if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      console.error('Groq API error:', errorData);
+      const error = await response.json();
+      console.error('OpenAI API error:', error);
+      
+      if (response.status === 429) {
+        return new Response(
+          JSON.stringify({ 
+            error: 'Rate limited',
+            message: 'Уучлаарай, хэтэрхий олон асуулт ирлээ. Хэсэг хугацаа хүлээнэ үү.' 
+          }),
+          { 
+            status: 429,
+            headers: { 'Content-Type': 'application/json' }
+          }
+        );
+      }
+
+      if (response.status === 401) {
+        return new Response(
+          JSON.stringify({ 
+            error: 'Unauthorized',
+            message: 'Уучлаарай, API түлхүүр буруу байна. Админтай холбогдоорой.' 
+          }),
+          { 
+            status: 401,
+            headers: { 'Content-Type': 'application/json' }
+          }
+        );
+      }
+
       return new Response(
         JSON.stringify({ 
-          error: 'API request failed',
-          message: 'Уучлаарай, хариулт авахад алдаа гарлаа. Дахин оролдоно уу.' 
+          error: 'OpenAI API error',
+          message: 'Уучлаарай, хариулт авахад алдаа гарлаа. Дахин оролдоорой.' 
         }),
         { 
-          status: response.status,
+          status: 500,
           headers: { 'Content-Type': 'application/json' }
         }
       );
     }
 
     const data = await response.json();
-    const aiMessage = data.choices?.[0]?.message?.content || 'Уучлаарай, хариулт авч чадсангүй.';
+    const botMessage = data.choices?.[0]?.message?.content;
+
+    if (!botMessage) {
+      return new Response(
+        JSON.stringify({ 
+          error: 'No response from OpenAI',
+          message: 'Хариулт авахад алдаа гарлаа.' 
+        }),
+        { 
+          status: 500,
+          headers: { 'Content-Type': 'application/json' }
+        }
+      );
+    }
 
     return new Response(
-      JSON.stringify({ message: aiMessage }),
+      JSON.stringify({ message: botMessage }),
       { 
         status: 200,
         headers: { 'Content-Type': 'application/json' }
       }
     );
-
   } catch (error) {
     console.error('Chat API error:', error);
     return new Response(
       JSON.stringify({ 
         error: 'Internal server error',
-        message: 'Уучлаарай, алдаа гарлаа. Дахин оролдоно уу.' 
+        message: 'Уучлаарай, сүлжээний алдаа гарлаа. Дахин оролдоорой.' 
       }),
       { 
         status: 500,
