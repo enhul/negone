@@ -68,39 +68,43 @@ interface Message {
   timestamp: Date;
 }
 
+// Frontend-only chatbot logic
+function getFrontendChatResponse(userMessage: string): string {
+  const lowerMessage = userMessage.toLowerCase().trim();
+  
+  // Simple pattern matching for frontend-only responses
+  if (lowerMessage === 'hello' || lowerMessage === 'hi' || lowerMessage === 'hey') {
+    return 'Hi there! How can I help you today?';
+  }
+  
+  if (lowerMessage === 'bye' || lowerMessage === 'goodbye' || lowerMessage === 'see you') {
+    return 'Goodbye! Have a nice day.';
+  }
+  
+  // Default response for anything else
+  return "Sorry, I don't understand. Can you rephrase?";
+}
+
+// Placeholder for future API integration
 async function getChatGPTResponse(userMessage: string): Promise<string> {
   try {
+    // TODO: Uncomment this when API is ready
     // Call the backend API route instead of directly calling OpenAI
-    const response = await fetch('/api/chat', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        message: userMessage,
-      }),
-    });
-
-    if (!response.ok) {
-      const error = await response.json();
-      console.error('Chat API error:', error);
-      
-      if (response.status === 401) {
-        return 'Уучлаарай, API түлхүүр олдсонгүй. Админтай холбогдоорой.';
-      }
-      
-      if (response.status === 429) {
-        return 'Уучлаарай, хэтэрхий олон асуулт ирлээ. Хэсэг хугацаа хүлээнэ үү.';
-      }
-      
-      return 'Уучлаарай, хариулт авахад алдаа гарлаа. Дахин оролдоорой.';
-    }
-
-    const data = await response.json();
-    return data.message || 'Хариулт авахад алдаа гарлаа.';
+    // const response = await fetch('/api/chat', {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //   },
+    //   body: JSON.stringify({
+    //     message: userMessage,
+    //   }),
+    // });
+    
+    // For now, use frontend-only logic
+    return getFrontendChatResponse(userMessage);
   } catch (error) {
     console.error('Error calling chat API:', error);
-    return 'Уучлаарай, сүлжээний алдаа гарлаа. Дахин оролдоорой.';
+    return 'Sorry, I encountered an error. Please try again.';
   }
 }
 
@@ -109,13 +113,14 @@ function HomePageChatbot() {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      text: 'Сайн байна уу! Би NegOne AI туслах юм. Та эрүүл мэнд, фитнес, хооллолт, сэтгэлзүйн талаар асуулт байвал асууж болно.',
+      text: 'Hi! I\'m your AI assistant. Try saying "hello", "bye", or ask me anything!',
       sender: 'bot',
       timestamp: new Date(),
     }
   ]);
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [typingText, setTypingText] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -144,6 +149,16 @@ function HomePageChatbot() {
 
     const botResponseText = await getChatGPTResponse(userMessageText);
     
+    // Typing animation effect
+    let displayedText = '';
+    const typingSpeed = 30; // milliseconds per character
+    
+    for (let i = 0; i < botResponseText.length; i++) {
+      displayedText += botResponseText[i];
+      setTypingText(displayedText);
+      await new Promise(resolve => setTimeout(resolve, typingSpeed));
+    }
+    
     const botResponse: Message = {
       id: (Date.now() + 1).toString(),
       text: botResponseText,
@@ -152,6 +167,7 @@ function HomePageChatbot() {
     };
     
     setMessages(prev => [...prev, botResponse]);
+    setTypingText('');
     setIsLoading(false);
   };
 
@@ -193,8 +209,8 @@ function HomePageChatbot() {
           <Card className="bg-white/95 backdrop-blur-sm border-primary/20 shadow-2xl rounded-3xl overflow-hidden flex flex-col h-[500px]">
             {/* Header */}
             <div className="bg-gradient-to-r from-primary/20 to-secondary/20 p-4 border-b border-primary/10">
-              <h3 className="font-heading text-lg text-foreground">NegOne AI Туслах</h3>
-              <p className="text-sm text-foreground/70 font-paragraph">Эрүүл мэндийн асуулт асууж болно</p>
+              <h3 className="font-heading text-lg text-foreground">Chat Assistant</h3>
+              <p className="text-sm text-foreground/70 font-paragraph">Frontend-only demo - Try "hello", "bye", or anything else</p>
             </div>
 
             {/* Messages Container */}
@@ -218,7 +234,25 @@ function HomePageChatbot() {
                   </div>
                 </motion.div>
               ))}
-              {isLoading && (
+              {isLoading && typingText && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="flex justify-start"
+                >
+                  <div className="bg-gray-100 text-foreground px-4 py-3 rounded-2xl rounded-bl-none">
+                    <span className="text-sm">{typingText}</span>
+                    <motion.span
+                      animate={{ opacity: [0, 1] }}
+                      transition={{ duration: 0.6, repeat: Infinity }}
+                      className="ml-1 inline-block"
+                    >
+                      ▌
+                    </motion.span>
+                  </div>
+                </motion.div>
+              )}
+              {isLoading && !typingText && (
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -226,7 +260,7 @@ function HomePageChatbot() {
                 >
                   <div className="bg-gray-100 text-foreground px-4 py-3 rounded-2xl rounded-bl-none flex items-center gap-2">
                     <Loader className="w-4 h-4 animate-spin" />
-                    <span className="text-sm">Хариулт бичиж байна...</span>
+                    <span className="text-sm">Thinking...</span>
                   </div>
                 </motion.div>
               )}
@@ -240,7 +274,7 @@ function HomePageChatbot() {
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
                   onKeyPress={handleKeyPress}
-                  placeholder="Асуулт асууж болно..."
+                  placeholder="Type your message..."
                   className="rounded-full border-primary/20 focus:border-primary font-paragraph text-sm"
                   disabled={isLoading}
                 />
