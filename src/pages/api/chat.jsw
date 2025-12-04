@@ -1,6 +1,8 @@
+
 import { secrets } from 'wix-secrets-backend';
 
-const SYSTEM_PROMPT = `You are NegOne AI, a supportive and empathetic health and wellness assistant for women. 
+const SYSTEM_PROMPT = `
+You are NegOne AI, a supportive and empathetic health and wellness assistant for women. 
 Your characteristics:
 - Empathetic, encouraging, and informative tone
 - Supportive and empowering
@@ -9,12 +11,12 @@ Your characteristics:
 - Provide practical, actionable advice
 - Be warm and friendly
 - Focus on women's health and wellness
-- Encourage self-love and body positivity`;
+- Encourage self-love and body positivity
+`;
 
 export async function chat(message) {
-  // Handle both string and object inputs
   const userMessage = typeof message === 'string' ? message : message?.message || message?.userMessage;
-  
+
   if (!userMessage || typeof userMessage !== 'string') {
     return { message: 'Асуулт хоосон байна.' };
   }
@@ -42,21 +44,18 @@ export async function chat(message) {
         max_tokens: 500
       })
     });
-    
+
     if (!res.ok) {
       let errorData;
-      try {
-        errorData = await res.json();
-      } catch {
-        errorData = { status: res.status, statusText: res.statusText };
-      }
+      try { errorData = await res.json(); } catch { errorData = { status: res.status, statusText: res.statusText }; }
       console.error('Groq API error:', errorData);
       return { message: 'Уучлаарай, хариулт авахад алдаа гарлаа.' };
     }
-    
+
     const data = await res.json();
     const responseMessage = data.choices?.[0]?.message?.content || 'Хариулт авахад алдаа гарлаа.';
     return { message: responseMessage };
+
   } catch (err) {
     console.error('Chat error:', err);
     return { message: 'Уучлаарай, сүлжээний алдаа гарлаа.' };
