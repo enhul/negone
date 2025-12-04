@@ -1,5 +1,24 @@
+interface ChatMessage {
+  role: 'system' | 'user' | 'assistant';
+  content: string;
+}
 
-import { secrets } from 'wix-secrets-backend';
+interface GroqResponse {
+  choices?: Array<{
+    message?: {
+      content?: string;
+    };
+  }>;
+}
+
+interface ChatRequest {
+  message?: string;
+  userMessage?: string;
+}
+
+interface ChatResponse {
+  message: string;
+}
 
 const SYSTEM_PROMPT = `
 You are NegOne AI, a supportive and empathetic health and wellness assistant for women. 
@@ -14,16 +33,16 @@ Your characteristics:
 - Encourage self-love and body positivity
 `;
 
-export async function chat(message) {
+export async function chat(message: string | ChatRequest): Promise<ChatResponse> {
   const userMessage = typeof message === 'string' ? message : message?.message || message?.userMessage;
 
   if (!userMessage || typeof userMessage !== 'string') {
     return { message: 'Асуулт хоосон байна.' };
   }
 
-  const apiKey = await secrets.getSecret("GROQ_API_KEY");
+  const apiKey = process.env.GROQ_API_KEY;
   if (!apiKey) {
-    console.error('GROQ_API_KEY not found in secrets');
+    console.error('GROQ_API_KEY not found in environment variables');
     return { message: 'API түлхүүр олдсонгүй.' };
   }
 
@@ -39,7 +58,7 @@ export async function chat(message) {
         messages: [
           { role: "system", content: SYSTEM_PROMPT },
           { role: "user", content: userMessage }
-        ],
+        ] as ChatMessage[],
         temperature: 0.7,
         max_tokens: 500
       })
@@ -47,12 +66,16 @@ export async function chat(message) {
 
     if (!res.ok) {
       let errorData;
-      try { errorData = await res.json(); } catch { errorData = { status: res.status, statusText: res.statusText }; }
+      try {
+        errorData = await res.json();
+      } catch {
+        errorData = { status: res.status, statusText: res.statusText };
+      }
       console.error('Groq API error:', errorData);
       return { message: 'Уучлаарай, хариулт авахад алдаа гарлаа.' };
     }
 
-    const data = await res.json();
+    const data = await res.json() as GroqResponse;
     const responseMessage = data.choices?.[0]?.message?.content || 'Хариулт авахад алдаа гарлаа.';
     return { message: responseMessage };
 
