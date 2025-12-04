@@ -100,18 +100,32 @@ export default function ProgressPage() {
 
   useEffect(() => {
     // Filter recommended exercises based on user profile
-    if (exercises.length > 0 && profile.bodyShape && profile.focusAreas && profile.fitnessGoal) {
-      const filtered = exercises.filter(exercise => {
-        const matchesBodyShape = exercise.suitableBodyShapes?.toLowerCase().includes(profile.bodyShape?.toLowerCase() || '');
-        const matchesFocusAreas = profile.focusAreas?.some(area => 
-          exercise.focusBodyAreas?.toLowerCase().includes(area.toLowerCase())
-        );
-        const matchesGoal = exercise.fitnessGoal?.toLowerCase().includes(profile.fitnessGoal?.toLowerCase() || '');
-        
-        return matchesBodyShape || matchesFocusAreas || matchesGoal;
-      });
+    if (exercises.length > 0) {
+      // Always include "Beginner 20min" exercise for all users
+      const beginnerExercise = exercises.find(ex => ex.exerciseName?.toLowerCase() === 'beginner 20min');
       
-      setRecommendedExercises(filtered.slice(0, 6)); // Show top 6 recommendations
+      if (profile.bodyShape && profile.focusAreas && profile.fitnessGoal) {
+        // User has profile - show profile-matched exercises + beginner exercise
+        const filtered = exercises.filter(exercise => {
+          const matchesBodyShape = exercise.suitableBodyShapes?.toLowerCase().includes(profile.bodyShape?.toLowerCase() || '');
+          const matchesFocusAreas = profile.focusAreas?.some(area => 
+            exercise.focusBodyAreas?.toLowerCase().includes(area.toLowerCase())
+          );
+          const matchesGoal = exercise.fitnessGoal?.toLowerCase().includes(profile.fitnessGoal?.toLowerCase() || '');
+          
+          return matchesBodyShape || matchesFocusAreas || matchesGoal;
+        });
+        
+        // Combine with beginner exercise if not already in filtered list
+        const combined = beginnerExercise && !filtered.find(ex => ex._id === beginnerExercise._id)
+          ? [beginnerExercise, ...filtered]
+          : filtered;
+        
+        setRecommendedExercises(combined.slice(0, 6)); // Show top 6 recommendations
+      } else if (beginnerExercise) {
+        // User doesn't have profile - show only beginner exercise
+        setRecommendedExercises([beginnerExercise]);
+      }
     }
   }, [exercises, profile]);
 
@@ -384,24 +398,11 @@ export default function ProgressPage() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  {!profile.bodyShape || !profile.focusAreas ? (
-                    <div className="text-center py-6">
-                      <p className="text-foreground/60 font-paragraph text-sm mb-4">
-                        Дасгалын зөвлөмж авахын тулд профайлаа бөглөнө үү
-                      </p>
-                      <Button
-                        asChild
-                        variant="outline"
-                        className="border-primary/30 text-primary hover:bg-primary/10 rounded-[20px] font-paragraph"
-                      >
-                        <a href="/profile">Профайл бөглөх</a>
-                      </Button>
-                    </div>
-                  ) : recommendedExercises.length === 0 ? (
+                  {recommendedExercises.length === 0 ? (
                     <div className="text-center py-6">
                       <Activity className="w-12 h-12 text-foreground/30 mx-auto mb-3" />
                       <p className="text-foreground/60 font-paragraph text-sm">
-                        Танд тохирох дасгал олдсонгүй
+                        Дасгал олдсонгүй
                       </p>
                     </div>
                   ) : (
