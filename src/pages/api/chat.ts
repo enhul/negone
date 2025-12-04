@@ -76,6 +76,45 @@ export const POST: APIRoute = async ({ request }) => {
         temperature: 0.7,
         max_tokens: 500,
       }),
-    }); 
+    });
 
-broo ene groq api key barij avj chadahgui baih ym wix ai ashiglaad dotor nni hiij baigaa
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      console.error('Groq API error:', errorData);
+      return new Response(
+        JSON.stringify({ 
+          error: 'API request failed',
+          message: 'Уучлаарай, хариулт авахад алдаа гарлаа. Дахин оролдоно уу.' 
+        }),
+        { 
+          status: response.status,
+          headers: { 'Content-Type': 'application/json' }
+        }
+      );
+    }
+
+    const data = await response.json();
+    const aiMessage = data.choices?.[0]?.message?.content || 'Уучлаарай, хариулт авч чадсангүй.';
+
+    return new Response(
+      JSON.stringify({ message: aiMessage }),
+      { 
+        status: 200,
+        headers: { 'Content-Type': 'application/json' }
+      }
+    );
+
+  } catch (error) {
+    console.error('Chat API error:', error);
+    return new Response(
+      JSON.stringify({ 
+        error: 'Internal server error',
+        message: 'Уучлаарай, алдаа гарлаа. Дахин оролдоно уу.' 
+      }),
+      { 
+        status: 500,
+        headers: { 'Content-Type': 'application/json' }
+      }
+    );
+  }
+};
