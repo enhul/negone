@@ -1,4 +1,5 @@
-import { secrets } from "wix-secrets-backend";
+// Frontend-only chatbot - no backend secrets needed
+// This file is kept for future API integration
 
 const SYSTEM_PROMPT = `
 You are NegOne AI, a supportive and empathetic health and wellness assistant for women. 
