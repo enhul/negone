@@ -11,13 +11,17 @@ Your characteristics:
 - Focus on women's health and wellness
 - Encourage self-love and body positivity`;
 
-export async function chat(userMessage) {
+export async function chat(message) {
+  // Handle both string and object inputs
+  const userMessage = typeof message === 'string' ? message : message?.message || message?.userMessage;
+  
   if (!userMessage || typeof userMessage !== 'string') {
     return { message: 'Асуулт хоосон байна.' };
   }
 
   const apiKey = await secrets.getSecret("GROQ_API_KEY");
   if (!apiKey) {
+    console.error('GROQ_API_KEY not found in secrets');
     return { message: 'API түлхүүр олдсонгүй.' };
   }
 
@@ -40,13 +44,19 @@ export async function chat(userMessage) {
     });
     
     if (!res.ok) {
-      const errorData = await res.json();
+      let errorData;
+      try {
+        errorData = await res.json();
+      } catch {
+        errorData = { status: res.status, statusText: res.statusText };
+      }
       console.error('Groq API error:', errorData);
       return { message: 'Уучлаарай, хариулт авахад алдаа гарлаа.' };
     }
     
     const data = await res.json();
-    return { message: data.choices?.[0]?.message?.content || 'Хариулт авахад алдаа гарлаа.' };
+    const responseMessage = data.choices?.[0]?.message?.content || 'Хариулт авахад алдаа гарлаа.';
+    return { message: responseMessage };
   } catch (err) {
     console.error('Chat error:', err);
     return { message: 'Уучлаарай, сүлжээний алдаа гарлаа.' };

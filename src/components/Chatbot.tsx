@@ -25,7 +25,7 @@ async function getChatResponse(userMessage: string): Promise<string> {
     });
 
     if (!response.ok) {
-      console.error('Chat API error:', response.status);
+      console.error('Chat API error:', response.status, response.statusText);
       
       if (response.status === 401) {
         return 'Уучлаарай, API түлхүүр олдсонгүй. Админтай холбогдоорой.';
@@ -36,6 +36,13 @@ async function getChatResponse(userMessage: string): Promise<string> {
       }
       
       return 'Уучлаарай, хариулт авахад алдаа гарлаа. Дахин оролдоорой.';
+    }
+
+    // Ensure we're parsing JSON
+    const contentType = response.headers.get('content-type');
+    if (!contentType || !contentType.includes('application/json')) {
+      console.error('Invalid content type:', contentType);
+      return 'Уучлаарай, сүлжээний алдаа гарлаа. Дахин оролдоорой.';
     }
 
     const data = await response.json();
