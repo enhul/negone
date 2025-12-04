@@ -23,7 +23,9 @@ Always be supportive and never judgmental.`;
 export const POST: APIRoute = async ({ request }) => {
   try {
     // Check if API key is available
-    const apiKey = process.env.OPENAI_API_KEY;
+//    const apiKey = process.env.OPENAI_API_KEY;
+    const apiKey = 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
+
     
     if (!apiKey) {
       console.error('OpenAI API key not found in environment variables');
