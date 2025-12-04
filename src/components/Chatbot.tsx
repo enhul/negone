@@ -1,4 +1,5 @@
-import { useState, useRef, useEffect, FC, ChangeEvent, KeyboardEvent } from 'react';
+
+import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -13,13 +14,45 @@ interface Message {
   timestamp: Date;
 }
 
-interface ChatResponse {
-  message: string;
+async function getChatGPTResponse(userMessage: string): Promise<string> {
+  try {
+    // Call the backend API route instead of directly calling OpenAI
+    const response = await fetch('/api/chat', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        message: userMessage,
+      }),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      console.error('Chat API error:', error);
+      
+      if (response.status === 401) {
+        return 'Уучлаарай, API түлхүүр олдсонгүй. Админтай холбогдоорой.';
+      }
+      
+      if (response.status === 429) {
+        return 'Уучлаарай, хэтэрхий олон асуулт ирлээ. Хэсэг хугацаа хүлээнэ үү.';
+      }
+      
+      return 'Уучлаарай, хариулт авахад алдаа гарлаа. Дахин оролдоорой.';
+    }
+
+    const data = await response.json();
+    return data.message || 'Хариулт авахад алдаа гарлаа.';
+  } catch (error) {
+    console.error('Error calling chat API:', error);
+    return 'Уучлаарай, сүлжээний алдаа гарлаа. Дахин оролдоорой.';
+  }
 }
 
-const Chatbot: FC = () => {
+export default function Chatbot() {
   const { isAuthenticated } = useMember();
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
@@ -28,11 +61,11 @@ const Chatbot: FC = () => {
       timestamp: new Date(),
     }
   ]);
-  const [inputValue, setInputValue] = useState<string>('');
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [inputValue, setInputValue] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  const scrollToBottom = (): void => {
+  const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
@@ -40,26 +73,12 @@ const Chatbot: FC = () => {
     scrollToBottom();
   }, [messages]);
 
-  const getChatGPTResponse = async (userMessage: string): Promise<string> => {
-    try {
-      const response = await fetch('/_functions/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: userMessage }),
-      });
-
-      const data = await response.json() as ChatResponse;
-      return data.message || 'Хариулт авахад алдаа гарлаа.';
-    } catch (error) {
-      console.error('Error calling chat API:', error);
-      return 'Сүлжээний алдаа гарлаа. Дахин оролдоорой.';
-    }
-  };
-
-  const handleSendMessage = async (): Promise<void> => {
+  const handleSendMessage = async () => {
     if (!inputValue.trim()) return;
 
     const userMessageText = inputValue;
+
+    // Add user message
     const userMessage: Message = {
       id: Date.now().toString(),
       text: userMessageText,
@@ -71,27 +90,25 @@ const Chatbot: FC = () => {
     setInputValue('');
     setIsLoading(true);
 
+    // Get response from ChatGPT
     const botResponseText = await getChatGPTResponse(userMessageText);
+    
     const botResponse: Message = {
       id: (Date.now() + 1).toString(),
       text: botResponseText,
       sender: 'bot',
       timestamp: new Date(),
     };
-
+    
     setMessages(prev => [...prev, botResponse]);
     setIsLoading(false);
   };
 
-  const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>): void => {
+  const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       handleSendMessage();
     }
-  };
-
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement>): void => {
-    setInputValue(e.target.value);
   };
 
   return (
@@ -104,7 +121,11 @@ const Chatbot: FC = () => {
         whileTap={{ scale: 0.95 }}
         aria-label="Open chatbot"
       >
-        {isOpen ? <X className="w-6 h-6" /> : <MessageCircle className="w-6 h-6" />}
+        {isOpen ? (
+          <X className="w-6 h-6" />
+        ) : (
+          <MessageCircle className="w-6 h-6" />
+        )}
       </motion.button>
 
       {/* Chat Window */}
@@ -165,7 +186,7 @@ const Chatbot: FC = () => {
                 <div className="flex gap-2">
                   <Input
                     value={inputValue}
-                    onChange={handleInputChange}
+                    onChange={(e) => setInputValue(e.target.value)}
                     onKeyPress={handleKeyPress}
                     placeholder="Асуулт асууж болно..."
                     className="rounded-full border-primary/20 focus:border-primary font-paragraph text-sm"
@@ -187,6 +208,4 @@ const Chatbot: FC = () => {
       </AnimatePresence>
     </>
   );
-};
-
-export default Chatbot;
+}
