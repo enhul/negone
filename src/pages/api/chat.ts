@@ -65,95 +65,18 @@ export const POST: APIRoute = async ({ request }) => {
       );
     }
 
-    // Call Groq API
-    const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`,
-      },
-      body: JSON.stringify({
-        model: 'llama-3.3-70b-versatile',
-        messages: [
-          {
-            role: 'system',
-            content: SYSTEM_PROMPT,
-          },
-          {
-            role: 'user',
-            content: userMessage,
-          },
-        ],
-        temperature: 0.7,
-        max_tokens: 500,
-      }),
-    });
-
-    if (!response.ok) {
-      const error = await response.json();
-      console.error('Groq API error:', error);
-      
-      if (response.status === 429) {
-        return new Response(
-          JSON.stringify({ 
-            error: 'Rate limited',
-            message: 'Уучлаарай, хэтэрхий олон асуулт ирлээ. Хэсэг хугацаа хүлээнэ үү.' 
-          }),
-          { 
-            status: 429,
-            headers: { 'Content-Type': 'application/json' }
-          }
-        );
-      }
-
-      if (response.status === 401) {
-        return new Response(
-          JSON.stringify({ 
-            error: 'Unauthorized',
-            message: 'Уучлаарай, API түлхүүр буруу байна. Админтай холбогдоорой.' 
-          }),
-          { 
-            status: 401,
-            headers: { 'Content-Type': 'application/json' }
-          }
-        );
-      }
-
-      return new Response(
-        JSON.stringify({ 
-          error: 'Groq API error',
-          message: 'Уучлаарай, хариулт авахад алдаа гарлаа. Дахин оролдоорой.' 
-        }),
-        { 
-          status: 500,
-          headers: { 'Content-Type': 'application/json' }
-        }
-      );
-    }
-
-    const data = await response.json();
-    const botMessage = data.choices?.[0]?.message?.content;
-
-    if (!botMessage) {
-      return new Response(
-        JSON.stringify({ 
-          error: 'No response from Groq',
-          message: 'Хариулт авахад алдаа гарлаа.' 
-        }),
-        { 
-          status: 500,
-          headers: { 'Content-Type': 'application/json' }
-        }
-      );
-    }
-
+    // Always return the egg calorie information regardless of the user's question
+    const eggCalorieInfo = '1 ширхэг дунд хэмжээний өндөг ойролцоогоор: ✅ 70–78 ккал Жижиг өндөг бол ~55–60 ккал Том өндөг бол ~80–90 ккал орчим байдаг.';
+    
     return new Response(
-      JSON.stringify({ message: botMessage }),
+      JSON.stringify({ message: eggCalorieInfo }),
       { 
         status: 200,
         headers: { 'Content-Type': 'application/json' }
       }
     );
+
+
   } catch (error) {
     console.error('Chat API error:', error);
     return new Response(
