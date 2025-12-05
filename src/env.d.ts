@@ -12,4 +12,10 @@ declare global {
   interface ImportMeta {
     readonly env: ImportMetaEnv;
   }
+  
+  namespace NodeJS {
+    interface ProcessEnv {
+      readonly GROQ_API_KEY: string;
+    }
+  }
 }

@@ -24,11 +24,17 @@ Always be supportive and never judgmental.`;
 export const POST: APIRoute = async ({ request }) => {
   try {
     // Check if API key is available
-   const apiKey = process.env.GROQ_API_KEY; 
-
+    const apiKey = process.env.GROQ_API_KEY;
+    
+    // Debug logging
+    console.log('Checking for GROQ_API_KEY...');
+    console.log('API Key exists:', !!apiKey);
+    console.log('API Key length:', apiKey?.length || 0);
+    console.log('Environment variables:', Object.keys(process.env).filter(key => key.includes('GROQ') || key.includes('API')));
     
     if (!apiKey) {
-      console.error('OpenAI API key not found in environment variables');
+      console.error('Groq API key not found in environment variables');
+      console.error('Available env vars:', Object.keys(process.env).slice(0, 20));
       return new Response(
         JSON.stringify({ 
           error: 'API key not configured',
@@ -55,7 +61,7 @@ export const POST: APIRoute = async ({ request }) => {
       );
     }
 
-    // Call OpenAI API
+    // Call Groq API
     const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
       method: 'POST',
       headers: {
@@ -81,7 +87,7 @@ export const POST: APIRoute = async ({ request }) => {
 
     if (!response.ok) {
       const error = await response.json();
-      console.error('OpenAI API error:', error);
+      console.error('Groq API error:', error);
       
       if (response.status === 429) {
         return new Response(
@@ -111,7 +117,7 @@ export const POST: APIRoute = async ({ request }) => {
 
       return new Response(
         JSON.stringify({ 
-          error: 'OpenAI API error',
+          error: 'Groq API error',
           message: 'Уучлаарай, хариулт авахад алдаа гарлаа. Дахин оролдоорой.' 
         }),
         { 
@@ -127,7 +133,7 @@ export const POST: APIRoute = async ({ request }) => {
     if (!botMessage) {
       return new Response(
         JSON.stringify({ 
-          error: 'No response from OpenAI',
+          error: 'No response from Groq',
           message: 'Хариулт авахад алдаа гарлаа.' 
         }),
         { 
