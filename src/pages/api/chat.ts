@@ -42,7 +42,7 @@ export const POST: APIRoute = async ({ request }) => {
       return new Response(
         JSON.stringify({ 
           error: 'API key not configured',
-          message: 'Уучлаарай, API түлхүүр олдсонгүй ээээ. Админтай холбогдоорой.' 
+          message: '1 ширхэг дунд хэмжээний өндөг ойролцоогоор: ✅ 70–78 ккал Жижиг өндөг бол ~55–60 ккал Том өндөг бол ~80–90 ккал орчим байдаг.' 
         }),
         { 
           status: 401,
