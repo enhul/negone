@@ -17,15 +17,15 @@
 
 ### Step 1: Get API Key (2 min)
 ```
-1. Go to https://platform.openai.com/api-keys
-2. Click "Create new secret key"
+1. Go to https://console.groq.com/
+2. Click "Create new API key"
 3. Copy the key
 ```
 
 ### Step 2: Add to Project (1 min)
 ```
 Create .env.local in project root:
-OPENAI_API_KEY=sk-your-api-key-here
+GROQ_API_KEY=gsk-your-api-key-here
 ```
 
 ### Step 3: Test (1 min)
@@ -61,16 +61,16 @@ OPENAI_API_KEY=sk-your-api-key-here
 │  ┌────────────────────────────────────────────────────┐  │
 │  │      API Route (pages/api/chat.ts)                 │  │
 │  │  - Validates incoming message                      │  │
-│  │  - Has secure API key (OPENAI_API_KEY)             │  │
-│  │  - Calls OpenAI API                                │  │
+│  │  - Has secure API key (GROQ_API_KEY)               │  │
+│  │  - Calls Groq API                                  │  │
 │  │  - Returns response to frontend                    │  │
 │  │  - Handles errors gracefully                       │  │
 │  └────────────────────────────────────────────────────┘  │
 └──────────────────────────────────────────────────────────┘
                     ↓ API Call (Secure)
 ┌──────────────────────────────────────────────────────────┐
-│              OpenAI API (External Service)                │
-│  - GPT-3.5-turbo model                                   │
+│              Groq API (External Service)                 │
+│  - Mixtral-8x7b-32768 model                              │
 │  - Processes message with system prompt                  │
 │  - Returns intelligent response                          │
 └──────────────────────────────────────────────────────────┘
@@ -79,7 +79,7 @@ OPENAI_API_KEY=sk-your-api-key-here
 ### Key Features
 
 ✅ **Secure** - API key on backend only  
-✅ **Real-time** - Instant ChatGPT responses  
+✅ **Real-time** - Instant Groq responses  
 ✅ **Intelligent** - Understands context  
 ✅ **Multilingual** - Responds in Mongolian  
 ✅ **Reliable** - Error handling & fallbacks  
@@ -92,23 +92,23 @@ OPENAI_API_KEY=sk-your-api-key-here
 
 ### Prerequisites
 - Node.js installed
-- OpenAI account
-- API key from OpenAI
+- Groq account
+- API key from Groq
 
 ### Detailed Setup Steps
 
-#### 1. Get OpenAI API Key
+#### 1. Get Groq API Key
 
 **Option A: New Account**
-1. Go to https://platform.openai.com/signup
+1. Go to https://console.groq.com/signup
 2. Sign up with email or Google
 3. Verify email
 4. Go to API Keys section
-5. Create new secret key
+5. Create new API key
 
 **Option B: Existing Account**
-1. Go to https://platform.openai.com/api-keys
-2. Click "Create new secret key"
+1. Go to https://console.groq.com/
+2. Click "Create new API key"
 3. Copy the key (shown only once!)
 
 #### 2. Create Environment File
@@ -116,12 +116,12 @@ OPENAI_API_KEY=sk-your-api-key-here
 **File**: `.env.local` (in project root, same level as `package.json`)
 
 ```env
-# OpenAI API Configuration
-OPENAI_API_KEY=sk-your-api-key-here
+# Groq API Configuration
+GROQ_API_KEY=gsk-your-api-key-here
 ```
 
 **Important:**
-- Replace `sk-your-api-key-here` with your actual key
+- Replace `gsk-your-api-key-here` with your actual key
 - Do NOT commit this file to git (already in .gitignore)
 - Keep this file private and secure
 
@@ -209,7 +209,7 @@ Check browser console for errors:
 **Solution:**
 ```
 1. Create .env.local in project root
-2. Add: OPENAI_API_KEY=sk-your-key-here
+2. Add: GROQ_API_KEY=gsk-your-key-here
 3. Restart dev server
 4. Check that file exists: ls -la .env.local
 ```
@@ -220,7 +220,7 @@ Check browser console for errors:
 
 **Solution:**
 ```
-1. Go to https://platform.openai.com/api-keys
+1. Go to https://console.groq.com/
 2. Check if your key is still there
 3. If revoked, create a new key
 4. Update .env.local with new key
@@ -251,17 +251,17 @@ Check browser console for errors:
 2. Check system prompt in /src/pages/api/chat.ts
 3. Verify it includes "Always respond in Mongolian"
 4. Try different question
-5. Check OpenAI status at https://status.openai.com/
+5. Check Groq status
 ```
 
 ### Issue: Rate limit error
 
-**Cause:** Too many requests to OpenAI
+**Cause:** Too many requests to Groq
 
 **Solution:**
 ```
 1. Wait 1-2 minutes
-2. Check OpenAI dashboard for limits
+2. Check Groq console for limits
 3. Verify you haven't exceeded quota
 4. Consider upgrading plan
 5. Try again
@@ -313,7 +313,7 @@ Backend has API key
     ↓
 Frontend calls backend
     ↓
-Backend calls OpenAI
+Backend calls Groq
     ↓
 API key never exposed ✅
 ```
@@ -325,8 +325,8 @@ API key never exposed ✅
 ### Pre-Deployment Checklist
 
 ```
-□ API key obtained from OpenAI
-□ .env.local created with OPENAI_API_KEY
+□ API key obtained from Groq
+□ .env.local created with GROQ_API_KEY
 □ Chatbot tested locally
 □ No console errors
 □ No server errors
@@ -350,8 +350,8 @@ API key never exposed ✅
 1. Go to Wix Dashboard
 2. Settings > Environment Variables
 3. Add new variable:
-   - Name: OPENAI_API_KEY
-   - Value: sk-your-api-key-here
+   - Name: GROQ_API_KEY
+   - Value: gsk-your-api-key-here
 4. Save
 ```
 
@@ -370,18 +370,18 @@ API key never exposed ✅
 1. Check API usage daily
 2. Monitor for errors
 3. Verify responses
-4. Set up billing alerts
+4. Set up usage alerts
 5. Update API key if needed
 ```
 
 ### Production Checklist
 
 ```
-□ OPENAI_API_KEY set in Wix environment
+□ GROQ_API_KEY set in Wix environment
 □ Chatbot working on production
 □ No errors in logs
 □ API usage being monitored
-□ Billing alerts set up
+□ Usage alerts set up
 □ Response times acceptable
 □ Mongolian responses working
 ```
@@ -393,37 +393,38 @@ API key never exposed ✅
 ### Pricing
 
 ```
-GPT-3.5-turbo (current model):
-- Input: ~$0.0005 per 1K tokens
-- Output: ~$0.0015 per 1K tokens
+Groq (current model):
+- Free tier with generous limits
+- No per-message cost for free tier
+- Paid tier available for higher usage
 
 Average message:
 - Input: ~50-100 tokens
 - Output: ~50-100 tokens
-- Total cost: ~$0.001-0.002 per message
+- Total cost: Free or minimal
 ```
 
 ### Budget Estimates
 
 ```
 100 messages/day:
-- Daily cost: ~$0.10-0.20
-- Monthly cost: ~$3-6
+- Daily cost: Free
+- Monthly cost: Free
 
 1000 messages/day:
-- Daily cost: ~$1-2
-- Monthly cost: ~$30-60
+- Daily cost: Free
+- Monthly cost: Free
 
 10000 messages/day:
-- Daily cost: ~$10-20
-- Monthly cost: ~$300-600
+- Daily cost: Minimal
+- Monthly cost: Minimal
 ```
 
-### Monitor Costs
+### Monitor Usage
 
-1. Go to https://platform.openai.com/account/billing/overview
+1. Go to https://console.groq.com/
 2. Check current usage
-3. Set up billing alerts
+3. Set up usage alerts
 4. Monitor daily usage
 5. Upgrade plan if needed
 
@@ -435,19 +436,19 @@ Average message:
 **A:** Yes! The API key is stored on the backend server only and never exposed to the frontend. It's completely safe.
 
 ### Q: How much will this cost?
-**A:** Very affordable! ~$0.001-0.002 per message. For testing, costs are minimal.
+**A:** Very affordable! Groq offers a free tier with generous limits. Most use cases are free.
 
-### Q: Can I use GPT-4 instead?
-**A:** Yes! Change the model in `/src/pages/api/chat.ts` from `'gpt-3.5-turbo'` to `'gpt-4'`. Note: GPT-4 is more expensive.
+### Q: Can I use a different model?
+**A:** Yes! Change the model in `/src/pages/api/chat.ts` from `'mixtral-8x7b-32768'` to another Groq model.
 
 ### Q: What if the API key is wrong?
-**A:** You'll get a 401 error. Check your API key in the OpenAI dashboard and update `.env.local`.
+**A:** You'll get a 401 error. Check your API key in the Groq console and update `.env.local`.
 
 ### Q: Can users see my API key?
 **A:** No! The API key is only on the server. Users cannot access it through the browser.
 
-### Q: How do I monitor costs?
-**A:** Check your OpenAI dashboard at https://platform.openai.com/account/billing/overview
+### Q: How do I monitor usage?
+**A:** Check your Groq console at https://console.groq.com/
 
 ### Q: What if I exceed my quota?
 **A:** You'll get rate limit errors. Wait a few minutes and try again, or upgrade your plan.
@@ -522,13 +523,13 @@ Average message:
 
 ## 🎯 Next Steps
 
-1. **Get API Key** - https://platform.openai.com/api-keys
-2. **Create .env.local** - Add OPENAI_API_KEY
+1. **Get API Key** - https://console.groq.com/
+2. **Create .env.local** - Add GROQ_API_KEY
 3. **Restart Server** - npm run dev
 4. **Test Chatbot** - Click button and send message
-5. **Monitor Usage** - Check OpenAI dashboard
+5. **Monitor Usage** - Check Groq console
 6. **Deploy** - Add env var to Wix and deploy
-7. **Monitor** - Check logs and costs daily
+7. **Monitor** - Check logs and usage daily
 
 ---
 

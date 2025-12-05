@@ -128,7 +128,7 @@ Mental Health:
 
 ```
 □ .env.local exists in project root
-□ OPENAI_API_KEY is set correctly
+□ GROQ_API_KEY is set correctly
 □ Dev server restarted
 □ Chatbot button visible (bottom-right)
 □ Can type messages
@@ -206,14 +206,14 @@ Average message:
 ```
 Fix:
 1. Create .env.local in project root
-2. Add: OPENAI_API_KEY=sk-...
+2. Add: GROQ_API_KEY=gsk-...
 3. Restart dev server
 ```
 
 ### Error: "401 Unauthorized"
 ```
 Fix:
-1. Check API key in OpenAI dashboard
+1. Check API key in Groq console
 2. Verify key hasn't been revoked
 3. Try generating a new key
 4. Update .env.local
@@ -232,7 +232,7 @@ Fix:
 ```
 Fix:
 1. Wait 1-2 minutes
-2. Check OpenAI dashboard for limits
+2. Check Groq console for limits
 3. Upgrade plan if needed
 ```
 
@@ -241,10 +241,10 @@ Fix:
 ## 📞 Support Resources
 
 ### Official Resources
-- OpenAI Docs: https://platform.openai.com/docs
-- API Reference: https://platform.openai.com/docs/api-reference
-- Status Page: https://status.openai.com/
-- Community: https://community.openai.com/
+- Groq Docs: https://console.groq.com/docs
+- API Reference: https://console.groq.com/docs/api-reference
+- Status Page: https://status.groq.com/
+- Community: https://community.groq.com/
 
 ### Project Documentation
 - Quick Start: `/src/CHATBOT_QUICK_START.md`
@@ -264,7 +264,7 @@ Fix:
 - [ ] Responses in Mongolian
 
 ### Deployment
-- [ ] Add OPENAI_API_KEY to Wix environment variables
+- [ ] Add GROQ_API_KEY to Wix environment variables
 - [ ] Deploy to production
 - [ ] Test on production
 - [ ] Monitor API usage

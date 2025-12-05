@@ -3,12 +3,12 @@
 ## ✅ What Was Fixed & Implemented
 
 ### Problem Identified
-The original chatbot implementation exposed the OpenAI API key to the frontend, which is a **critical security vulnerability**. The frontend was directly calling the OpenAI API with the API key visible in browser requests.
+The original chatbot implementation exposed the Groq API key to the frontend, which is a **critical security vulnerability**. The frontend was directly calling the Groq API with the API key visible in browser requests.
 
 ### Solution Implemented
 Implemented a **secure backend API pattern** where:
 - Frontend sends messages to a backend API route
-- Backend securely handles the OpenAI API call
+- Backend securely handles the Groq API call
 - API key is stored on the server only
 - Frontend never has access to the API key
 
@@ -22,7 +22,7 @@ Implemented a **secure backend API pattern** where:
 ```typescript
 // Secure backend endpoint that:
 // ✅ Validates incoming messages
-// ✅ Calls OpenAI API securely
+// ✅ Calls Groq API securely
 // ✅ Handles errors gracefully
 // ✅ Returns responses to frontend
 // ✅ Protects API key
@@ -48,8 +48,8 @@ Implemented a **secure backend API pattern** where:
 **Before:**
 ```typescript
 // ❌ INSECURE - API key exposed
-const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
-fetch('https://api.openai.com/v1/chat/completions', {
+const apiKey = import.meta.env.VITE_GROQ_API_KEY;
+fetch('https://api.groq.com/openai/v1/chat/completions', {
   headers: { 'Authorization': `Bearer ${apiKey}` }
 })
 ```
@@ -66,7 +66,7 @@ fetch('/api/chat', {
 ### 3. **Environment Configuration**
 **File**: `/src/env.d.ts`
 
-- Updated to use `OPENAI_API_KEY` (not `VITE_OPENAI_API_KEY`)
+- Updated to use `GROQ_API_KEY` (not `VITE_GROQ_API_KEY`)
 - Removed frontend environment variable exposure
 - Backend-only API key configuration
 
@@ -100,7 +100,7 @@ Backend has API key
     ↓
 Frontend calls backend API
     ↓
-Backend calls OpenAI securely
+Backend calls Groq securely
     ↓
 API key never exposed to frontend
     ↓
@@ -113,15 +113,15 @@ SECURE! ✅
 
 ### 1. Get API Key
 ```
-1. Go to https://platform.openai.com/api-keys
-2. Click "Create new secret key"
+1. Go to https://console.groq.com/
+2. Click "Create new API key"
 3. Copy the key
 ```
 
 ### 2. Add to Project
 ```
 Create .env.local in project root:
-OPENAI_API_KEY=sk-your-api-key-here
+GROQ_API_KEY=gsk-your-api-key-here
 ```
 
 ### 3. Test
@@ -142,8 +142,8 @@ OPENAI_API_KEY=sk-your-api-key-here
 2. Frontend sends POST to /api/chat
 3. Backend receives request
 4. Backend validates message
-5. Backend calls OpenAI API (with secure API key)
-6. OpenAI returns response
+5. Backend calls Groq API (with secure API key)
+6. Groq returns response
 7. Backend returns response to frontend
 8. Frontend displays response to user
 ```
@@ -169,7 +169,7 @@ OPENAI_API_KEY=sk-your-api-key-here
 ## ✨ Features
 
 ### Chatbot Features
-- ✅ Real-time ChatGPT responses
+- ✅ Real-time Groq responses
 - ✅ Mongolian language support
 - ✅ Empathetic, supportive tone
 - ✅ Health & wellness expertise
@@ -195,16 +195,16 @@ OPENAI_API_KEY=sk-your-api-key-here
 ### Environment Variables
 ```env
 # .env.local (local development)
-OPENAI_API_KEY=sk-your-api-key-here
+GROQ_API_KEY=gsk-your-api-key-here
 
 # Wix Dashboard (production)
-Settings > Environment Variables > OPENAI_API_KEY=sk-...
+Settings > Environment Variables > GROQ_API_KEY=gsk-...
 ```
 
 ### API Configuration
 ```typescript
 // In /src/pages/api/chat.ts
-model: 'gpt-3.5-turbo'      // Can change to gpt-4
+model: 'mixtral-8x7b-32768'  // Groq's fast model
 temperature: 0.7             // 0=factual, 1=creative
 max_tokens: 500              // Response length
 ```
@@ -214,14 +214,14 @@ max_tokens: 500              // Response length
 ## 📈 Monitoring & Costs
 
 ### Monitor Usage
-- OpenAI Dashboard: https://platform.openai.com/account/billing/overview
-- Set up billing alerts
+- Groq Console: https://console.groq.com/
+- Set up usage alerts
 - Track API calls in server logs
 
 ### Cost Estimate
-- GPT-3.5-turbo: ~$0.001-0.002 per message
-- 100 messages: ~$0.10-0.20
-- 1000 messages: ~$1-2
+- Groq: Free tier with generous limits
+- 100 messages: Free
+- 1000 messages: Free (with Groq's free tier)
 
 ---
 
@@ -247,8 +247,8 @@ See `/src/CHATBOT_TESTING.md` for:
 
 | Issue | Cause | Solution |
 |-------|-------|----------|
-| "API key not found" | .env.local missing | Create .env.local with OPENAI_API_KEY |
-| "401 Unauthorized" | Invalid API key | Check key in OpenAI dashboard |
+| "API key not found" | .env.local missing | Create .env.local with GROQ_API_KEY |
+| "401 Unauthorized" | Invalid API key | Check key in Groq console |
 | No response | Backend error | Check server logs and browser console |
 | English responses | Model behavior | Try asking in Mongolian |
 | Rate limited | Too many requests | Wait 1-2 minutes |
@@ -271,17 +271,17 @@ See `/src/CHATBOT_TESTING.md` for:
 - **This File**: `/src/CHATBOT_INTEGRATION_SUMMARY.md` (overview)
 
 ### External Resources
-- OpenAI Docs: https://platform.openai.com/docs
-- API Reference: https://platform.openai.com/docs/api-reference
-- Status Page: https://status.openai.com/
+- Groq Docs: https://console.groq.com/docs
+- API Reference: https://console.groq.com/docs/api-reference
+- Status Page: https://status.groq.com/
 
 ---
 
 ## ✅ Deployment Checklist
 
 ### Before Deployment
-- [ ] API key obtained from OpenAI
-- [ ] .env.local created with OPENAI_API_KEY
+- [ ] API key obtained from Groq
+- [ ] .env.local created with GROQ_API_KEY
 - [ ] Chatbot tested locally
 - [ ] No console errors
 - [ ] No server errors
@@ -289,11 +289,11 @@ See `/src/CHATBOT_TESTING.md` for:
 - [ ] Mongolian responses working
 
 ### Deployment Steps
-1. Add OPENAI_API_KEY to Wix environment variables
+1. Add GROQ_API_KEY to Wix environment variables
 2. Deploy to production
 3. Test chatbot on production
 4. Monitor API usage
-5. Set up billing alerts
+5. Set up usage alerts
 
 ### After Deployment
 - [ ] Monitor API usage daily
