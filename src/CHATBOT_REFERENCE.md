@@ -4,8 +4,8 @@
 
 ### Setup (3 Steps)
 ```
-1. Get API key: https://platform.openai.com/api-keys
-2. Create .env.local with: OPENAI_API_KEY=sk-...
+1. Get API key: https://console.groq.com/
+2. Create .env.local with: GROQ_API_KEY=gsk-...
 3. Restart dev server and test!
 ```
 
@@ -27,14 +27,14 @@
 │  │  API Route (pages/api/chat.ts)               │   │
 │  │  - Validates message                         │   │
 │  │  - Has API key (SECURE!)                     │   │
-│  │  - Calls OpenAI                              │   │
+│  │  - Calls Groq                                │   │
 │  │  - Returns response                          │   │
 │  └──────────────────────────────────────────────┘   │
 └─────────────────────────────────────────────────────┘
                         ↓ API Call
 ┌─────────────────────────────────────────────────────┐
-│              OpenAI API (External)                   │
-│  - GPT-3.5-turbo model                              │
+│              Groq API (External)                     │
+│  - Mixtral-8x7b-32768 model                         │
 │  - Processes message                                │
 │  - Returns response                                 │
 └─────────────────────────────────────────────────────┘
@@ -67,13 +67,13 @@
 ### Development
 ```env
 # File: .env.local (in project root)
-OPENAI_API_KEY=sk-your-api-key-here
+GROQ_API_KEY=gsk-your-api-key-here
 ```
 
 ### Production
 ```
 Wix Dashboard > Settings > Environment Variables
-OPENAI_API_KEY=sk-your-api-key-here
+GROQ_API_KEY=gsk-your-api-key-here
 ```
 
 ---
@@ -82,18 +82,18 @@ OPENAI_API_KEY=sk-your-api-key-here
 
 ### Get API Key
 ```
-1. Visit: https://platform.openai.com/api-keys
-2. Click: "Create new secret key"
+1. Visit: https://console.groq.com/
+2. Click: "Create new API key"
 3. Copy: The key (only shown once!)
 ```
 
 ### Create .env.local
 ```bash
 # Mac/Linux
-echo "OPENAI_API_KEY=sk-your-key-here" > .env.local
+echo "GROQ_API_KEY=gsk-your-key-here" > .env.local
 
 # Windows (PowerShell)
-"OPENAI_API_KEY=sk-your-key-here" | Out-File -FilePath .env.local
+"GROQ_API_KEY=gsk-your-key-here" | Out-File -FilePath .env.local
 ```
 
 ### Test API Endpoint

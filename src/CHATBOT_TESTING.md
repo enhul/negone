@@ -92,7 +92,7 @@
 
 **Debug Steps:**
 1. Check `.env.local` file exists in project root
-2. Verify `OPENAI_API_KEY=sk-...` is set correctly
+2. Verify `GROQ_API_KEY=gsk-...` is set correctly
 3. Copy-paste the key from OpenAI dashboard again
 4. Restart the development server
 5. Check OpenAI dashboard that the key hasn't been revoked
@@ -232,10 +232,10 @@ console.log(`Response time: ${Date.now() - startTime}ms`);
 ### Check if API key is set
 ```bash
 # On Mac/Linux
-echo $OPENAI_API_KEY
+echo $GROQ_API_KEY
 
 # On Windows (PowerShell)
-$env:OPENAI_API_KEY
+$env:GROQ_API_KEY
 ```
 
 ### View environment variables

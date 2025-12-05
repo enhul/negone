@@ -1,7 +1,7 @@
-# NegOne AI Chatbot - OpenAI Integration Setup Guide
+# NegOne AI Chatbot - Groq Integration Setup Guide
 
 ## Overview
-The NegOne chatbot has been integrated with OpenAI's ChatGPT API to provide real-time, intelligent responses to users about fitness, nutrition, mental health, and wellness.
+The NegOne chatbot has been integrated with Groq's API to provide real-time, intelligent responses to users about fitness, nutrition, mental health, and wellness.
 
 ## What's Been Implemented
 
@@ -14,12 +14,12 @@ The NegOne chatbot has been integrated with OpenAI's ChatGPT API to provide real
 
 ### 2. **Backend API Route** (`/src/pages/api/chat.ts`)
 - Secure server-side API endpoint
-- Handles all OpenAI API calls
+- Handles all Groq API calls
 - Protects API key from exposure
 - Error handling and rate limiting
 
 ### 3. **Features**
-- ✅ Real-time responses from ChatGPT
+- ✅ Real-time responses from Groq API
 - ✅ Empathetic, supportive tone
 - ✅ Personalized health and wellness advice
 - ✅ Available on all pages
@@ -30,12 +30,12 @@ The NegOne chatbot has been integrated with OpenAI's ChatGPT API to provide real
 
 ## Setup Instructions
 
-### Step 1: Get Your OpenAI API Key
+### Step 1: Get Your Groq API Key
 
-1. Go to [OpenAI Platform](https://platform.openai.com/)
+1. Go to [Groq Console](https://console.groq.com/)
 2. Sign up or log in to your account
 3. Navigate to **API Keys** section
-4. Click **Create new secret key**
+4. Click **Create new API key**
 5. Copy the API key (you'll only see it once!)
 
 ### Step 2: Add Environment Variable
@@ -44,15 +44,14 @@ The NegOne chatbot has been integrated with OpenAI's ChatGPT API to provide real
 Create a `.env.local` file in the root of your project (same level as `package.json`):
 
 ```env
-OPENAI_API_KEY=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
-
+GROQ_API_KEY=gsk-your-api-key-here
 ```
 
-Replace `sk-your-api-key-here` with your actual OpenAI API key.
+Replace `gsk-your-api-key-here` with your actual Groq API key.
 
 **For Production (Wix Deployment):**
 1. Go to **Settings > Environment Variables** in Wix Dashboard
-2. Add `OPENAI_API_KEY` with your API key value
+2. Add `GROQ_API_KEY` with your API key value
 3. The API key will be securely stored and available to your backend
 
 ### Step 3: Verify Setup
@@ -102,22 +101,22 @@ The chatbot uses a system prompt that defines its personality:
 - **Expertise**: Fitness, nutrition, mental health, self-love
 
 ### API Integration
-- **Model**: GPT-3.5-turbo (fast and cost-effective)
+- **Model**: Mixtral-8x7b-32768 (fast and cost-effective)
 - **Temperature**: 0.7 (balanced creativity and consistency)
 - **Max Tokens**: 500 (concise responses)
 - **Endpoint**: `/api/chat` (backend route)
-- **OpenAI Endpoint**: `https://api.openai.com/v1/chat/completions` (server-side only)
+- **Groq Endpoint**: `https://api.groq.com/openai/v1/chat/completions` (server-side only)
 
 ## Cost Considerations
 
 ### Pricing
-- GPT-3.5-turbo: ~$0.0005 per 1K input tokens, ~$0.0015 per 1K output tokens
+- Groq API: Free tier available with generous limits
 - Average conversation: ~100-200 tokens per exchange
-- Estimated cost: $0.001-0.002 per user message
+- Estimated cost: Free or minimal for most use cases
 
 ### Budget Management
-1. Set up usage limits in OpenAI dashboard
-2. Monitor API usage regularly
+1. Monitor API usage in Groq console
+2. Check rate limits and quotas
 3. Consider implementing rate limiting if needed
 
 ## Troubleshooting
@@ -125,36 +124,36 @@ The chatbot uses a system prompt that defines its personality:
 ### Issue: "API key not found" or "API key not configured"
 **Solution**: 
 - Verify `.env.local` file exists in project root
-- Check that `OPENAI_API_KEY` is set correctly (not `VITE_OPENAI_API_KEY`)
+- Check that `GROQ_API_KEY` is set correctly (not `VITE_GROQ_API_KEY`)
 - Restart the development server
 - Check that the environment variable is being read by the backend
 
 ### Issue: "401 Unauthorized"
 **Solution**:
 - Verify API key is correct in `.env.local`
-- Check that API key hasn't been revoked in OpenAI dashboard
+- Check that API key hasn't been revoked in Groq console
 - Ensure API key has proper permissions (should have chat completion access)
 - Try regenerating a new API key
 
 ### Issue: "Rate limit exceeded"
 **Solution**:
 - Wait a few minutes before retrying
-- Check OpenAI dashboard for usage limits
+- Check Groq console for usage limits
 - Consider implementing request throttling on the frontend
-- Upgrade your OpenAI plan if needed
+- Upgrade your Groq plan if needed
 
 ### Issue: Responses in English instead of Mongolian
 **Solution**:
 - The system prompt specifies Mongolian
 - If still happening, try asking in Mongolian first
-- Check OpenAI API status at https://status.openai.com/
+- Check Groq API status
 
 ### Issue: Chatbot not responding at all
 **Solution**:
 - Check browser console for errors (F12 > Console)
 - Check server logs for API errors
 - Verify `/api/chat` endpoint is accessible
-- Ensure `OPENAI_API_KEY` environment variable is set
+- Ensure `GROQ_API_KEY` environment variable is set
 - Try a simple test message like "Сайн байна уу"
 
 ### Issue: CORS errors
@@ -173,10 +172,9 @@ const SYSTEM_PROMPT = `Your custom prompt here...`;
 ```
 
 ### Change the Model
-Replace `'gpt-3.5-turbo'` with in `/src/pages/api/chat.ts`:
-- `'gpt-4'` (more powerful, more expensive)
-- `'gpt-4-turbo'` (faster GPT-4)
-- `'gpt-3.5-turbo-16k'` (longer context)
+Replace `'mixtral-8x7b-32768'` with in `/src/pages/api/chat.ts`:
+- `'llama-2-70b-chat'` (alternative model)
+- `'gemma-7b-it'` (smaller model)
 
 ### Adjust Response Length
 Change `max_tokens` value in `/src/pages/api/chat.ts` (default: 500):
@@ -223,7 +221,7 @@ Change `temperature` value in `/src/pages/api/chat.ts` (default: 0.7):
 ### For Wix Deployment
 1. Add environment variable in Wix dashboard:
    - Go to **Settings > Environment Variables**
-   - Add `OPENAI_API_KEY` with your API key
+   - Add `GROQ_API_KEY` with your API key
    
 2. Ensure `.env.local` is in `.gitignore`
 
@@ -231,9 +229,9 @@ Change `temperature` value in `/src/pages/api/chat.ts` (default: 0.7):
 
 ### Environment Variables in Different Environments
 ```
-Development: .env.local (OPENAI_API_KEY=sk-...)
-Production: Wix Dashboard > Environment Variables (OPENAI_API_KEY=sk-...)
-Staging: Wix Dashboard > Environment Variables (staging) (OPENAI_API_KEY=sk-...)
+Development: .env.local (GROQ_API_KEY=gsk-...)
+Production: Wix Dashboard > Environment Variables (GROQ_API_KEY=gsk-...)
+Staging: Wix Dashboard > Environment Variables (staging) (GROQ_API_KEY=gsk-...)
 ```
 
 ### Important Notes for Production
@@ -262,10 +260,10 @@ Staging: Wix Dashboard > Environment Variables (staging) (OPENAI_API_KEY=sk-...)
 
 ## Support & Resources
 
-- **OpenAI Documentation**: https://platform.openai.com/docs
-- **API Reference**: https://platform.openai.com/docs/api-reference
-- **Status Page**: https://status.openai.com/
-- **Community Forum**: https://community.openai.com/
+- **Groq Documentation**: https://console.groq.com/docs
+- **API Reference**: https://console.groq.com/docs/api-reference
+- **Status Page**: https://status.groq.com/
+- **Community Forum**: https://community.groq.com/
 
 ## Next Steps
 
@@ -285,15 +283,15 @@ Staging: Wix Dashboard > Environment Variables (staging) (OPENAI_API_KEY=sk-...)
 
 ## Quick Start Checklist
 
-- [ ] Get OpenAI API key from https://platform.openai.com/api-keys
+- [ ] Get Groq API key from https://console.groq.com/
 - [ ] Create `.env.local` file in project root
-- [ ] Add `OPENAI_API_KEY=sk-your-key-here` to `.env.local`
+- [ ] Add `GROQ_API_KEY=gsk-your-key-here` to `.env.local`
 - [ ] Restart development server
 - [ ] Test chatbot by clicking the floating button
 - [ ] Ask a question in Mongolian
 - [ ] Verify response appears in real-time
 - [ ] Check browser console for any errors
-- [ ] Monitor OpenAI dashboard for usage
+- [ ] Monitor Groq console for usage
 
 ## Common Questions
 
@@ -301,19 +299,19 @@ Staging: Wix Dashboard > Environment Variables (staging) (OPENAI_API_KEY=sk-...)
 A: Yes! The API key is stored on the backend server only and never exposed to the frontend. All API calls happen server-side.
 
 **Q: How much will this cost?**
-A: GPT-3.5-turbo costs ~$0.001-0.002 per user message. For testing, costs are minimal.
+A: Groq offers a free tier with generous limits. Most use cases are free or very low cost.
 
-**Q: Can I use GPT-4 instead?**
-A: Yes, change the model in `/src/pages/api/chat.ts` from `'gpt-3.5-turbo'` to `'gpt-4'`. Note: GPT-4 is more expensive.
+**Q: Can I use a different model?**
+A: Yes, change the model in `/src/pages/api/chat.ts` from `'mixtral-8x7b-32768'` to other available Groq models.
 
 **Q: What if the API key is wrong?**
-A: You'll get a 401 error. Check your API key in the OpenAI dashboard and update `.env.local`.
+A: You'll get a 401 error. Check your API key in the Groq console and update `.env.local`.
 
 **Q: Can users see my API key?**
 A: No, the API key is only on the server. Users cannot access it through the browser.
 
-**Q: How do I monitor costs?**
-A: Check your OpenAI dashboard at https://platform.openai.com/account/billing/overview
+**Q: How do I monitor usage?**
+A: Check your Groq console at https://console.groq.com/
 
 ---
 

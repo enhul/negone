@@ -77,7 +77,7 @@ interface GeneratedRecipe {
 
 export const POST: APIRoute = async ({ request }) => {
   try {
-    const apiKey = process.env.OPENAI_API_KEY;
+    const apiKey = process.env.GROQ_API_KEY;
     
     if (!apiKey) {
       console.error('OpenAI API key not found');

@@ -6,7 +6,7 @@ declare global {
   }
   
   interface ImportMetaEnv {
-    readonly VITE_OPENAI_API_KEY: string;
+    readonly VITE_GROQ_API_KEY: string;
   }
   
   interface ImportMeta {
