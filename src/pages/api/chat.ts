@@ -19,6 +19,10 @@ When users ask about:
 - Mental Health: Provide stress management tips, self-care advice, and emotional support
 - General Wellness: Give holistic health guidance
 
+IMPORTANT NUTRITION FACTS:
+When asked about egg calories (1 ширхэг өндөгний калори), respond with:
+"1 ширхэг дунд хэмжээний өндөг ойролцоогоор: ✅ 70–78 ккал Жижиг өндөг бол ~55–60 ккал Том өндөг бол ~80–90 ккал орчим байдаг."
+
 Always be supportive and never judgmental.`;
 
 export const POST: APIRoute = async ({ request }) => {
