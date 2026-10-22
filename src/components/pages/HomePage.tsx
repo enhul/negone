@@ -43,7 +43,7 @@ const ParallaxImage = ({ id, alt }: { id: string; alt: string }) => {
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({
     target: ref,
-    offset: ["start end", "end start"],
+    offset: ["start end", "end start"], 
   });
   const y = useTransform(scrollYProgress, [0, 1], ["-20%", "20%"]);
 
@@ -84,15 +84,15 @@ async function getChatGPTResponse(userMessage: string): Promise<string> {
     if (!response.ok) {
       const error = await response.json();
       console.error('Chat API error:', error);
-      
+
       if (response.status === 401) {
         return 'Уучлаарай, API түлхүүр олдсонгүй. Админтай холбогдоорой.';
       }
-      
+
       if (response.status === 429) {
         return 'Уучлаарай, хэтэрхий олон асуулт ирлээ. Хэсэг хугацаа хүлээнэ үү.';
       }
-      
+
       return 'Уучлаарай, хариулт авахад алдаа гарлаа. Дахин оролдоорой.';
     }
 
@@ -143,14 +143,14 @@ function HomePageChatbot() {
     setIsLoading(true);
 
     const botResponseText = await getChatGPTResponse(userMessageText);
-    
+
     const botResponse: Message = {
       id: (Date.now() + 1).toString(),
       text: botResponseText,
       sender: 'bot',
       timestamp: new Date(),
     };
-    
+
     setMessages(prev => [...prev, botResponse]);
     setIsLoading(false);
   };
@@ -313,22 +313,22 @@ export default function HomePage() {
         .text-balance { text-wrap: balance; }
       `}</style>
       <div className="min-h-screen bg-background font-paragraph text-foreground selection:bg-primary/50 selection:text-primary-foreground">
-        
+
         {/* Hero Section */}
         <section ref={heroRef} className="h-screen w-full relative flex items-center justify-center text-center overflow-clip hero-gradient">
           <ParallaxImage id="hero-background-serene" alt="Pastel pink and green abstract background" />
-          <motion.div 
+          <motion.div
             style={{ opacity: heroTextOpacity, y: heroTextY }}
             className="relative z-10 px-4 max-w-5xl"
           >
-            <motion.h1 
+            <motion.h1
               className="text-5xl md:text-7xl lg:text-8xl font-heading text-foreground mb-6 text-balance"
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1, transition: { duration: 0.8, delay: 0.2, ease: "easeOut" } }}
             >
               NegOne
             </motion.h1>
-            <motion.p 
+            <motion.p
               className="text-lg md:text-xl text-foreground/80 mb-10 max-w-3xl mx-auto text-balance"
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1, transition: { duration: 0.8, delay: 0.4, ease: "easeOut" } }}
@@ -345,7 +345,7 @@ export default function HomePage() {
                   <Link to="/dashboard">Хяналтын самбар</Link>
                 </Button>
               ) : (
-                <Button 
+                <Button
                   onClick={actions.login}
                   size="lg"
                   className="bg-primary text-primary-foreground hover:bg-primary/80 rounded-full px-8 py-6 text-lg font-semibold transition-transform duration-300 hover:scale-105"
@@ -485,7 +485,7 @@ export default function HomePage() {
                 <p className="text-lg text-foreground/70 mb-10 max-w-2xl mx-auto text-balance">
                   Таны эрүүл, аз жаргалтай амьдралын хэв маяг эндээс эхэлнэ.
                 </p>
-                <Button 
+                <Button
                   onClick={actions.login}
                   size="lg"
                   className="bg-primary text-primary-foreground hover:bg-primary/80 rounded-full px-10 py-7 text-xl font-semibold transition-transform duration-300 hover:scale-105 shadow-lg shadow-primary/30"
