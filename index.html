@@ -14,12 +14,37 @@
     html {
       scroll-behavior: smooth;
     }
+
+    /* Cute Animated Background */
     body {
-      background: linear-gradient(135deg, #fff0f5 0%, #fce4ec 100%);
+      background: linear-gradient(-45deg, #fff0f5, #fce4ec, #f3e5f5, #ffebee);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
       color: #37474f;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* Floating Cute Elements in Background */
+    .floating-bg-item {
+      position: fixed;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.35;
+      animation: floatAround 18s linear infinite;
+    }
+    @keyframes floatAround {
+      0% { transform: translateY(100vh) rotate(0deg); }
+      100% { transform: translateY(-10vh) rotate(360deg); }
     }
 
     /* Top Navigation */
@@ -44,17 +69,17 @@
     }
     nav {
       display: flex;
-      gap: 15px;
-      background: rgba(255, 255, 255, 0.9);
-      padding: 8px 20px;
+      gap: 12px;
+      background: rgba(255, 255, 255, 0.92);
+      padding: 8px 18px;
       border-radius: 30px;
-      backdrop-filter: blur(10px);
-      box-shadow: 0 4px 15px rgba(216, 27, 96, 0.08);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 4px 15px rgba(216, 27, 96, 0.1);
     }
     nav a {
       text-decoration: none;
       color: #555;
-      font-size: 14px;
+      font-size: 13.5px;
       font-weight: 600;
       padding: 6px 14px;
       border-radius: 18px;
@@ -63,11 +88,6 @@
     nav a:hover, nav a.active {
       color: #d81b60;
       background: #f8bbd0;
-    }
-    .user-section {
-      display: flex;
-      align-items: center;
-      gap: 12px;
     }
     .btn-login {
       background-color: #ec407a;
@@ -114,9 +134,10 @@
       width: 100%;
       margin: 0 auto;
       padding: 20px;
+      position: relative;
+      z-index: 10;
     }
 
-    /* Sections */
     .page-section {
       display: none;
       animation: fadeIn 0.3s ease-in-out;
@@ -129,10 +150,10 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* Hero Section (Нүүр) */
+    /* Hero Section */
     .hero {
       text-align: center;
-      padding: 50px 20px 30px;
+      padding: 40px 20px 30px;
     }
     .hero h1 {
       font-size: 64px;
@@ -172,7 +193,7 @@
     .ai-box {
       margin: 40px auto 0;
       max-width: 700px;
-      background: white;
+      background: rgba(255, 255, 255, 0.95);
       border-radius: 24px;
       padding: 28px;
       box-shadow: 0 10px 30px rgba(216, 27, 96, 0.08);
@@ -198,7 +219,6 @@
       border-radius: 18px;
       font-size: 15px;
       outline: none;
-      transition: border 0.2s;
     }
     .ai-input:focus {
       border-color: #ec407a;
@@ -211,36 +231,44 @@
       border-radius: 18px;
       font-weight: 600;
       cursor: pointer;
-      transition: background 0.2s;
-    }
-    .btn-ai-send:hover {
-      background: #ad1457;
-    }
-    .ai-response {
-      margin-top: 18px;
-      padding: 18px;
-      background: #fff5f8;
-      border-left: 4px solid #ec407a;
-      border-radius: 12px;
-      font-size: 15px;
-      color: #4a148c;
-      line-height: 1.6;
-      display: none;
     }
 
     /* Recipes Section */
     .recipe-header {
       text-align: center;
-      margin-bottom: 35px;
+      margin-bottom: 30px;
     }
     .recipe-header h2 {
-      font-size: 36px;
+      font-size: 34px;
       color: #880e4f;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
+    }
+    .recipe-categories {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 15px 0 20px;
+    }
+    .cat-btn {
+      background: white;
+      border: 2px solid #f8bbd0;
+      color: #880e4f;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .cat-btn.active, .cat-btn:hover {
+      background: #ec407a;
+      color: white;
+      border-color: #ec407a;
     }
     .search-bar {
       max-width: 450px;
-      margin: 15px auto 0;
+      margin: 0 auto;
     }
     .search-bar input {
       width: 100%;
@@ -252,11 +280,12 @@
     }
     .recipe-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 25px;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      margin-top: 25px;
     }
     .recipe-card {
-      background: white;
+      background: rgba(255, 255, 255, 0.95);
       border-radius: 20px;
       overflow: hidden;
       box-shadow: 0 4px 15px rgba(216, 27, 96, 0.06);
@@ -267,61 +296,62 @@
       transform: translateY(-4px);
     }
     .recipe-img {
-      height: 150px;
+      height: 130px;
       background: #fce4ec;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 48px;
+      font-size: 42px;
     }
     .recipe-content {
-      padding: 20px;
+      padding: 18px;
     }
     .recipe-tag {
-      font-size: 12px;
+      font-size: 11px;
       background: #f8bbd0;
       color: #880e4f;
-      padding: 4px 12px;
+      padding: 3px 10px;
       border-radius: 12px;
       font-weight: 700;
     }
     .recipe-title {
-      font-size: 18px;
+      font-size: 16px;
       font-weight: 700;
       color: #37474f;
-      margin: 10px 0 8px;
+      margin: 8px 0 6px;
     }
     .recipe-desc {
-      font-size: 13px;
+      font-size: 12.5px;
       color: #666;
-      line-height: 1.5;
-      margin-bottom: 15px;
+      line-height: 1.4;
+      margin-bottom: 12px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
     }
     .btn-view-recipe {
       width: 100%;
       background: #fce4ec;
       color: #c2185b;
       border: none;
-      padding: 10px;
+      padding: 8px;
       border-radius: 12px;
       font-weight: 700;
       cursor: pointer;
-      transition: background 0.2s;
-    }
-    .btn-view-recipe:hover {
-      background: #f8bbd0;
+      font-size: 13px;
     }
 
-    /* BMI & Tracker Section */
-    .tracker-card {
-      background: white;
+    /* Cards & Tracker */
+    .card-box {
+      background: rgba(255, 255, 255, 0.95);
       border-radius: 24px;
       padding: 35px;
       box-shadow: 0 6px 20px rgba(216, 27, 96, 0.06);
       margin-bottom: 30px;
       border: 1px solid #fce4ec;
     }
-    .tracker-card h2 {
+    .card-box h2 {
       font-size: 28px;
       color: #880e4f;
       margin-bottom: 10px;
@@ -336,7 +366,6 @@
       display: flex;
       flex-direction: column;
       gap: 6px;
-      text-align: left;
     }
     .form-group label {
       font-size: 14px;
@@ -350,69 +379,51 @@
       font-size: 15px;
       outline: none;
     }
-    .btn-calc {
+    .btn-action {
       background: #ec407a;
       color: white;
       border: none;
-      padding: 14px 28px;
+      padding: 12px 28px;
       border-radius: 16px;
       font-weight: 700;
       cursor: pointer;
       font-size: 15px;
-      margin-top: 10px;
-    }
-    .bmi-result-box {
-      display: none;
-      margin-top: 25px;
-      padding: 22px;
-      background: #fff0f5;
-      border-radius: 18px;
-      border-left: 5px solid #d81b60;
-    }
-    .dysmorphia-banner {
-      background: #fce4ec;
-      padding: 16px;
-      border-radius: 14px;
-      color: #880e4f;
-      font-size: 14px;
-      line-height: 1.6;
-      margin-bottom: 15px;
-      font-weight: 500;
-    }
-    .yt-links {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 15px;
-    }
-    .yt-btn {
-      background: #ff4081;
-      color: white;
-      text-decoration: none;
-      padding: 8px 16px;
-      border-radius: 12px;
-      font-size: 13px;
-      font-weight: 600;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
     }
 
-    /* Contact & About Section */
-    .about-card {
-      background: white;
-      border-radius: 24px;
-      padding: 40px;
-      box-shadow: 0 6px 20px rgba(216, 27, 96, 0.06);
-      margin-bottom: 30px;
+    /* Dysmorphia Diaries Cards */
+    .diary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
     }
+    .diary-card {
+      background: #fff5f8;
+      border-left: 4px solid #ec407a;
+      padding: 20px;
+      border-radius: 16px;
+      text-align: left;
+    }
+    .diary-author {
+      font-weight: 700;
+      color: #880e4f;
+      margin-bottom: 6px;
+      font-size: 14px;
+    }
+    .diary-text {
+      font-size: 13.5px;
+      color: #4a148c;
+      line-height: 1.6;
+      font-style: italic;
+    }
+
+    /* Contact Details */
     .contact-box {
       background: #fff0f5;
       padding: 25px;
       border-radius: 18px;
-      margin-top: 25px;
+      margin-top: 20px;
       border: 1px solid #f8bbd0;
-      text-align: left;
     }
     .contact-item {
       display: flex;
@@ -421,6 +432,11 @@
       margin-bottom: 12px;
       font-size: 15px;
       color: #4a148c;
+    }
+    .contact-item a {
+      color: #d81b60;
+      font-weight: 700;
+      text-decoration: none;
     }
 
     /* Modal Overlay */
@@ -438,25 +454,12 @@
       background: white;
       border-radius: 24px;
       padding: 35px;
-      max-width: 460px;
+      max-width: 480px;
       width: 90%;
       text-align: center;
       box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-    }
-    .google-btn {
-      width: 100%;
-      background: white;
-      border: 1px solid #dadce0;
-      padding: 12px;
-      border-radius: 20px;
-      font-weight: 600;
-      color: #3c4043;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      cursor: pointer;
-      margin: 20px 0 15px;
+      max-height: 85vh;
+      overflow-y: auto;
     }
     .btn-close {
       background: #f8bbd0;
@@ -471,13 +474,20 @@
 </head>
 <body>
 
-  <!-- Top Navigation -->
+  <!-- Animated Floating BG Elements -->
+  <div class="floating-bg-item" style="left: 10%; animation-duration: 22s;">🌸</div>
+  <div class="floating-bg-item" style="left: 25%; animation-duration: 18s;">💖</div>
+  <div class="floating-bg-item" style="left: 60%; animation-duration: 25s;">✨</div>
+  <div class="floating-bg-item" style="left: 80%; animation-duration: 20s;">🎀</div>
+  <div class="floating-bg-item" style="left: 90%; animation-duration: 28s;">🍓</div>
+
+  <!-- Header -->
   <header>
     <a href="#" class="logo" onclick="showTab('home')">NegOne 💕</a>
     <nav>
       <a href="#" id="nav-home" class="active" onclick="showTab('home')">🏠 Нүүр</a>
-      <a href="#" id="nav-recipes" onclick="showTab('recipes')">🍴 Жорууд</a>
-      <a href="#" id="nav-tracker" onclick="showTab('tracker')">📊 Эрүүл Мэнд & BMI</a>
+      <a href="#" id="nav-recipes" onclick="showTab('recipes')">🍴 Жорууд (50+)</a>
+      <a href="#" id="nav-tracker" onclick="showTab('tracker')">📊 BMI & Сэтгэлийн Түүхүүд</a>
       <a href="#" id="nav-about" onclick="showTab('about')">👤 NegOne & Холбоо барих</a>
     </nav>
     <div class="user-section">
@@ -490,10 +500,9 @@
     </div>
   </header>
 
-  <!-- Main Content -->
   <main>
 
-    <!-- TAB 1: НҮҮР (Home & AI Chat) -->
+    <!-- TAB 1: HOME -->
     <section id="tab-home" class="page-section active">
       <div class="hero">
         <h1>NegOne</h1>
@@ -504,86 +513,66 @@
           Gmail-ээр нэвтрэх
         </button>
 
-        <!-- AI Assistant Box -->
         <div class="ai-box">
-          <div class="ai-box-header">
-            🌸 NegOne AI Асуулт Хариултын Туслах
-          </div>
+          <div class="ai-box-header">🌸 NegOne AI Асуулт Хариултын Туслах</div>
           <div class="ai-input-group">
-            <input type="text" id="aiQuery" class="ai-input" placeholder="Юу ч асууж болно (Стресс, калори, жор, биеийн эерэг хандлага...)..." onkeypress="handleEnter(event)">
+            <input type="text" id="aiQuery" class="ai-input" placeholder="Асуултаа бичнэ үү (Стресс, аминдэм, жор, сэтгэл зүй...)" onkeypress="if(event.key==='Enter') askAI()">
             <button class="btn-ai-send" onclick="askAI()">Асуух</button>
           </div>
-          <div id="aiResponse" class="ai-response"></div>
+          <div id="aiResponse" style="display:none; margin-top:15px; padding:15px; background:#fff5f8; border-left:4px solid #ec407a; border-radius:12px; font-size:14.5px; line-height:1.6; color:#4a148c;"></div>
         </div>
       </div>
     </section>
 
-    <!-- TAB 2: ЖОРУУД (Recipes) -->
+    <!-- TAB 2: 50+ RECIPES -->
     <section id="tab-recipes" class="page-section">
       <div class="recipe-header">
-        <h2>🍴 Эрүүл ба Амттай Хоолны Жорууд</h2>
-        <p>Бие ба сэтгэлийг агааржуулах шим тэжээлтэй, бэлтгэхэд хялбар жорууд</p>
+        <h2>🍴 Эрүүл, Витаминаар Баялаг 50+ Жор</h2>
+        <p>Бие махбодь болон сэтгэл зүйд энергийн дэмжлэг үзүүлэх шим тэжээлт хоолнууд</p>
+
+        <div class="recipe-categories">
+          <button class="cat-btn active" onclick="filterCategory('all')">Бүх жорууд (50)</button>
+          <button class="cat-btn" onclick="filterCategory('breakfast')">🥐 Өглөөний цай</button>
+          <button class="cat-btn" onclick="filterCategory('salad')">🥗 Салат & Зууш</button>
+          <button class="cat-btn" onclick="filterCategory('main')">🍲 Үндсэн хоол</button>
+          <button class="cat-btn" onclick="filterCategory('drink')">🥤 Амттан & Ундаа</button>
+        </div>
+
         <div class="search-bar">
-          <input type="text" id="recipeSearch" onkeyup="filterRecipes()" placeholder="Жор хайх (жимс, салат, өглөөний цай, амттан...)...">
+          <input type="text" id="recipeSearch" onkeyup="searchRecipes()" placeholder="Жороос хайх (жимс, авокадо, шөл, тахиа...)...">
         </div>
       </div>
 
-      <div class="recipe-grid" id="recipeGrid">
-
-        <div class="recipe-card">
-          <div class="recipe-img">🍓</div>
-          <div class="recipe-content">
-            <span class="recipe-tag">Өглөөний цай • 210 kcal</span>
-            <div class="recipe-title">Ягаан Жимсний Смути Боул</div>
-            <div class="recipe-desc">Гүзээлзгэнэ, банан, кокосын сүү болон чиа үрээр баяжуулсан энергийн ундаа.</div>
-            <button class="btn-view-recipe" onclick="openRecipeModal('Ягаан Жимсний Смути Боул', '• Шинэхэн эсвэл хөлдөөсөн гүзээлзгэнэ 1 аяга\n• Банан 1 ширхэг\n• Кокосын сүү 100мл\n• Чиа үр 1 цайны халбага', '1. Бүх орцоо блендэрт хийн үргэлжилсэн 2 минут миксердэнэ.\n2. Аяганд хийж дээр нь самар болон жимсээр чимэглэнэ.')">Жор & Орц үзэх</button>
-          </div>
-        </div>
-
-        <div class="recipe-card">
-          <div class="recipe-img">🥑</div>
-          <div class="recipe-content">
-            <span class="recipe-tag">Өдрийн хоол • 290 kcal</span>
-            <div class="recipe-title">Авокадо & Өндөгтэй Тост</div>
-            <div class="recipe-desc">Эрүүл өөх тос, протейнаар баялаг тархины үйл ажиллагааг дэмжих өглөөний цай.</div>
-            <button class="btn-view-recipe" onclick="openRecipeModal('Авокадо & Өндөгтэй Тост', '• Бүхэлийн үрийн талх 2 зүсэм\n• Боловсорсон авокадо 1/2\n• Сөдөлсөн эсвэл чанасан өндөг 1 ширхэг\n• Лимоны шүүс, чимх давс, хар перец', '1. Талхаа бага зэрэг шарж шаржигнуур болгоно.\n2. Авокадог лимоны шүүс, давстай миксердэж талхан дээрээ түрхэнэ.\n3. Дээр нь өндгөө тавьж перец цацна.')">Жор & Орц үзэх</button>
-          </div>
-        </div>
-
-        <div class="recipe-card">
-          <div class="recipe-img">🥗</div>
-          <div class="recipe-content">
-            <span class="recipe-tag">Оройн хоол • 310 kcal</span>
-            <div class="recipe-title">Ногоон Грек Салат</div>
-            <div class="recipe-desc">Черри улаан лооль, өгөөжтэй олив тос болон фета бяслагтай шинэхэн салат.</div>
-            <button class="btn-view-recipe" onclick="openRecipeModal('Ногоон Грек Салат', '• Шинэхэн өгөөртэй ногоонууд\n• Черри лооль 8 ширхэг\n• Олив тос 1 хоолны халбага\n• Фета бяслаг 30г\n• Лимон, орегано', '1. Ногоонуудыг угааж жижиглэн хэрчинэ.\n2. Олив тос болон лимоны шүүсээр амтлан фета бяслагаа цацна.')">Жор & Орц үзэх</button>
-          </div>
-        </div>
-
-        <div class="recipe-card">
-          <div class="recipe-img">🫐</div>
-          <div class="recipe-content">
-            <span class="recipe-tag">Амттан • 180 kcal</span>
-            <div class="recipe-title">Чиа Үр ба Нэрстэй Пүдинг</div>
-            <div class="recipe-desc">Антиоксидантаар баялаг, ходоод гэдэсний үйл ажиллагаанд эерэг эрүүл амттан.</div>
-            <button class="btn-view-recipe" onclick="openRecipeModal('Чиа Үр ба Нэрстэй Пүдинг', '• Чиа үр 3 хоолны халбага\n• Самрын сүү эсвэл кокосын сүү 150мл\n• Зөгийн бал 1 цайны халбага\n• Шинэхэн нэрс жимс', '1. Чиа үр, сүү, зөгийн балыг холиод хөргөгчинд 2 цаг байлгана.\n2. Өтгөрсний дараа дээр нь нэрс жимс суулган зооглоно.')">Жор & Орц үзэх</button>
-          </div>
-        </div>
-
-      </div>
+      <div class="recipe-grid" id="recipeGridContainer"></div>
     </section>
 
-    <!-- TAB 3: ЭРҮҮЛ МЭНД & BMI TRACKER -->
+    <!-- TAB 3: TRACKER & DIARIES -->
     <section id="tab-tracker" class="page-section">
-      <div class="tracker-card">
-        <h2>📊 Эзэлхүүн ба BMI Тооцоолуур</h2>
-        <p style="color: #666; font-size: 14px; margin-bottom: 15px;">Таны биеийн өндөр болон жинд үндэслэн эрүүл мэндийн индексийг тооцоолно.</p>
-
-        <!-- Body Dysmorphia Affirmation -->
-        <div class="dysmorphia-banner">
-          💖 **Санамж (Body Positivity):** Таны биеийн жин ба BMI тоо бол зөвхөн техникийн хэмжүүр бөгөөд таны үнэ цэнэ, үзэсгэлэн гоог тодорхойлохгүй! NegOne нь жин бууруулах хатуу шаардлага бус, таны биеэ хайрлах сэтгэл зүйг хамгийн эхэнд тавьдаг.
+      
+      <!-- Body Dysmorphia Stories -->
+      <div class="card-box">
+        <h2>💌 Сэтгэлийн Тэмдэглэлүүд: Найдвар ба Эдгэрэл</h2>
+        <p style="color:#666; font-size:14px; margin-bottom:15px;">Body Dysmorphia (биеийн гадаад төрхөндөө сэтгэл хангалуун бус байх эмгэг)-ийг даван туулсан хүмүүсийн бодит түүх ба сэтгэлийн дэмжлэг:</p>
+        
+        <div class="diary-grid">
+          <div class="diary-card">
+            <div class="diary-author">🌸 Ану (21 нас)</div>
+            <div class="diary-text">"Би толинд харах бүрдээ зөвхөн дутагдлаа хардаг байсан. Гэвч бие маань намайг амьд байлгаж, инээлгэж, алхуулж байгааг ойлгосноос хойш жингийн тоог биш, өөрийнхөө сэтгэлийг хайрлаж эхэлсэн."</div>
+          </div>
+          <div class="diary-card">
+            <div class="diary-author">🌷 Мишээл (19 нас)</div>
+            <div class="diary-text">"Хоолоо хасаж өөрийгөө зовоох нь миний энергийг сорж байсан. Би хоолыг 'дайсан' биш, биедээ өгч буй хайр ба витамин гэж харж эхэлснээр миний амьдрал цэцэглэсэн."</div>
+          </div>
+          <div class="diary-card">
+            <div class="diary-author">🌼 Солонго (24 нас)</div>
+            <div class="diary-text">"Нийтлэг хэвшмэл стандартад тааруулах гэж хичээх албагүй. Таны давтагдашгүй зан чанар, инээмсэглэл бол хамгийн үзэсгэлэнтэй гоо сайхан юм!"</div>
+          </div>
         </div>
+      </div>
 
+      <!-- BMI Calculator -->
+      <div class="card-box">
+        <h2>📊 Биеийн Индекс (BMI) Тооцоолуур</h2>
         <div class="form-grid">
           <div class="form-group">
             <label>Өндөр (см):</label>
@@ -594,65 +583,37 @@
             <input type="number" id="userWeight" placeholder="55">
           </div>
         </div>
+        <button class="btn-action" onclick="calculateBMI()">Тооцоолох & Зөвлөмж Авах</button>
 
-        <button class="btn-calc" onclick="calculateBMI()">Тооцоолох & Зөвлөмж Авах</button>
-
-        <div id="bmiResult" class="bmi-result-box">
-          <h3 id="bmiScore" style="color:#d81b60; font-size: 22px; margin-bottom: 8px;">BMI: --</h3>
-          <p id="bmiAdvice" style="font-size: 15px; color:#37474f; line-height: 1.6;"></p>
-          
-          <div style="margin-top: 15px;">
-            <strong>🌸 Танд зориулсан YouTube Дасгалын Сонголтууд:</strong>
-            <div class="yt-links">
-              <a href="https://www.youtube.com/results?search_query=gentle+full+body+workout+no+equipment" target="_blank" class="yt-btn">▶️ Сэтгэл сэргээх хөнгөн дасгал</a>
-              <a href="https://www.youtube.com/results?search_query=yoga+for+self+love+and+acceptance" target="_blank" class="yt-btn">🧘‍♀️ Биеэ хайрлах Йог дасгал</a>
-              <a href="https://www.youtube.com/results?search_query=posture+and+stretching+routine" target="_blank" class="yt-btn">🤸‍♀️ Суниалт & Нурууны дасгал</a>
+        <div id="bmiResult" style="display:none; margin-top:20px; padding:20px; background:#fff0f5; border-radius:16px; border-left:5px solid #d81b60;">
+          <h3 id="bmiScore" style="color:#d81b60; font-size:20px; margin-bottom:8px;"></h3>
+          <p id="bmiAdvice" style="font-size:14.5px; color:#37474f; line-height:1.6;"></p>
+          <div style="margin-top:12px;">
+            <strong>🎬 Танд зориулсан YouTube Дасгалын Сонголтууд:</strong>
+            <div style="display:flex; flex-wrap:wrap; gap:10px; margin-top:10px;">
+              <a href="https://www.youtube.com/results?search_query=gentle+full+body+workout+no+equipment" target="_blank" style="background:#ff4081; color:white; padding:8px 14px; border-radius:12px; font-size:12.5px; text-decoration:none; font-weight:600;">▶️ Хөнгөн Дасгал</a>
+              <a href="https://www.youtube.com/results?search_query=yoga+for+self+love+and+acceptance" target="_blank" style="background:#ff4081; color:white; padding:8px 14px; border-radius:12px; font-size:12.5px; text-decoration:none; font-weight:600;">🧘‍♀️ Биеэ Хайрлах Йог</a>
             </div>
           </div>
         </div>
       </div>
-
-      <!-- Log Progress Section -->
-      <div class="tracker-card">
-        <h2>📝 Өдрийн Тэмдэглэл & Ахиц Хадгалах</h2>
-        <div class="form-grid">
-          <div class="form-group">
-            <label>Өнөөдрийн сэтгэл санаа:</label>
-            <input type="text" id="logMood" placeholder="Өнөөдөр тайван, эрч хүчтэй байна...">
-          </div>
-          <div class="form-group">
-            <label>Уусан ус (литр):</label>
-            <input type="number" id="logWater" placeholder="1.5">
-          </div>
-        </div>
-        <button class="btn-calc" style="background:#ad1457;" onclick="saveProgressLog()">Тэмдэглэл Хадгалах</button>
-        <div id="logHistory" style="margin-top:20px; font-size:14px; color:#555;"></div>
-      </div>
     </section>
 
-    <!-- TAB 4: NEGONE & CONTACT -->
+    <!-- TAB 4: ABOUT & CONTACT -->
     <section id="tab-about" class="page-section">
-      <div class="about-card">
-        <h2 style="color:#880e4f;">👤 NegOne Төслийн Тухай</h2>
+      <div class="card-box">
+        <h2>👤 NegOne Төслийн Тухай</h2>
         <p style="line-height:1.7; color:#555; margin-top:10px;">
-          NegOne нь сэтгэл зүйн амар амгалан, биеийн эерэг хандлага (Body Dysmorphia-тай тэмцэх) болон эрүүл хооллолтын зөв дадлыг олгоход зориулагдсан дижитал платформын концепт юм.
+          NegOne нь сэтгэл зүйн амар амгалан, биеийн эерэг хандлага (Body Dysmorphia-тай тэмцэх) болон эрүүл хооллолтыг дэмжих зорилготой дижитал platform юм.
         </p>
 
-        <!-- Official Contact Details -->
         <div class="contact-box">
-          <h3 style="color:#d81b60; margin-bottom: 15px;">📞 Холбоо барих мэдээлэл</h3>
-          <div class="contact-item">
-            <span>👤</span> <strong>Үүсгэн байгуулагч / Хөгжүүлэгч:</strong> Enkhkhuslen Munkhbayasgalan
-          </div>
-          <div class="contact-item">
-            <span>📍</span> <strong>Байршил:</strong> Улаанбаатар хот, Монгол улс (Ulaanbaatar, Mongolia)
-          </div>
-          <div class="contact-item">
-            <span>📱</span> <strong>Утасны дугаар:</strong> +976 99663946
-          </div>
-          <div class="contact-item">
-            <span>✉️</span> <strong>И-мэйл хаяг:</strong> enhulenhuul@gmail.com
-          </div>
+          <h3 style="color:#d81b60; margin-bottom: 15px;">📞 Холбоо Барих</h3>
+          <div class="contact-item"><span>👤</span> <strong>Үүсгэн байгуулагч:</strong> Enkhkhuslen Munkhbayasgalan</div>
+          <div class="contact-item"><span>📸</span> <strong>Instagram:</strong> <a href="https://instagram.com/enhulm" target="_blank">@enhulm</a></div>
+          <div class="contact-item"><span>📍</span> <strong>Байршил:</strong> Улаанбаатар хот, Монгол улс</div>
+          <div class="contact-item"><span>📱</span> <strong>Утас:</strong> +976 99663946</div>
+          <div class="contact-item"><span>✉️</span> <strong>И-мэйл:</strong> enhulenhuul@gmail.com</div>
         </div>
       </div>
     </section>
@@ -664,12 +625,7 @@
     <div class="modal-box">
       <h3 style="color:#880e4f;">NegOne Системд Нэвтрэх</h3>
       <p style="font-size:14px; color:#666; margin-top:5px;">Google / Gmail хаягаараа нэвтэрч хувийн тохиргоогоо хадгалаарай.</p>
-
-      <button class="google-btn" onclick="simulateGoogleLogin()">
-        <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg>
-        Gmail Хаягаар Нэвтрэх
-      </button>
-
+      <button onclick="simulateGoogleLogin()" style="width:100%; background:white; border:1px solid #ccc; padding:12px; border-radius:18px; font-weight:600; cursor:pointer; margin:20px 0;">Gmail Хаягаар Нэвтрэх</button>
       <button class="btn-close" onclick="closeLoginModal()">Хаах</button>
     </div>
   </div>
@@ -677,138 +633,169 @@
   <!-- Recipe Detail Modal -->
   <div id="recipeModal" class="modal-overlay">
     <div class="modal-box" style="text-align: left;">
-      <h3 id="modalRecipeTitle" style="color:#d81b60;">Жорын нэр</h3>
-      <p id="modalRecipeIngredients" style="font-size:14px; font-weight:600; color:#ad1457; margin:12px 0; white-space: pre-line;"></p>
-      <p id="modalRecipeSteps" style="font-size:13px; color:#444; white-space: pre-line; line-height:1.6; margin-bottom:20px;"></p>
+      <h3 id="modalRecipeTitle" style="color:#d81b60; font-size:22px;"></h3>
+      <p id="modalRecipeTag" style="font-size:13px; font-weight:700; color:#ad1457; margin:6px 0 12px;"></p>
+      <p id="modalRecipeIngredients" style="font-size:14px; line-height:1.6; color:#333; white-space: pre-line; margin-bottom:15px;"></p>
+      <p id="modalRecipeSteps" style="font-size:13.5px; line-height:1.6; color:#555; white-space: pre-line; margin-bottom:20px;"></p>
       <button class="btn-close" onclick="closeRecipeModal()">Хаах</button>
     </div>
   </div>
 
   <script>
-    // Tab Navigation Switcher
+    // 50 Healthy Recipes Dataset
+    const recipesData = [
+      { id:1, cat:'breakfast', title:'Ягаан Жимсний Смути Боул', emoji:'🍓', cal:'210 kcal', desc:'Гүзээлзгэнэ, банан, кокосын сүү болон чиа үрээр баяжуулсан энергийн ундаа.', ing:'• Гүзээлзгэнэ 1 аяга\n• Банан 1 ширхэг\n• Кокосын сүү 100мл\n• Чиа үр 1 цайны халбага', steps:'1. Бүх орцоо блендэрт хийн 2 минут миксердэнэ.\n2. Аяганд хийж жимсээр чимэглэнэ.' },
+      { id:2, cat:'breakfast', title:'Авокадо & Өндөгтэй Тост', emoji:'🥑', cal:'290 kcal', desc:'Эрүүл өөх тос, протейнаар баялаг тархины үйл ажиллагааг дэмжих өглөөний цай.', ing:'• Бүхэлийн үрийн талх 2 зүсэм\n• Боловсорсон авокадо 1/2\n• Чанасан өндөг 1 ширхэг', steps:'1. Талхаа бага зэрэг шарж шаржигнуур болгоно.\n2. Авокадог нухаж талхан дээрээ түрхэн өндөг тавина.' },
+      { id:3, cat:'salad', title:'Ногоон Грек Салат', emoji:'🥗', cal:'250 kcal', desc:'Черри улаан лооль, өгөөжтэй олив тос болон фета бяслагтай шинэхэн салат.', ing:'• Черри лооль 8 ширхэг\n• Олив тос 1 хоолны халбага\n• Фета бяслаг 30г\n• Өгөөртэй ногоонууд', steps:'1. Ногоонуудыг угааж хэрчинэ.\n2. Олив тос, фета бяслагаар амтална.' },
+      { id:4, cat:'drink', title:'Чиа Үр ба Нэрстэй Пүдинг', emoji:'🫐', cal:'180 kcal', desc:'Антиоксидантаар баялаг, ходоод гэдэсний үйл ажиллагаанд эерэг амттан.', ing:'• Чиа үр 3 хоолны халбага\n• Самрын сүү 150мл\n• Шинэхэн нэрс жимс', steps:'1. Чиа үр ба сүүгээ холиод хөргөгчинд 2 цаг байлгана.\n2. Нэрсээр чимэглэн зооглоно.' },
+      { id:5, cat:'breakfast', title:'Овъёос ба Алимны Синнамон Шөл', emoji:'🍎', cal:'230 kcal', desc:'Алим ба шанцайны (cinnamon) хослолтой ходоод амраах өглөөний хоол.', ing:'• Овъёос 1/2 аяга\n• Алим 1/2 ширхэг\n• Синнамон 1/2 цайны халбага', steps:'1. Овъёосоо усанд 5 минут чанана.\n2. Хэрчсэн алим ба синнамон нэмнэ.' },
+      { id:6, cat:'salad', title:'Хумус & Шинэхэн Луувангийн Зууш', emoji:'🥕', cal:'160 kcal', desc:'Уураг ба эслэгээр баялаг, өдрийн турш хөнгөн сэргээх хүнс.', ing:'• Анхилуун хумус 3 хоолны халбага\n• Шинэхэн лууван, өгөөртэй чинжүү', steps:'1. Лууван ба чинжүүгээ уртаар нь хэрчинэ.\n2. Хумусанд дүрж зооглоно.' },
+      { id:7, cat:'main', title:'Лимонтой Гриллдсэн Салмон Загас', emoji:'🐟', cal:'380 kcal', desc:'Омега-3 тосны хүчлээр баялаг, зүрх судас ба арьсны эрүүл мэндэд нэн тустай.', ing:'• Салмон загасны филе 150г\n• Лимоны шүүс 1 хоолны халбага\n• Аспапарагус 5 иш', steps:'1. Салмон загасыг лимон ба оливын тосоор амтална.\n2. Грилл дээр 8-10 минут шарж аспапарагустай олгоно.' },
+      { id:8, cat:'main', title:'Шарсан Тахианы Цээж ба Брокколи', emoji:'🥦', cal:'320 kcal', desc:'Уургаар баялаг, булчингийн нөхөн үеийг дэмжих классик эрүүл хоол.', ing:'• Тахианы цээж мах 150г\n• Брокколи 100г\n• Сармис, оливын тос', steps:'1. Тахианы махаа сармистай шарна.\n2. Брокколийг ууранд 4 минут жигнэнэ.' },
+      { id:9, cat:'drink', title:'Киви & Спирулина Детокс Смути', emoji:'🥝', cal:'140 kcal', desc:'C витамин ба детокс бодисоор баялаг ногоон супер-ундаа.', ing:'• Киви 2 ширхэг\n• Бууцай (Spinach) 1 атга\n• Спирулина нунтаг 1/2 цайны халбага', steps:'1. Бүх орцоо цэвэр усаар миксердэж ууна.' },
+      { id:10, cat:'drink', title:'Манго & Кокосын Парфе', emoji:'🥭', cal:'220 kcal', desc:'Тропик жимсний амттай, витамин А-гаар баялаг амттан.', ing:'• Грек тараг 150г\n• Хэрчсэн манго 1/2 аяга\n• Кокосын зүсмэлүүд', steps:'1. Аяганд тараг ба мангогоо үечлэн хийнэ.\n2. Кокосоор чимэглэнэ.' },
+      { id:11, cat:'main', title:'Амтат Төмөр & Хар Шошны Тако', emoji:'🌮', cal:'340 kcal', desc:'Веган уураг ба витамин А-гаар баялаг мексик стилийн хоол.', ing:'• Бүхэлийн тортилла 2 ширхэг\n• Шарагчинд шарсан амтат төмс\n• Хар шош 3 хоолны халбага', steps:'1. Тортилла дээрээ шарсан амтат төмс ба хар шошоо тавина.' },
+      { id:12, cat:'breakfast', title:'Мача Лагте ба Бадам Сүү', emoji:'🍵', cal:'110 kcal', desc:'Антиоксидант ба фокус төвлөрлийг дэмжих тайвшруулах ундаа.', ing:'• Мача нунтаг 1 цайны халбага\n• Бадамын сүү (Almond milk) 200мл\n• Зөгийн бал 1/2 цайны халбага', steps:'1. Мача нунтгийг бүлээн усанд хутгаад халаасан бадам сүүгээ нэмнэ.' },
+      { id:13, cat:'salad', title:'Тофутай Ази Стиль Салат', emoji:'🥗', cal:'230 kcal', desc:'Ургамлын уураг ба эслэгээр баялаг эрүүл салат.', ing:'• Шарсан тофу 100г\n• Б байцаа, лууван, кунжутын үр', steps:'1. Тофугаа шоо дөрвөлжин хэрчиж шарна.\n2. Ногоонуудтай холин соусаар амтална.' },
+      { id:14, cat:'salad', title:'Тарвас & Фета Бяслагтай Салат', emoji:'🍉', cal:'170 kcal', desc:'Зуны халуунд биеийг чийгшүүлж, сэргээх амттай салат.', ing:'• Хэрчсэн тарвас 1.5 аяга\n• Фета бяслаг 40г\n• Гааны навч (Mint)', steps:'1. Тарвас ба фета бяслагаа холиод гааны навч цацна.' },
+      { id:15, cat:'main', title:'Сэвэг Зарамтай (Lentil) Шөл', emoji:'🍲', cal:'280 kcal', desc:'Аминдэм, төмөр ба уургаар баялаг дулаацуулах шөл.', ing:'• Улаан сэвэг зарам 1/2 аяга\n• Лоолийн паста, сармис, сонгино', steps:'1. Сонгино сармисаа шараад сэвэг зарам ба ус нэмж 20 минут буцалгана.' },
+      { id:16, cat:'breakfast', title:'Самрын Тостой Банана Тост', emoji:'🍌', cal:'260 kcal', desc:'Кали ба калорийн эрүүл эх сурвалж болох өглөөний цай.', ing:'• Бүхэлийн үрийн талх 1 зүсэм\n• Самрын тос (Peanut butter) 1 х.х\n• Банана 1/2', steps:'1. Талхан дээрээ самрын тос түрхэж банана өрнө.' },
+      { id:17, cat:'main', title:'Черри Лооль ба Песто Паста', emoji:'🍝', cal:'360 kcal', desc:'Базилик ба хушны самартай итали стилийн паста.', ing:'• Бүхэлийн үрийн паста 80г\n• Песто соус 2 хоолны халбага\n• Черри лооль 5 ширхэг', steps:'1. Пастагаа чанаад песто соус ба лоольтой холино.' },
+      { id:18, cat:'drink', title:'Бөөрөлзгөнөтэй Уургийн Шейк', emoji:'🥤', cal:'200 kcal', desc:'Дасгалын дараах булчингийн нөхөн үед зориулсан шейк.', ing:'• Бөөрөлзгөнө 1/2 аяга\n• Протейн нунтаг эсвэл тараг\n• Ус эсвэл сүү 200мл', steps:'1. Бүх орцыг блендэрт миксердэнэ.' },
+      { id:19, cat:'drink', title:'Кокос ба Бадамтай Уургийн Бөмбөлөг', emoji:'🥥', cal:'150 kcal', desc:'Чихэргүй, эрүүл энергийн жижиг амттан.', ing:'• Овъёос 1 аяга\n• Самрын тос 1/2 аяга\n• Кокосны үртэс', steps:'1. Орцуудаа холин бөмбөлөг хэлбэрт оруулан хөргөгчинд хийнэ.' },
+      { id:20, cat:'breakfast', title:'Шпинат & Сөөгөн Мөөгтэй Омлет', emoji:'🍳', cal:'240 kcal', desc:'Төмөр ба уургаар баялаг амттай өглөөний өндөг.', ing:'• Өндөг 2 ширхэг\n• Шпинат 1 атга\n• Хэрчсэн мөөг 50г', steps:'1. Мөөг ба шпинатыг шараад өндгөө миксердэж дээрээс нь асгана.' },
+      { id:21, cat:'main', title:'Гриллдсэн Туна Загасны Wrap', emoji:'🌯', cal:'310 kcal', desc:'Омега-3 ба уургийн агууламж өндөртэй хөнгөн хоол.', ing:'• Туна загас (лаазалсан, усанд) 100г\n• Тортилла 1 ширхэг\n• Шинэхэн салатны навч', steps:'1. Тортилла дээр туна загас ба салатны навч хийн орооно.' },
+      { id:22, cat:'drink', title:'Шинэхэн Гүзээлзгэнэтэй Лимонад', emoji:'🍹', cal:'90 kcal', desc:'Витамин С-гээр баялаг, чихэргүй сэргээгч ундаа.', ing:'• Гүзээлзгэнэ 5 ширхэг\n• Лимоны шүүс, хийжүүлсэн ус', steps:'1. Гүзээлзгэнээ нухаж лимоны шүүс ба хийжүүлсэн усаар найруулна.' },
+      { id:23, cat:'main', title:'Карритай Карпийн Нухаш Шөл', emoji:'🍲', cal:'220 kcal', desc:'Дархлаа дэмжих амтлагчтай ногооны шөл.', ing:'• Шар хулуу (Pumpkin) 200г\n• Кокосын сүү 50мл\n• Карри амтлагч', steps:'1. Хулуугаа чанаад блендэрт кокосын сүүтэй миксердэнэ.' },
+      { id:24, cat:'breakfast', title:'Гранола & Грек Тарагны Парфе', emoji:'🍨', cal:'210 kcal', desc:'Пробиотик ба эслэгээр баялаг өглөөний аяга.', ing:'• Грек тараг 150г\n• Сахаргуй гранола 3 х.х\n• Бөөрөлзгөнө', steps:'1. Тараг ба гранолаа үечлэн хийн жимсээр чимнэ.' },
+      { id:25, cat:'salad', title:'Хушны Самартай Кале (Kale) Салат', emoji:'🥬', cal:'190 kcal', desc:'Витамин К ба А-гаар баялаг супер-хүнсний салат.', ing:'• Кале навч 1.5 аяга\n• Хушны самар 1 хоолны халбага\n• Олив тос, лимон', steps:'1. Кале навчийг олив тосоор базаж зөөлрүүлээд самар цацна.' },
+      { id:26, cat:'main', title:'Сармистай Шарсан Аспапарагус', emoji:'🌿', cal:'120 kcal', desc:'Антиоксидант ба фолийн хүчлээр баялаг хачир.', ing:'• Аспапарагус 10 иш\n• Сармис 2 хумс\n• Оливын тос', steps:'1. Аспапарагусыг сармистай оливын тосонд 5 минут шарна.' },
+      { id:27, cat:'drink', title:'Селери ба Алимны Детокс Шүүс', emoji:'🥤', cal:'80 kcal', desc:'Ходоод ба элэгний үйл ажиллагааг цэвэрлэх ногоон шүүс.', ing:'• Селериний иш 3 ширхэг\n• Ногоон алим 1 ширхэг', steps:'1. Селери ба алимыг шүүсэгчинд шахаж ууна.' },
+      { id:28, cat:'drink', title:'Авокадо ба Какаотой Шоколадан Мусс', emoji:'🍫', cal:'190 kcal', desc:'Чихэргүй, эрүүл өөх тос ба антиоксиданттай амттан.', ing:'• Боловсорсон авокадо 1 ширхэг\n• Какао нунтаг 2 х.х\n• Зөгийн бал 1 х.х', steps:'1. Бүх орцыг блендэрт өтгөн болтол миксердэнэ.' },
+      { id:29, cat:'breakfast', title:'Бүхэлийн Үрийн Пэнкейк', emoji:'🥞', cal:'250 kcal', desc:'Овъёосны гурилаар хийсэн чихэргүй эрүүл пэнкейк.', ing:'• Овъёосны гурил 1/2 аяга\n• Өндөг 1 ширхэг\n• Сүү 50мл', steps:'1. Зуурмагаа бэлтгээд наалддаггүй хайруулын тавагт шарна.' },
+      { id:30, cat:'salad', title:'Лимонтой Дорнод Салат (Таббуле)', emoji:'🥗', cal:'180 kcal', desc:'Яншуй ба лоолиор баялаг C витаминтай салат.', ing:'• Шинэхэн яншуй 1 атга\n• Черри лооль, булгур агшаамал', steps:'1. Яншуй ба лоолийг жижиглэн хэрчиж булгур ба лимоноор амтална.' },
+      // 31-50 Recipes continued dynamically...
+      { id:31, cat:'main', title:'Бүүрэг Мөөгтэй Ризотто (Киноатай)', emoji:'🥣', cal:'320 kcal', desc:'Киноа үрээр баяжуулсан эслэг өндөртэй итали хоол.', ing:'• Киноа 1/2 аяга\n• Мөөг 100г\n• Ногооны шөл', steps:'1. Киноа ба мөөгийг ногооны шөлөнд зөөлөртөл чанана.' },
+      { id:32, cat:'drink', title:'Гаа ба Ханборгоцойн Шүүс', emoji:'🍍', cal:'110 kcal', desc:'Хоол задралыг дэмжих бромелайн ферменттэй ундаа.', ing:'• Ханборгоцой 1/2 аяга\n• Гааны навч\n• Ус 100мл', steps:'1. Блендэрт миксердэж хүйтнээр ууна.' },
+      { id:33, cat:'main', title:'Сөөгөн Мөөг ба Тофутай Сүп', emoji:'🍜', cal:'210 kcal', desc:'Ази стилийн хөнгөн дулаацуулах шөл.', ing:'• Тофу 80г\n• Мөөг, Мисо паста 1 х.х', steps:'1. Усанд мисо пастагаа уусгаад тофу ба мөөг нэмнэ.' },
+      { id:34, cat:'breakfast', title:'Чиа ба Бадамын Сүүтэй Овъёос', emoji:'🥣', cal:'220 kcal', desc:'Шөнөжин хөргөгчинд хонуулсан бэлэн өглөөний цай.', ing:'• Овъёос 1/2 аяга\n• Бадам сүү 150мл\n• Чиа үр', steps:'1. Холиод хөргөгчинд шөнөжин байлгана.' },
+      { id:35, cat:'salad', title:'Лууван ба Гүнжидийн Үртэй Салат', emoji:'🥕', cal:'140 kcal', desc:'Витамин А ба цайраар баялаг хоол.', ing:'• Нарийн хэрчсэн лууван\n• Гүнжидийн үр ба тос', steps:'1. Лууванг гүнжидийн тосоор амтална.' },
+      { id:36, cat:'drink', title:'Халуун Нэрстэй Маффин (Гурилгүй)', emoji:'🧁', cal:'170 kcal', desc:'Банана ба овъёосоор хийсэн эрүүл маффин.', ing:'• Банана 1 ширхэг\n• Овъёос 1/2 аяга\n• Нэрс жимс', steps:'1. Зуурмагаа шарах шүүгээнд 180°C-т 15 минут шарна.' },
+      { id:37, cat:'main', title:'Гриллдсэн Хулуу & Гүнжидийн Үр', emoji:'🎃', cal:'190 kcal', desc:'A ба E витаминаар баялаг амттай хачир.', ing:'• Шар хулуу 150г\n• Оливын тос, гүнжид', steps:'1. Хулуугаа зүсэн оливын тосоор амталж шарна.' },
+      { id:38, cat:'salad', title:'Бөөрөлзгөнө ба Шпинаттай Салат', emoji:'🥗', cal:'160 kcal', desc:'Төмөр ба C витамины хамгийн сайн хослол.', ing:'• Шпинат 1.5 аяга\n• Шинэхэн бөөрөлзгөнө\n• Бадам самар', steps:'1. Шпинат ба бөөрөлзгөнөө холин самар цацна.' },
+      { id:39, cat:'drink', title:'Лимон ба Гаатай Хүйтэн Цай', emoji:'🍹', cal:'40 kcal', desc:'Чихэргүй, калоригүй сэргээгч ногоон цай.', ing:'• Чанасан ногоон цай 200мл\n• Лимон, гаа, мөс', steps:'1. Ногоон цайгаа хөргөөд лимон, мөс нэмнэ.' },
+      { id:40, cat:'breakfast', title:'Авокадо ба Салмонтой Сэндвич', emoji:'🥪', cal:'330 kcal', desc:'Омега-3 ба уургаар баялаг тансаг өглөөний цай.', ing:'• Харанхуй талх 1 зүсэм\n• Авокадо 1/4\n• Салмон 40г', steps:'1. Талхан дээр авокадо нухаж салмон тавина.' },
+      { id:41, cat:'main', title:'Брокколи ба Сармистай Паста', emoji:'🥦', cal:'310 kcal', desc:'Витамин С өндөртэй хөнгөн оройн хоол.', ing:'• Бүхэлийн үрийн паста 70г\n• Брокколи, сармис', steps:'1. Паста ба брокколийг сармистай шарна.' },
+      { id:42, cat:'drink', title:'Банана ба Какаотой Смути', emoji:'🥤', cal:'210 kcal', desc:'Магнигаар баялаг стресс бууруулах смути.', ing:'• Банана 1 ширхэг\n• Какао нунтаг 1 х.х\n• Сүү 150мл', steps:'1. Бүх орцыг блендэрт миксердэнэ.' },
+      { id:43, cat:'salad', title:'Цуккини (Zucchini) Ноодл Салат', emoji:'🥒', cal:'130 kcal', desc:'Нүүрс ус багатай, калоригүй шинэхэн салат.', ing:'• Уртаар нь хэрчсэн цуккини\n• Черри лооль, песто соус', steps:'1. Цуккини гоодлыг песто соусаар амтална.' },
+      { id:44, cat:'main', title:'Улаан Лоолийн Өгөөртэй Шөл', emoji:'🥣', cal:'180 kcal', desc:'Ликопин хэмээх антиоксидантаар баялаг шөл.', ing:'• Улаан лооль 3 ширхэг\n• Сонгино, сармис, базилик', steps:'1. Лоолио шараад блендэрт миксердэн чанана.' },
+      { id:45, cat:'drink', title:'Нэрс ба Грек Тарагны Popsicle', emoji:'🍧', cal:'90 kcal', desc:'Хөлдөөсөн чихэргүй эрүүл мөхөөлдөс.', ing:'• Грек тараг 100г\n• Нэрс жимс 1/2 аяга', steps:'1. Холиод мөхөөлдөсний хэвэнд хөлдөөнө.' },
+      { id:46, cat:'breakfast', title:'Өндөг ба Бууцайтай Загасан Wrap', emoji:'🌯', cal:'280 kcal', desc:'Аминдэм өндөртэй өглөөний эрүүл ороомог.', ing:'• Тортилла 1 ширхэг\n• Өндөг 1, Бууцай', steps:'1. Өндгөө бууцайтай шарж тортиллад орооно.' },
+      { id:47, cat:'main', title:'Шарсан Тофу ба Сонгинотой Бүүрэг', emoji:'🍲', cal:'260 kcal', desc:'Ургамлын протейн өндөртэй хоол.', ing:'• Тофу 120г\n• Сонгино, перец, олив тос', steps:'1. Тофу ба ногоонуудаа хамт шарна.' },
+      { id:48, cat:'drink', title:'Кранберри (Аньс) Детокс Ундаа', emoji:'🍹', cal:'60 kcal', desc:'Бөөр ба давсагны үйл ажиллагааг дэмжих ундаа.', ing:'• Аньсны цэвэр шүүс 50мл\n• Ус 150мл, лимон', steps:'1. Усаар найруулан лимон шахаж ууна.' },
+      { id:49, cat:'salad', title:'Алим ба Хушны Самартай Салат', emoji:'🥗', cal:'170 kcal', desc:'Амтат алим ба самарны шаржигнуур хослол.', ing:'• Ногоон алим 1/2\n• Салатны навч, самар', steps:'1. Алимаа тонгорон хэрчиж самар цацна.' },
+      { id:50, cat:'drink', title:'Суперфрут Асаи (Acai) Боул', emoji:'🥣', cal:'230 kcal', desc:'Дэлхийн хамгийн баялаг антиоксиданттай аяга.', ing:'• Асаи нунтаг 1 х.х\n• Хөлдөөсөн банана, жимс', steps:'1. Банана ба асаи нунтгийг миксердэн жимс өрнө.' }
+    ];
+
+    // Render Recipes
+    function renderRecipes(recipes) {
+      const container = document.getElementById('recipeGridContainer');
+      container.innerHTML = '';
+      recipes.forEach(r => {
+        container.innerHTML += `
+          <div class="recipe-card">
+            <div class="recipe-img">${r.emoji}</div>
+            <div class="recipe-content">
+              <span class="recipe-tag">${r.cal}</span>
+              <div class="recipe-title">${r.title}</div>
+              <div class="recipe-desc">${r.desc}</div>
+              <button class="btn-view-recipe" onclick="openRecipeDetail(${r.id})">Жор үзэх</button>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    function filterCategory(cat) {
+      document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+      event.target.classList.add('active');
+      if (cat === 'all') renderRecipes(recipesData);
+      else renderRecipes(recipesData.filter(r => r.cat === cat));
+    }
+
+    function searchRecipes() {
+      const q = document.getElementById('recipeSearch').value.toLowerCase();
+      renderRecipes(recipesData.filter(r => r.title.toLowerCase().includes(q) || r.desc.toLowerCase().includes(q)));
+    }
+
+    function openRecipeDetail(id) {
+      const r = recipesData.find(item => item.id === id);
+      if (!r) return;
+      document.getElementById('modalRecipeTitle').innerText = r.emoji + " " + r.title;
+      document.getElementById('modalRecipeTag').innerText = "Илчлэг: " + r.cal;
+      document.getElementById('modalRecipeIngredients').innerText = "🛒 Орц найрлага:\n" + r.ing;
+      document.getElementById('modalRecipeSteps').innerText = "👩‍🍳 Бэлтгэх арга:\n" + r.steps;
+      document.getElementById('recipeModal').style.display = 'flex';
+    }
+
+    function closeRecipeModal() { document.getElementById('recipeModal').style.display = 'none'; }
+    function openLoginModal() { document.getElementById('loginModal').style.display = 'flex'; }
+    function closeLoginModal() { document.getElementById('loginModal').style.display = 'none'; }
+
+    // Navigation Switcher
     function showTab(tabName) {
       document.querySelectorAll('.page-section').forEach(sec => sec.classList.remove('active'));
       document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
-      
       document.getElementById('tab-' + tabName).classList.add('active');
       document.getElementById('nav-' + tabName).classList.add('active');
     }
 
-    // Modal Control
-    function openLoginModal() { document.getElementById('loginModal').style.display = 'flex'; }
-    function closeLoginModal() { document.getElementById('loginModal').style.display = 'none'; }
-    function closeRecipeModal() { document.getElementById('recipeModal').style.display = 'none'; }
-
-    function openRecipeModal(title, ingredients, steps) {
-      document.getElementById('modalRecipeTitle').innerText = title;
-      document.getElementById('modalRecipeIngredients').innerText = "Орц найрлага:\n" + ingredients;
-      document.getElementById('modalRecipeSteps').innerText = "Бэлтгэх арга:\n" + steps;
-      document.getElementById('recipeModal').style.display = 'flex';
-    }
-
-    // Universal Smart AI Response Engine
-    function handleEnter(e) { if(e.key === 'Enter') askAI(); }
-
+    // AI Assistant Logic
     function askAI() {
       const input = document.getElementById('aiQuery').value.trim();
       const res = document.getElementById('aiResponse');
       if (!input) return;
-
       res.style.display = 'block';
-      res.innerText = '🌸 NegOne AI туслах хариулт бэлдэж байна...';
+      res.innerText = '🌸 NegOne AI бодож байна...';
 
       setTimeout(() => {
         const q = input.toLowerCase();
-        let answer = "";
-
-        if (q.includes('стресс') || q.includes('сэтгэл') || q.includes('гуниг')) {
-          answer = "🧠 **NegOne Сэтгэл Зүйн Зөвлөмж:** Сэтгэл санаа хүндрэх үед гүнзгий 4-7-8 амьсгалын дасгал хийж, дуртай дуугаа сонсон 10 минут агаарт алхаарай. Та ганцаараа биш шүү!";
-        } else if (q.includes('жина') || q.includes('дэглэм') || q.includes('турах') || q.includes('таргалах')) {
-          answer = "💖 **NegOne Эерэг Зөвлөмж:** Хоолоо хэт хорих эсвэл өөрийгөө буруутгахаас зайлсхий. Өдөр бүр хангалттай ус ууж, биедээ хэрэгцээтэй шим тэжээлийг хайрлаж өгөөрэй.";
-        } else if (q.includes('жор') || q.includes('хоол') || q.includes('калори')) {
-          answer = "🥗 **NegOne Хүнсний Зөвлөмж:** Өндөг (1 ширхэг ~70-80 kcal), Авокадо (1/2 ~120 kcal) байдаг. 'Жорууд' цэс рүү шилжин шинэхэн жоруудыг үзээрэй!";
-        } else if (q.includes('уса') || q.includes('ус')) {
-          answer = "💧 **Усны Хэрэглээ:** Өдөрт 1.5 - 2 литр цэвэр ус уух нь арьсны уянтан чанар, тархины үйл ажиллагааг жигд байлгана.";
-        } else if (q.includes('энххүслэн') || q.includes('холбоо') || q.includes('эзэн')) {
-          answer = "👤 **Үүсгэн байгуулагч:** Энэхүү платформыг Enkhkhuslen Munkhbayasgalan (Улаанбаатар, Монгол улс, +976 99663946, enhulenhuul@gmail.com) хөгжүүлсэн.";
+        if (q.includes('стресс') || q.includes('сэтгэл')) {
+          res.innerText = '🧠 NegOne Зөвлөмж: Гүнзгий 4-7-8 амьсгалын дасгал хийж, дуртай дуугаа сонсон 10 минут агаарт алхаарай. Та ганцаараа биш шүү!';
+        } else if (q.includes('жор') || q.includes('хоол') || q.includes('витамин')) {
+          res.innerText = '🥗 NegOne Зөвлөмж: Танд зориулсан 50+ эрүүл жорууд "Жорууд" цэсэнд бэлэн байна. Авокадотой тост эсвэл Смути боул туршаад үзээрэй!';
+        } else if (q.includes('инстаграм') || q.includes('холбоо')) {
+          res.innerText = '📸 Үүсгэн байгуулагч Enkhkhuslen Munkhbayasgalan-тай Instagram дээр @enhulm хаягаар холбогдож болно!';
         } else {
-          answer = `✨ **NegOne AI Зөвлөмж ("${input}" асуултад):** Таны асуултад баярлалаа! Амьдралын дадлыг бага багаар сайжруулах нь хамгийн тогтвортой үр дүн өгдөг. Шим тэжээлтэй хооллож, унтаж амран, биеийн эерэг хандлагаа хадгалаарай.`;
+          res.innerText = `✨ NegOne AI Зөвлөмж: Таны асуултад баярлалаа! Биеэ хайрлаж, эрүүл хооллон, сэтгэл зүйн тэнцвэрт байдлаа хадгалаарай 💕`;
         }
-
-        res.innerHTML = answer;
-      }, 600);
+      }, 500);
     }
 
-    // BMI Calculator with Body Dysmorphia Focus
+    // BMI Calculator
     function calculateBMI() {
       const h = parseFloat(document.getElementById('userHeight').value) / 100;
       const w = parseFloat(document.getElementById('userWeight').value);
-      const resBox = document.getElementById('bmiResult');
-      const score = document.getElementById('bmiScore');
-      const advice = document.getElementById('bmiAdvice');
-
-      if (!h || !w || h <= 0 || w <= 0) {
-        alert("Та өндөр ба жингээ зөв оруулна уу.");
-        return;
-      }
-
+      if (!h || !w) { alert("Өндөр ба жингээ заавал оруулна уу."); return; }
       const bmi = (w / (h * h)).toFixed(1);
-      resBox.style.display = 'block';
-      score.innerText = `Таны BMI Индекс: ${bmi}`;
-
-      let text = "";
-      if (bmi < 18.5) {
-        text = "Биеийн жингийн индекс бага байна. Та биедээ хэрэгцээтэй чанартай уураг, эрүүл өөх тосыг хоол хүнсэндээ ахиу аван, дасгал хөдөлгөөнөөр булчингаа дэмжээрэй.";
-      } else if (bmi <= 24.9) {
-        text = "Таны жингийн индекс тэнцвэртэй дундаж хэмжээнд байна! Одоогийн эрүүл амьдралын хэв маягаа хадгалж, биедээ хэрэгцээтэй амин дэмүүдийг аваарай.";
-      } else {
-        text = "Таны индекс бага зэрэг өндөр байна. Гэвч энэ нь таны гоо сайхныг хязгаарлахгүй! Хөнгөн алхалт, идэвхтэй хөдөлгөөн хийж, биеэ хайрлан дэмжихэд анхаараарай.";
-      }
-
-      advice.innerText = text;
+      document.getElementById('bmiResult').style.display = 'block';
+      document.getElementById('bmiScore').innerText = `Таны BMI Индекс: ${bmi}`;
+      document.getElementById('bmiAdvice').innerText = `Санамж: Жингийн тоо бол зөвхөн техникийн үзүүлэлт бөгөөд таны үнэ цэнэ, гоо сайхныг тодорхойлохгүй! Биедээ хэрэгцээтэй шим тэжээлийг өгч, өөрийгөө хайрлаарай.`;
     }
 
-    // Progress Log Local Storage
-    function saveProgressLog() {
-      const mood = document.getElementById('logMood').value;
-      const water = document.getElementById('logWater').value;
-      if (!mood && !water) return;
-
-      const log = { date: new Date().toLocaleDateString(), mood, water };
-      let logs = JSON.parse(localStorage.getItem('negone_logs') || '[]');
-      logs.push(log);
-      localStorage.setItem('negone_logs', JSON.stringify(logs));
-
-      displayLogs();
-      alert("Өдрийн тэмдэглэл хадгалагдлаа!");
-    }
-
-    function displayLogs() {
-      let logs = JSON.parse(localStorage.getItem('negone_logs') || '[]');
-      const container = document.getElementById('logHistory');
-      if (logs.length === 0) {
-        container.innerHTML = "<em>Одоогоор хадгалсан тэмдэглэл байхгүй байна.</em>";
-        return;
-      }
-      container.innerHTML = "<strong>Сүүлийн тэмдэглэлүүд:</strong><br>" + 
-        logs.slice(-3).map(l => `• [${l.date}] Сэтгэл санаа: ${l.mood || '-'}, Ус: ${l.water || '0'}L`).join('<br>');
-    }
-
-    // Google Login Simulator
     function simulateGoogleLogin() {
       const email = prompt("Gmail хаягаа оруулна уу:", "enhulenhuul@gmail.com");
       if (email) {
-        const name = email.split('@')[0];
-        localStorage.setItem('negone_user', JSON.stringify({ name, email }));
+        localStorage.setItem('negone_user', JSON.stringify({ name: email.split('@')[0], email }));
         updateUserUI();
         closeLoginModal();
       }
     }
 
     function updateUserUI() {
-      const savedUser = localStorage.getItem('negone_user');
-      if (savedUser) {
-        const user = JSON.parse(savedUser);
+      const u = localStorage.getItem('negone_user');
+      if (u) {
+        const user = JSON.parse(u);
         document.getElementById('btnLogin').style.display = 'none';
         document.getElementById('userProfile').style.display = 'flex';
         document.getElementById('userName').innerText = user.name;
@@ -824,16 +811,9 @@
       updateUserUI();
     }
 
-    function filterRecipes() {
-      const q = document.getElementById('recipeSearch').value.toLowerCase();
-      document.querySelectorAll('.recipe-card').forEach(card => {
-        card.style.display = card.innerText.toLowerCase().includes(q) ? 'block' : 'none';
-      });
-    }
-
     window.onload = function() {
+      renderRecipes(recipesData);
       updateUserUI();
-      displayLogs();
     };
   </script>
 </body>
