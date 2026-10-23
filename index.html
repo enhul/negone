@@ -550,7 +550,7 @@
       <div class="hero">
         <div class="mascot-badge">
           <span>🐰🌸</span>
-          <span>Уулзаарай: Него — Таны Эрүүл Мэнд & Сэтгэл Зүйн Туслах!</span>
+          <span>Танилцаарай: Него — Таны Эрүүл Мэнд & Сэтгэл Зүйн Туслах!</span>
         </div>
 
         <h1>NegOne</h1>
@@ -586,11 +586,11 @@
         <p>Бие махбодь болон сэтгэл зүйд энергийн дэмжлэг үзүүлэх шим тэжээлт хоолнууд</p>
 
         <div class="recipe-categories">
-          <button class="cat-btn active" onclick="filterCategory('all')">Бүх жорууд (50)</button>
-          <button class="cat-btn" onclick="filterCategory('breakfast')">🥐 Өглөөний цай</button>
-          <button class="cat-btn" onclick="filterCategory('salad')">🥗 Салат & Зууш</button>
-          <button class="cat-btn" onclick="filterCategory('main')">🍲 Үндсэн хоол</button>
-          <button class="cat-btn" onclick="filterCategory('drink')">🥤 Амттан & Ундаа</button>
+          <button class="cat-btn active" onclick="filterCategory('all', this)">Бүх жорууд (50)</button>
+          <button class="cat-btn" onclick="filterCategory('breakfast', this)">🥐 Өглөөний цай</button>
+          <button class="cat-btn" onclick="filterCategory('salad', this)">🥗 Салат & Зууш</button>
+          <button class="cat-btn" onclick="filterCategory('main', this)">🍲 Үндсэн хоол</button>
+          <button class="cat-btn" onclick="filterCategory('drink', this)">🥤 Амттан & Ундаа</button>
         </div>
 
         <div class="search-bar">
@@ -770,9 +770,9 @@
       });
     }
 
-    function filterCategory(cat) {
+    function filterCategory(cat, element) {
       document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-      event.target.classList.add('active');
+      if(element) element.classList.add('active');
       if (cat === 'all') renderRecipes(recipesData);
       else renderRecipes(recipesData.filter(r => r.cat === cat));
     }
@@ -848,7 +848,7 @@
           body = "• Арьсны гэрэлтсэн байдал ба хоол шингэц нь өдөрт 1.5 - 2L ус уухаас шууд хамаарна.<br>• Өглөө орондоосоо босоод 1 аяга бүлээн ус уух нь дотор эрхтнүүдийг сэрээж детокс хийдэг!";
         }
         // 6. Exercise, Energy & Fatigue
-        else if (q.includes('ядаргаа') || q.includes('сулд) || q.includes('эрч хүч') || q.includes('дасгал') || q.includes('хөдөлгөөн')) {
+        else if (q.includes('ядаргаа') || q.includes('сулд') || q.includes('эрч хүч') || q.includes('дасгал') || q.includes('хөдөлгөөн')) {
           title = "⚡ Энерги ба Хөнгөн Дасгал (Него-гийн зөвлөгөө)";
           body = "• Хэт ачаалалтай эрчимтэй дасгал заавал хийх албагүй. Өдөрт 15 минут суниалт хийх, йог эсвэл цэвэр агаарт алхахад л допамины даавар ялгарна.<br>• Ядарч байвал биедээ амралт өгөх нь хамгийн ухаалаг сонголт шүү!";
         }
