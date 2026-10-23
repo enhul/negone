@@ -155,18 +155,18 @@
     /* Hero Section */
     .hero {
       text-align: center;
-      padding: 30px 20px 20px;
+      padding: 20px 20px;
     }
     .mascot-badge {
       display: inline-flex;
       align-items: center;
       gap: 10px;
-      background: rgba(255, 255, 255, 0.9);
-      padding: 8px 20px;
+      background: rgba(255, 255, 255, 0.95);
+      padding: 8px 22px;
       border-radius: 25px;
-      box-shadow: 0 4px 15px rgba(216, 27, 96, 0.1);
+      box-shadow: 0 4px 15px rgba(216, 27, 96, 0.12);
       margin-bottom: 20px;
-      font-size: 14px;
+      font-size: 14.5px;
       font-weight: 700;
       color: #ad1457;
       border: 1px solid #f8bbd0;
@@ -205,9 +205,43 @@
       box-shadow: 0 6px 22px rgba(236, 64, 122, 0.5);
     }
 
-    /* AI Chat Widget with Mascot */
+    /* Hero Mascot Visual Card Grid */
+    .hero-mascot-card {
+      background: white;
+      border-radius: 24px;
+      padding: 25px;
+      max-width: 720px;
+      margin: 30px auto;
+      box-shadow: 0 8px 25px rgba(216, 27, 96, 0.1);
+      border: 2px solid #f8bbd0;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      text-align: left;
+    }
+    .hero-mascot-img {
+      width: 140px;
+      height: 140px;
+      border-radius: 20px;
+      object-fit: cover;
+      border: 3px solid #ec407a;
+      box-shadow: 0 4px 12px rgba(236, 64, 122, 0.25);
+    }
+    .hero-mascot-info h3 {
+      color: #880e4f;
+      font-size: 20px;
+      margin-bottom: 6px;
+    }
+    .hero-mascot-info p {
+      font-size: 14px;
+      color: #555;
+      line-height: 1.5;
+      margin-bottom: 0;
+    }
+
+    /* AI Chat Widget with Hero Mascot */
     .ai-box {
-      margin: 35px auto 0;
+      margin: 25px auto 0;
       max-width: 720px;
       background: rgba(255, 255, 255, 0.96);
       border-radius: 24px;
@@ -222,19 +256,15 @@
       margin-bottom: 14px;
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 14px;
       font-size: 18px;
     }
-    .mascot-avatar {
-      width: 45px;
-      height: 45px;
-      background: #fce4ec;
-      border: 2px solid #f8bbd0;
+    .mascot-avatar-img {
+      width: 55px;
+      height: 55px;
       border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 24px;
+      border: 2px solid #ec407a;
+      object-fit: cover;
     }
     .ai-input-group {
       display: flex;
@@ -518,14 +548,14 @@
   <div class="floating-bg-item" style="left: 10%; animation-duration: 22s;">🐰</div>
   <div class="floating-bg-item" style="left: 25%; animation-duration: 18s;">💖</div>
   <div class="floating-bg-item" style="left: 60%; animation-duration: 25s;">✨</div>
-  <div class="floating-bg-item" style="left: 80%; animation-duration: 20s;">🌸</div>
-  <div class="floating-bg-item" style="left: 90%; animation-duration: 28s;">🍓</div>
+  <div class="floating-bg-item" style="left: 80%; animation-duration: 20s;">👑</div>
+  <div class="floating-bg-item" style="left: 90%; animation-duration: 28s;">🏋️‍♀️</div>
 
   <!-- Header -->
   <header>
     <a href="#" class="logo" onclick="showTab('home')">
       <span>NegOne</span>
-      <span style="font-size:20px;">🐰💕</span>
+      <span style="font-size:22px;">🐰👑</span>
     </a>
     <nav>
       <a href="#" id="nav-home" class="active" onclick="showTab('home')">🏠 Нүүр</a>
@@ -549,8 +579,8 @@
     <section id="tab-home" class="page-section active">
       <div class="hero">
         <div class="mascot-badge">
-          <span>🐰🌸</span>
-          <span>Танилцаарай: Него — Таны Эрүүл Мэнд & Сэтгэл Зүйн Туслах!</span>
+          <span>🐰👑</span>
+          <span>Танилцаарай: Hero — Таны Эрүүл Мэнд & Сэтгэл Зүйн Туслах!</span>
         </div>
 
         <h1>NegOne</h1>
@@ -561,12 +591,21 @@
           Gmail-ээр нэвтрэх
         </button>
 
-        <!-- AI Assistant Box with Nego Mascot -->
+        <!-- Mascot Hero Card Showcase -->
+        <div class="hero-mascot-card">
+          <img src="https://images.squarespace-cdn.com/content/v1/585038e837c581a3d3c87f3b/1560943916298-D7M45T2H210M3A1OFLUX/snowball_secret_life_of_pets_2.jpg" alt="Hero Rabbit Mascot" class="hero-mascot-img" onerror="this.src='https://i.ibb.co/Lvb8kK5/hero-bunny.png';">
+          <div class="hero-mascot-info">
+            <h3>🐰👑 Таны Туслах Hero-той танилцаарай!</h3>
+            <p>Hero бол өөртөө итгэлтэй, эрч хүчтэй, таныг сэтгэл санаагаар тэтгэж, биеийн эерэг хандлагыг суулгахад туслах NegOne платформын албан ёсны AI бэлгэдэл юм!</p>
+          </div>
+        </div>
+
+        <!-- AI Assistant Box with Hero Mascot Avatar -->
         <div class="ai-box">
           <div class="ai-box-header">
-            <div class="mascot-avatar">🐰</div>
+            <img src="https://images.squarespace-cdn.com/content/v1/585038e837c581a3d3c87f3b/1560943916298-D7M45T2H210M3A1OFLUX/snowball_secret_life_of_pets_2.jpg" alt="Hero Avatar" class="mascot-avatar-img" onerror="this.src='https://i.ibb.co/Lvb8kK5/hero-bunny.png';">
             <div>
-              <div style="font-size:16px; font-weight:800;">Него (Nego AI Туслах)</div>
+              <div style="font-size:16px; font-weight:800;">Hero (NegOne AI Туслах)</div>
               <div style="font-size:12.5px; color:#888; font-weight:500;">Эрүүл мэнд, витамин, сэтгэл зүй, дасгалын талаар юу ч асуугаарай!</div>
             </div>
           </div>
@@ -804,7 +843,7 @@
       document.getElementById('nav-' + tabName).classList.add('active');
     }
 
-    // Comprehensive Health AI Assistant Engine (Mascot Nego 🐰🌸)
+    // Comprehensive Health AI Assistant Engine (Mascot Hero 🐰👑)
     function askAI() {
       const input = document.getElementById('aiQuery').value.trim();
       const res = document.getElementById('aiResponse');
@@ -813,48 +852,48 @@
       res.style.display = 'block';
       res.innerHTML = `
         <div style="display:flex; align-items:center; gap:8px; font-weight:700; color:#d81b60; margin-bottom:6px;">
-          <span>🐰🌸 Него бодож байна...</span>
+          <span>🐰👑 Hero бодож байна...</span>
         </div>
       `;
 
       setTimeout(() => {
         const q = input.toLowerCase();
-        let title = "🌸 Него-гийн Эрүүл Мэндийн Зөвлөгөө";
+        let title = "🌸 Hero-ийн Эрүүл Мэндийн Зөвлөгөө";
         let body = "";
 
         // 1. Sleep & Recovery
         if (q.includes('нойр') || q.includes('унт') || q.includes('нойргүйдэл') || q.includes('амралт')) {
-          title = "😴 Нойр ба Биеийн Нөхөн Үе (Него-гийн зөвлөгөө)";
+          title = "😴 Нойр ба Биеийн Нөхөн Үе (Hero-ийн зөвлөгөө)";
           body = "• Чанартай нойр нь дархлаа ба сэтгэл зүйн тэнцвэрийн тулгуур юм.<br>• Унтахаас 1 цагийн өмнө утсаа холдуулж, бүлээн усанд орох эсвэл ромашка цай уух нь мелатонин дааврыг дэмжинэ.<br>• Өдөрт 7-8 цаг тогтмол цагт унтаж хэвшээрэй!";
         }
         // 2. Stress, Anxiety & Mental Health
         else if (q.includes('стресс') || q.includes('сэтгэл') || q.includes('сандрах') || q.includes('гуниг') || q.includes('түгшүүр') || q.includes('депресс')) {
-          title = "🧠 Сэтгэл Зүйн Амар Амгалан (Него-гийн зөвлөгөө)";
+          title = "🧠 Сэтгэл Зүйн Амар Амгалан (Hero-ийн зөвлөгөө)";
           body = "• Сэтгэл санаа хүндрэх үед 4-7-8 амьсгалын дасгал хийгээрэй (4 сек амьсгал аваад, 7 сек бариад, 8 сек гаргах).<br>• Сэтгэл хөдлөлөө хүлээн зөвшөөрч, өөрийгөө буруутгах хэрэггүй. 10 минут цэвэр агаарт алхах нь кортизол (стрессийн даавар)-ыг бууруулдаг шүү.";
         }
         // 3. Body Image & Body Dysmorphia
         else if (q.includes('жина') || q.includes('дэглэм') || q.includes('турах') || q.includes('таргалах') || q.includes('толь') || q.includes('царай') || q.includes('бие')) {
-          title = "💖 Биеийн Эерэг Хандлага & Хайр (Него-гийн зөвлөгөө)";
+          title = "💖 Биеийн Эерэг Хандлага & Хайр (Hero-ийн зөвлөгөө)";
           body = "• Жингийн тоо эсвэл толинд тусах дүрс бол таны үнэ цэнийн өгөгдөл БИШ!<br>• Хоолоо хэт сойх нь сэтгэл зүй ба бодисын солилцоог задардаг. Хоолыг биедээ өгч буй эрдэс, аминдэмийн бэлэг гэж хараарай. Та одоо байгаагаараа үзэсгэлэнтэй!";
         }
         // 4. Vitamins, Nutrition & Cravings
         else if (q.includes('витамин') || q.includes('аминдэм') || q.includes('хоол') || q.includes('калори') || q.includes('чихэр') || q.includes('амттан')) {
-          title = "🥗 Шим Тэжээл ба Витамин (Него-гийн зөвлөгөө)";
+          title = "🥗 Шим Тэжээл ба Витамин (Hero-ийн зөвлөгөө)";
           body = "• Биед С витамин (жимс, чинжүү), D витамин (нар, салмон загас), ба Омега-3 (самар, авокадо) нэн чухал.<br>• Чихэр идэх дуршил төрвөл бие тань магни эсвэл ус нэхэж байж магадгүй. Манай 'Жорууд' цэсээс аминдэмтэй смути туршаад үзээрэй!";
         }
         // 5. Water, Hydration & Skin
         else if (q.includes('ус') || q.includes('арьс') || q.includes('батга') || q.includes('шийдэл') || q.includes('чийг')) {
-          title = "💧 Усны Хэрэглээ & Арьсны Эрүүл Мэнд (Него-гийн зөвлөгөө)";
+          title = "💧 Усны Хэрэглээ & Арьсны Эрүүл Мэнд (Hero-ийн зөвлөгөө)";
           body = "• Арьсны гэрэлтсэн байдал ба хоол шингэц нь өдөрт 1.5 - 2L ус уухаас шууд хамаарна.<br>• Өглөө орондоосоо босоод 1 аяга бүлээн ус уух нь дотор эрхтнүүдийг сэрээж детокс хийдэг!";
         }
         // 6. Exercise, Energy & Fatigue
         else if (q.includes('ядаргаа') || q.includes('сулд') || q.includes('эрч хүч') || q.includes('дасгал') || q.includes('хөдөлгөөн')) {
-          title = "⚡ Энерги ба Хөнгөн Дасгал (Него-гийн зөвлөгөө)";
+          title = "⚡ Энерги ба Хөнгөн Дасгал (Hero-ийн зөвлөгөө)";
           body = "• Хэт ачаалалтай эрчимтэй дасгал заавал хийх албагүй. Өдөрт 15 минут суниалт хийх, йог эсвэл цэвэр агаарт алхахад л допамины даавар ялгарна.<br>• Ядарч байвал биедээ амралт өгөх нь хамгийн ухаалаг сонголт шүү!";
         }
         // 7. Digestion & Stomach
         else if (q.includes('ходоод') || q.includes('гэдэс') || q.includes('шингэц') || q.includes('цангах')) {
-          title = "🥣 Ходоод Гэдэсний Эрүүл Мэнд (Него-гийн зөвлөгөө)";
+          title = "🥣 Ходоод Гэдэсний Эрүүл Мэнд (Hero-ийн зөвлөгөө)";
           body = "• Ходоод гэдэс бол манай 'хоёрдогч тархи' юм. Пробиотик (грек тараг, кимчи) ба эслэгээр баялаг овъёос, жимс нь гэдэсний ашигтай бактерийг тэтгэнэ.<br>• Хоолоо сайн тайван зажилж идээрэй!";
         }
         // 8. Contact & Creator Query
@@ -864,17 +903,17 @@
         }
         // 9. Universal / Open Health Query Fallback
         else {
-          title = `🌸 Него-гийн Асуултын Зөвлөмж ("${input}")`;
+          title = `🌸 Hero-ийн Асуултын Зөвлөмж ("${input}")`;
           body = `
             • Таны асуултад баярлалаа! Эрүүл амьдралын хамгийн чухал зарчим бол <strong>Биеэ сонсох (Listening to your body)</strong> юм.<br>
             • Өдөр бүр чанартай нойр авч, хангалттай ус уун, витаминаар баялаг хоол хүнс хэрэглэх нь таны сэтгэл зүй ба биеийн дархлааг тогтвортой байлгана.<br>
-            • Танд тодорхой шинж тэмдэг заналхийлж байвал мэргэжлийн эмчид хандахыг зөвлөж байна. Него цаг ямагт таны талд шүү! 💖
+            • Танд тодорхой шинж тэмдэг заналхийлж байвал мэргэжлийн эмчид хандахыг зөвлөж байна. Hero цаг ямагт таны талд шүү! 💖
           `;
         }
 
         res.innerHTML = `
           <div style="font-weight:700; color:#d81b60; font-size:16px; margin-bottom:8px; display:flex; align-items:center; gap:6px;">
-            <span>🐰🌸</span> <span>${title}</span>
+            <span>🐰👑</span> <span>${title}</span>
           </div>
           <div style="color:#37474f; font-size:14.5px;">${body}</div>
         `;
