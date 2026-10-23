@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NegOne - AI Сэтгэлзүй ба Эрүүл Амьдралын Хувийн Туслах</title>
+  <title>NegOne - AI Сэтгэлзүй & Эрүүл Амьдралын Хувийн Туслах</title>
   <style>
     * {
       box-sizing: border-box;
@@ -15,8 +15,8 @@
       scroll-behavior: smooth;
     }
     body {
-      background: linear-gradient(135deg, #f4f7f2 0%, #e8f0e5 100%);
-      color: #2c3e50;
+      background: linear-gradient(135deg, #fff0f5 0%, #fce4ec 100%);
+      color: #37474f;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
@@ -38,31 +38,31 @@
     .logo {
       font-size: 26px;
       font-weight: 800;
-      color: #5c8342;
+      color: #d81b60;
       text-decoration: none;
       letter-spacing: -0.5px;
     }
     nav {
       display: flex;
-      gap: 20px;
-      background: rgba(255, 255, 255, 0.85);
-      padding: 8px 24px;
+      gap: 15px;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 8px 20px;
       border-radius: 30px;
       backdrop-filter: blur(10px);
-      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+      box-shadow: 0 4px 15px rgba(216, 27, 96, 0.08);
     }
     nav a {
       text-decoration: none;
       color: #555;
       font-size: 14px;
       font-weight: 600;
-      padding: 6px 12px;
-      border-radius: 15px;
+      padding: 6px 14px;
+      border-radius: 18px;
       transition: all 0.2s;
     }
     nav a:hover, nav a.active {
-      color: #2c3e50;
-      background: rgba(163, 204, 133, 0.25);
+      color: #d81b60;
+      background: #f8bbd0;
     }
     .user-section {
       display: flex;
@@ -70,18 +70,19 @@
       gap: 12px;
     }
     .btn-login {
-      background-color: #a3cc85;
-      color: #1a330e;
+      background-color: #ec407a;
+      color: white;
       border: none;
       padding: 10px 22px;
       border-radius: 20px;
       font-weight: 600;
       cursor: pointer;
       font-size: 14px;
+      box-shadow: 0 3px 10px rgba(236, 64, 122, 0.3);
       transition: all 0.2s;
     }
     .btn-login:hover {
-      background-color: #92be72;
+      background-color: #d81b60;
       transform: translateY(-1px);
     }
     .user-profile {
@@ -96,7 +97,7 @@
     .user-avatar {
       width: 28px;
       height: 28px;
-      background: #5c8342;
+      background: #ec407a;
       color: white;
       border-radius: 50%;
       display: flex;
@@ -131,32 +132,32 @@
     /* Hero Section (Нүүр) */
     .hero {
       text-align: center;
-      padding: 60px 20px 40px;
+      padding: 50px 20px 30px;
     }
     .hero h1 {
       font-size: 64px;
       font-weight: 800;
-      color: #2b2b2b;
+      color: #880e4f;
       margin-bottom: 18px;
       letter-spacing: -1px;
     }
     .hero p {
       font-size: 19px;
-      color: #555;
-      max-width: 620px;
-      margin: 0 auto 35px;
+      color: #6a1b4d;
+      max-width: 650px;
+      margin: 0 auto 30px;
       line-height: 1.6;
     }
     .btn-gmail {
-      background-color: #a3cc85;
-      color: #1a330e;
+      background-color: #ec407a;
+      color: white;
       border: none;
       padding: 16px 36px;
       border-radius: 30px;
       font-size: 17px;
       font-weight: 700;
       cursor: pointer;
-      box-shadow: 0 4px 16px rgba(163, 204, 133, 0.45);
+      box-shadow: 0 4px 18px rgba(236, 64, 122, 0.4);
       transition: all 0.2s;
       display: inline-flex;
       align-items: center;
@@ -164,26 +165,27 @@
     }
     .btn-gmail:hover {
       transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(163, 204, 133, 0.6);
+      box-shadow: 0 6px 22px rgba(236, 64, 122, 0.5);
     }
 
     /* AI Chat Widget */
     .ai-box {
-      margin: 50px auto 0;
-      max-width: 650px;
+      margin: 40px auto 0;
+      max-width: 700px;
       background: white;
       border-radius: 24px;
-      padding: 25px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+      padding: 28px;
+      box-shadow: 0 10px 30px rgba(216, 27, 96, 0.08);
       text-align: left;
     }
     .ai-box-header {
       font-weight: 700;
-      color: #5c8342;
+      color: #ad1457;
       margin-bottom: 12px;
       display: flex;
       align-items: center;
       gap: 8px;
+      font-size: 17px;
     }
     .ai-input-group {
       display: flex;
@@ -191,73 +193,82 @@
     }
     .ai-input {
       flex: 1;
-      padding: 12px 18px;
-      border: 1px solid #e0e0e0;
-      border-radius: 16px;
-      font-size: 14px;
+      padding: 14px 20px;
+      border: 2px solid #f8bbd0;
+      border-radius: 18px;
+      font-size: 15px;
       outline: none;
+      transition: border 0.2s;
     }
     .ai-input:focus {
-      border-color: #a3cc85;
+      border-color: #ec407a;
     }
     .btn-ai-send {
-      background: #5c8342;
+      background: #d81b60;
       color: white;
       border: none;
-      padding: 12px 20px;
-      border-radius: 16px;
+      padding: 14px 24px;
+      border-radius: 18px;
       font-weight: 600;
       cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn-ai-send:hover {
+      background: #ad1457;
     }
     .ai-response {
-      margin-top: 15px;
-      padding: 14px;
-      background: #f8faf7;
+      margin-top: 18px;
+      padding: 18px;
+      background: #fff5f8;
+      border-left: 4px solid #ec407a;
       border-radius: 12px;
-      font-size: 14px;
-      color: #333;
+      font-size: 15px;
+      color: #4a148c;
+      line-height: 1.6;
       display: none;
     }
 
-    /* Recipes Section (Жорууд) */
+    /* Recipes Section */
     .recipe-header {
       text-align: center;
-      margin-bottom: 40px;
+      margin-bottom: 35px;
     }
     .recipe-header h2 {
       font-size: 36px;
+      color: #880e4f;
       margin-bottom: 10px;
     }
     .search-bar {
-      max-width: 400px;
+      max-width: 450px;
       margin: 15px auto 0;
-      display: flex;
     }
     .search-bar input {
       width: 100%;
       padding: 12px 20px;
-      border: 1px solid #ddd;
+      border: 2px solid #f8bbd0;
       border-radius: 20px;
       font-size: 14px;
+      outline: none;
     }
     .recipe-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
       gap: 25px;
     }
     .recipe-card {
       background: white;
       border-radius: 20px;
       overflow: hidden;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+      box-shadow: 0 4px 15px rgba(216, 27, 96, 0.06);
       transition: transform 0.2s;
+      border: 1px solid #fce4ec;
     }
     .recipe-card:hover {
       transform: translateY(-4px);
     }
     .recipe-img {
-      height: 160px;
-      background: #e2ebd9;
+      height: 150px;
+      background: #fce4ec;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -268,15 +279,16 @@
     }
     .recipe-tag {
       font-size: 12px;
-      background: #eaf3e5;
-      color: #486a32;
-      padding: 4px 10px;
-      border-radius: 10px;
-      font-weight: 600;
+      background: #f8bbd0;
+      color: #880e4f;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-weight: 700;
     }
     .recipe-title {
       font-size: 18px;
       font-weight: 700;
+      color: #37474f;
       margin: 10px 0 8px;
     }
     .recipe-desc {
@@ -287,51 +299,128 @@
     }
     .btn-view-recipe {
       width: 100%;
-      background: #f0f6ec;
-      color: #3b5a28;
+      background: #fce4ec;
+      color: #c2185b;
       border: none;
       padding: 10px;
       border-radius: 12px;
-      font-weight: 600;
+      font-weight: 700;
       cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn-view-recipe:hover {
+      background: #f8bbd0;
     }
 
-    /* About Section */
+    /* BMI & Tracker Section */
+    .tracker-card {
+      background: white;
+      border-radius: 24px;
+      padding: 35px;
+      box-shadow: 0 6px 20px rgba(216, 27, 96, 0.06);
+      margin-bottom: 30px;
+      border: 1px solid #fce4ec;
+    }
+    .tracker-card h2 {
+      font-size: 28px;
+      color: #880e4f;
+      margin-bottom: 10px;
+    }
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin: 20px 0;
+    }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      text-align: left;
+    }
+    .form-group label {
+      font-size: 14px;
+      font-weight: 600;
+      color: #555;
+    }
+    .form-group input {
+      padding: 12px 16px;
+      border: 2px solid #f8bbd0;
+      border-radius: 14px;
+      font-size: 15px;
+      outline: none;
+    }
+    .btn-calc {
+      background: #ec407a;
+      color: white;
+      border: none;
+      padding: 14px 28px;
+      border-radius: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 15px;
+      margin-top: 10px;
+    }
+    .bmi-result-box {
+      display: none;
+      margin-top: 25px;
+      padding: 22px;
+      background: #fff0f5;
+      border-radius: 18px;
+      border-left: 5px solid #d81b60;
+    }
+    .dysmorphia-banner {
+      background: #fce4ec;
+      padding: 16px;
+      border-radius: 14px;
+      color: #880e4f;
+      font-size: 14px;
+      line-height: 1.6;
+      margin-bottom: 15px;
+      font-weight: 500;
+    }
+    .yt-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 15px;
+    }
+    .yt-btn {
+      background: #ff4081;
+      color: white;
+      text-decoration: none;
+      padding: 8px 16px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Contact & About Section */
     .about-card {
       background: white;
       border-radius: 24px;
       padding: 40px;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.04);
+      box-shadow: 0 6px 20px rgba(216, 27, 96, 0.06);
       margin-bottom: 30px;
     }
-    .about-card h2 {
-      font-size: 32px;
-      color: #2b2b2b;
-      margin-bottom: 15px;
-    }
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 20px;
-      margin-top: 30px;
-    }
-    .feature-item {
-      background: #f8faf7;
-      padding: 20px;
-      border-radius: 16px;
+    .contact-box {
+      background: #fff0f5;
+      padding: 25px;
+      border-radius: 18px;
+      margin-top: 25px;
+      border: 1px solid #f8bbd0;
       text-align: left;
     }
-    .feature-icon {
-      font-size: 30px;
-      margin-bottom: 10px;
-    }
-    .feature-item h3 {
-      font-size: 16px;
-      margin-bottom: 6px;
-    }
-    .feature-item p {
-      font-size: 13px;
-      color: #666;
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+      font-size: 15px;
+      color: #4a148c;
     }
 
     /* Modal Overlay */
@@ -339,7 +428,7 @@
       display: none;
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0,0,0,0.45);
+      background: rgba(136, 14, 79, 0.35);
       backdrop-filter: blur(5px);
       justify-content: center;
       align-items: center;
@@ -349,14 +438,10 @@
       background: white;
       border-radius: 24px;
       padding: 35px;
-      max-width: 420px;
+      max-width: 460px;
       width: 90%;
       text-align: center;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-    }
-    .modal-box h3 {
-      font-size: 22px;
-      margin-bottom: 10px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
     }
     .google-btn {
       width: 100%;
@@ -373,16 +458,14 @@
       cursor: pointer;
       margin: 20px 0 15px;
     }
-    .google-btn:hover {
-      background: #f8f9fa;
-    }
     .btn-close {
-      background: #f0f0f0;
+      background: #f8bbd0;
+      color: #880e4f;
       border: none;
-      padding: 8px 20px;
-      border-radius: 12px;
+      padding: 10px 24px;
+      border-radius: 14px;
       cursor: pointer;
-      font-weight: 600;
+      font-weight: 700;
     }
   </style>
 </head>
@@ -390,42 +473,44 @@
 
   <!-- Top Navigation -->
   <header>
-    <a href="#" class="logo" onclick="showTab('home')">NegOne</a>
+    <a href="#" class="logo" onclick="showTab('home')">NegOne 💕</a>
     <nav>
       <a href="#" id="nav-home" class="active" onclick="showTab('home')">🏠 Нүүр</a>
       <a href="#" id="nav-recipes" onclick="showTab('recipes')">🍴 Жорууд</a>
-      <a href="#" id="nav-about" onclick="showTab('about')">👤 NegOne-ийн тухай</a>
+      <a href="#" id="nav-tracker" onclick="showTab('tracker')">📊 Эрүүл Мэнд & BMI</a>
+      <a href="#" id="nav-about" onclick="showTab('about')">👤 NegOne & Холбоо барих</a>
     </nav>
     <div class="user-section">
       <button id="btnLogin" class="btn-login" onclick="openLoginModal()">Нэвтрэх</button>
       <div id="userProfile" class="user-profile">
-        <div id="userAvatar" class="user-avatar">N</div>
+        <div id="userAvatar" class="user-avatar">E</div>
         <span id="userName" style="font-weight: 600; font-size: 14px;">Хэрэглэгч</span>
-        <button onclick="logout()" style="border:none; background:none; color:#888; cursor:pointer; font-size:12px; margin-left:6px;">[Гарах]</button>
+        <button onclick="logout()" style="border:none; background:none; color:#ad1457; cursor:pointer; font-size:12px; margin-left:6px;">[Гарах]</button>
       </div>
     </div>
   </header>
 
-  <!-- Main Body Content -->
+  <!-- Main Content -->
   <main>
 
-    <!-- SECTION 1: НҮҮР (Hero / Home) -->
+    <!-- TAB 1: НҮҮР (Home & AI Chat) -->
     <section id="tab-home" class="page-section active">
       <div class="hero">
         <h1>NegOne</h1>
-        <p>AI-д суурилсан сэтгэлзүй, эрүүл амьдралын хэв маягийн таны хувийн туслах.</p>
+        <p>AI-д суурилсан сэтгэл зүй, биеийн эерэг хандлага, эрүүл амьдралын хэв маягийн таны хувийн туслах.</p>
+
         <button class="btn-gmail" onclick="openLoginModal()">
           <svg width="20" height="20" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg>
           Gmail-ээр нэвтрэх
         </button>
 
-        <!-- AI Assistant Interactive Box -->
+        <!-- AI Assistant Box -->
         <div class="ai-box">
           <div class="ai-box-header">
-            ✨ NegOne AI-аас асуулт асуух
+            🌸 NegOne AI Асуулт Хариултын Туслах
           </div>
           <div class="ai-input-group">
-            <input type="text" id="aiQuery" class="ai-input" placeholder="Жишээ: Стрессээ яаж бууруулах вэ? эсвэл Шинэхэн салатны жор асуух...">
+            <input type="text" id="aiQuery" class="ai-input" placeholder="Юу ч асууж болно (Стресс, калори, жор, биеийн эерэг хандлага...)..." onkeypress="handleEnter(event)">
             <button class="btn-ai-send" onclick="askAI()">Асуух</button>
           </div>
           <div id="aiResponse" class="ai-response"></div>
@@ -433,75 +518,140 @@
       </div>
     </section>
 
-    <!-- SECTION 2: ЖОРУУД (Recipes) -->
+    <!-- TAB 2: ЖОРУУД (Recipes) -->
     <section id="tab-recipes" class="page-section">
       <div class="recipe-header">
-        <h2>🍴 Эрүүл амьдралын жорууд</h2>
-        <p>Сэтгэл зүй ба бие махбодод тань зориулсан шим тэжээлтэй хоолны жорууд</p>
+        <h2>🍴 Эрүүл ба Амттай Хоолны Жорууд</h2>
+        <p>Бие ба сэтгэлийг агааржуулах шим тэжээлтэй, бэлтгэхэд хялбар жорууд</p>
         <div class="search-bar">
-          <input type="text" id="recipeSearch" onkeyup="filterRecipes()" placeholder="Жор хайх (жимс, салат, өглөөний цай...)...">
+          <input type="text" id="recipeSearch" onkeyup="filterRecipes()" placeholder="Жор хайх (жимс, салат, өглөөний цай, амттан...)...">
         </div>
       </div>
 
       <div class="recipe-grid" id="recipeGrid">
+
         <div class="recipe-card">
-          <div class="recipe-img">🥬</div>
+          <div class="recipe-img">🍓</div>
           <div class="recipe-content">
             <span class="recipe-tag">Өглөөний цай • 210 kcal</span>
-            <div class="recipe-title">Ногоон Смути Боул</div>
-            <div class="recipe-desc">Шпинат, банана, авокадо болон наргил модны самрын сүүтэй амин дэмээр баялаг ундаа.</div>
-            <button class="btn-view-recipe" onclick="openRecipeModal('Ногоон Смути Боул', 'Шпинат, Банана, Авокадо, Кокосын сүү', '1. Бүх орцоо блендэрт хийж 2 минут миксердэнэ.\n2. Аяганд хийж жимсээр чимэглэнэ.')">Жор үзэх</button>
+            <div class="recipe-title">Ягаан Жимсний Смути Боул</div>
+            <div class="recipe-desc">Гүзээлзгэнэ, банан, кокосын сүү болон чиа үрээр баяжуулсан энергийн ундаа.</div>
+            <button class="btn-view-recipe" onclick="openRecipeModal('Ягаан Жимсний Смути Боул', '• Шинэхэн эсвэл хөлдөөсөн гүзээлзгэнэ 1 аяга\n• Банан 1 ширхэг\n• Кокосын сүү 100мл\n• Чиа үр 1 цайны халбага', '1. Бүх орцоо блендэрт хийн үргэлжилсэн 2 минут миксердэнэ.\n2. Аяганд хийж дээр нь самар болон жимсээр чимэглэнэ.')">Жор & Орц үзэх</button>
           </div>
         </div>
 
         <div class="recipe-card">
-          <div class="recipe-img">🥣</div>
+          <div class="recipe-img">🥑</div>
           <div class="recipe-content">
-            <span class="recipe-tag">Шим тэжээлтэй • 320 kcal</span>
-            <div class="recipe-title">Овъёос & Жимстэй Паф</div>
-            <div class="recipe-desc">Цусны сахарыг тэнцвэржүүлж, өдрийн турш эрч хүч өгөх өглөөний хоол.</div>
-            <button class="btn-view-recipe" onclick="openRecipeModal('Овъёос & Жимстэй Паф', 'Овъёос, Тараг, Нарсны самар, Гүзээлзгэнэ', '1. Овъёосоо тарагтай хольж 15 минут байлгана.\n2. Шинэхэн жимс цацаж оройн хоолонд хэрэглэнэ.')">Жор үзэх</button>
+            <span class="recipe-tag">Өдрийн хоол • 290 kcal</span>
+            <div class="recipe-title">Авокадо & Өндөгтэй Тост</div>
+            <div class="recipe-desc">Эрүүл өөх тос, протейнаар баялаг тархины үйл ажиллагааг дэмжих өглөөний цай.</div>
+            <button class="btn-view-recipe" onclick="openRecipeModal('Авокадо & Өндөгтэй Тост', '• Бүхэлийн үрийн талх 2 зүсэм\n• Боловсорсон авокадо 1/2\n• Сөдөлсөн эсвэл чанасан өндөг 1 ширхэг\n• Лимоны шүүс, чимх давс, хар перец', '1. Талхаа бага зэрэг шарж шаржигнуур болгоно.\n2. Авокадог лимоны шүүс, давстай миксердэж талхан дээрээ түрхэнэ.\n3. Дээр нь өндгөө тавьж перец цацна.')">Жор & Орц үзэх</button>
           </div>
         </div>
 
         <div class="recipe-card">
           <div class="recipe-img">🥗</div>
           <div class="recipe-content">
-            <span class="recipe-tag">Өдөр тутмын • 280 kcal</span>
-            <div class="recipe-title">Тахианы Цээж Малтай Салат</div>
-            <div class="recipe-desc">Протейнаар баялаг, тархины үйл ажиллагааг дэмжих шинэхэн хүнсний салат.</div>
-            <button class="btn-view-recipe" onclick="openRecipeModal('Тахианы Цээж Малтай Салат', 'Шарсан тахианы цээж мал, Шпинат, Черри улаан лооль, Оливын тос', '1. Тахианы цээж махаа амталж шарна.\n2. Шинэхэн ногоонууд дээр оливын тос цацна.')">Жор үзэх</button>
+            <span class="recipe-tag">Оройн хоол • 310 kcal</span>
+            <div class="recipe-title">Ногоон Грек Салат</div>
+            <div class="recipe-desc">Черри улаан лооль, өгөөжтэй олив тос болон фета бяслагтай шинэхэн салат.</div>
+            <button class="btn-view-recipe" onclick="openRecipeModal('Ногоон Грек Салат', '• Шинэхэн өгөөртэй ногоонууд\n• Черри лооль 8 ширхэг\n• Олив тос 1 хоолны халбага\n• Фета бяслаг 30г\n• Лимон, орегано', '1. Ногоонуудыг угааж жижиглэн хэрчинэ.\n2. Олив тос болон лимоны шүүсээр амтлан фета бяслагаа цацна.')">Жор & Орц үзэх</button>
           </div>
         </div>
+
+        <div class="recipe-card">
+          <div class="recipe-img">🫐</div>
+          <div class="recipe-content">
+            <span class="recipe-tag">Амттан • 180 kcal</span>
+            <div class="recipe-title">Чиа Үр ба Нэрстэй Пүдинг</div>
+            <div class="recipe-desc">Антиоксидантаар баялаг, ходоод гэдэсний үйл ажиллагаанд эерэг эрүүл амттан.</div>
+            <button class="btn-view-recipe" onclick="openRecipeModal('Чиа Үр ба Нэрстэй Пүдинг', '• Чиа үр 3 хоолны халбага\n• Самрын сүү эсвэл кокосын сүү 150мл\n• Зөгийн бал 1 цайны халбага\n• Шинэхэн нэрс жимс', '1. Чиа үр, сүү, зөгийн балыг холиод хөргөгчинд 2 цаг байлгана.\n2. Өтгөрсний дараа дээр нь нэрс жимс суулган зооглоно.')">Жор & Орц үзэх</button>
+          </div>
+        </div>
+
       </div>
     </section>
 
-    <!-- SECTION 3: NEGONE-ИЙН ТУХАЙ (About) -->
+    <!-- TAB 3: ЭРҮҮЛ МЭНД & BMI TRACKER -->
+    <section id="tab-tracker" class="page-section">
+      <div class="tracker-card">
+        <h2>📊 Эзэлхүүн ба BMI Тооцоолуур</h2>
+        <p style="color: #666; font-size: 14px; margin-bottom: 15px;">Таны биеийн өндөр болон жинд үндэслэн эрүүл мэндийн индексийг тооцоолно.</p>
+
+        <!-- Body Dysmorphia Affirmation -->
+        <div class="dysmorphia-banner">
+          💖 **Санамж (Body Positivity):** Таны биеийн жин ба BMI тоо бол зөвхөн техникийн хэмжүүр бөгөөд таны үнэ цэнэ, үзэсгэлэн гоог тодорхойлохгүй! NegOne нь жин бууруулах хатуу шаардлага бус, таны биеэ хайрлах сэтгэл зүйг хамгийн эхэнд тавьдаг.
+        </div>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Өндөр (см):</label>
+            <input type="number" id="userHeight" placeholder="165">
+          </div>
+          <div class="form-group">
+            <label>Жин (кг):</label>
+            <input type="number" id="userWeight" placeholder="55">
+          </div>
+        </div>
+
+        <button class="btn-calc" onclick="calculateBMI()">Тооцоолох & Зөвлөмж Авах</button>
+
+        <div id="bmiResult" class="bmi-result-box">
+          <h3 id="bmiScore" style="color:#d81b60; font-size: 22px; margin-bottom: 8px;">BMI: --</h3>
+          <p id="bmiAdvice" style="font-size: 15px; color:#37474f; line-height: 1.6;"></p>
+          
+          <div style="margin-top: 15px;">
+            <strong>🌸 Танд зориулсан YouTube Дасгалын Сонголтууд:</strong>
+            <div class="yt-links">
+              <a href="https://www.youtube.com/results?search_query=gentle+full+body+workout+no+equipment" target="_blank" class="yt-btn">▶️ Сэтгэл сэргээх хөнгөн дасгал</a>
+              <a href="https://www.youtube.com/results?search_query=yoga+for+self+love+and+acceptance" target="_blank" class="yt-btn">🧘‍♀️ Биеэ хайрлах Йог дасгал</a>
+              <a href="https://www.youtube.com/results?search_query=posture+and+stretching+routine" target="_blank" class="yt-btn">🤸‍♀️ Суниалт & Нурууны дасгал</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Log Progress Section -->
+      <div class="tracker-card">
+        <h2>📝 Өдрийн Тэмдэглэл & Ахиц Хадгалах</h2>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Өнөөдрийн сэтгэл санаа:</label>
+            <input type="text" id="logMood" placeholder="Өнөөдөр тайван, эрч хүчтэй байна...">
+          </div>
+          <div class="form-group">
+            <label>Уусан ус (литр):</label>
+            <input type="number" id="logWater" placeholder="1.5">
+          </div>
+        </div>
+        <button class="btn-calc" style="background:#ad1457;" onclick="saveProgressLog()">Тэмдэглэл Хадгалах</button>
+        <div id="logHistory" style="margin-top:20px; font-size:14px; color:#555;"></div>
+      </div>
+    </section>
+
+    <!-- TAB 4: NEGONE & CONTACT -->
     <section id="tab-about" class="page-section">
       <div class="about-card">
-        <h2>👤 NegOne гэж юу вэ?</h2>
-        <p>NegOne нь таны өдөр тутмын амьдралын хэв маяг, сэтгэл зүйн тэнцвэрт байдлыг хиймэл интеллект (AI) технологиор дамжуулан дэмжих хувийн туслах систем юм.</p>
-        
-        <div class="features-grid">
-          <div class="feature-item">
-            <div class="feature-icon">🧠</div>
-            <h3>Сэтгэлзүйн AI Зөвлөх</h3>
-            <p>Стресс, ядаргааг бууруулах, сэтгэл санааг тэнцвэржүүлэх ухаалаг харилцаа.</p>
+        <h2 style="color:#880e4f;">👤 NegOne Төслийн Тухай</h2>
+        <p style="line-height:1.7; color:#555; margin-top:10px;">
+          NegOne нь сэтгэл зүйн амар амгалан, биеийн эерэг хандлага (Body Dysmorphia-тай тэмцэх) болон эрүүл хооллолтын зөв дадлыг олгоход зориулагдсан дижитал платформын концепт юм.
+        </p>
+
+        <!-- Official Contact Details -->
+        <div class="contact-box">
+          <h3 style="color:#d81b60; margin-bottom: 15px;">📞 Холбоо барих мэдээлэл</h3>
+          <div class="contact-item">
+            <span>👤</span> <strong>Үүсгэн байгуулагч / Хөгжүүлэгч:</strong> Enkhkhuslen Munkhbayasgalan
           </div>
-          <div class="feature-item">
-            <div class="feature-icon">🥗</div>
-            <h3>Эрүүл Хооллолт</h3>
-            <p>Таны биеийн онцлогт тохирсон өдөр тутмын калори болон жоруудын цуглуулга.</p>
+          <div class="contact-item">
+            <span>📍</span> <strong>Байршил:</strong> Улаанбаатар хот, Монгол улс (Ulaanbaatar, Mongolia)
           </div>
-          <div class="feature-item">
-            <div class="feature-icon">📊</div>
-            <h3>Сэтгэл санааны тэмдэглэл</h3>
-            <p>Өдөр бүрийн сэтгэл зүйн өөрчлөлтийг хянаж, зөвлөмж авах боломж.</p>
+          <div class="contact-item">
+            <span>📱</span> <strong>Утасны дугаар:</strong> +976 99663946
           </div>
-          <div class="feature-item">
-            <div class="feature-icon">🔒</div>
-            <h3>Нууцлал ба Аюулгүй байдал</h3>
-            <p>Таны хувийн мэдээлэл бүрэн шифрлэгдэж, аюулгүй хадгалагдана.</p>
+          <div class="contact-item">
+            <span>✉️</span> <strong>И-мэйл хаяг:</strong> enhulenhuul@gmail.com
           </div>
         </div>
       </div>
@@ -512,8 +662,8 @@
   <!-- Login Modal -->
   <div id="loginModal" class="modal-overlay">
     <div class="modal-box">
-      <h3>NegOne Системд Нэвтрэх</h3>
-      <p style="font-size:14px; color:#666; margin-top:5px;">Google / Gmail хаягаараа нэвтэрч AI туслахаа ашиглаарай.</p>
+      <h3 style="color:#880e4f;">NegOne Системд Нэвтрэх</h3>
+      <p style="font-size:14px; color:#666; margin-top:5px;">Google / Gmail хаягаараа нэвтэрч хувийн тохиргоогоо хадгалаарай.</p>
 
       <button class="google-btn" onclick="simulateGoogleLogin()">
         <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg>
@@ -527,15 +677,15 @@
   <!-- Recipe Detail Modal -->
   <div id="recipeModal" class="modal-overlay">
     <div class="modal-box" style="text-align: left;">
-      <h3 id="modalRecipeTitle">Жорын нэр</h3>
-      <p id="modalRecipeIngredients" style="font-size:14px; font-weight:600; color:#5c8342; margin:10px 0;"></p>
-      <p id="modalRecipeSteps" style="font-size:13px; color:#555; white-space: pre-line; line-height:1.6; margin-bottom:20px;"></p>
+      <h3 id="modalRecipeTitle" style="color:#d81b60;">Жорын нэр</h3>
+      <p id="modalRecipeIngredients" style="font-size:14px; font-weight:600; color:#ad1457; margin:12px 0; white-space: pre-line;"></p>
+      <p id="modalRecipeSteps" style="font-size:13px; color:#444; white-space: pre-line; line-height:1.6; margin-bottom:20px;"></p>
       <button class="btn-close" onclick="closeRecipeModal()">Хаах</button>
     </div>
   </div>
 
   <script>
-    // Tab Switching
+    // Tab Navigation Switcher
     function showTab(tabName) {
       document.querySelectorAll('.page-section').forEach(sec => sec.classList.remove('active'));
       document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
@@ -544,23 +694,114 @@
       document.getElementById('nav-' + tabName).classList.add('active');
     }
 
-    // Login Modal Logic
-    function openLoginModal() {
-      document.getElementById('loginModal').style.display = 'flex';
-    }
-    function closeLoginModal() {
-      document.getElementById('loginModal').style.display = 'none';
+    // Modal Control
+    function openLoginModal() { document.getElementById('loginModal').style.display = 'flex'; }
+    function closeLoginModal() { document.getElementById('loginModal').style.display = 'none'; }
+    function closeRecipeModal() { document.getElementById('recipeModal').style.display = 'none'; }
+
+    function openRecipeModal(title, ingredients, steps) {
+      document.getElementById('modalRecipeTitle').innerText = title;
+      document.getElementById('modalRecipeIngredients').innerText = "Орц найрлага:\n" + ingredients;
+      document.getElementById('modalRecipeSteps').innerText = "Бэлтгэх арга:\n" + steps;
+      document.getElementById('recipeModal').style.display = 'flex';
     }
 
-    // Google Login Simulation & Storage
+    // Universal Smart AI Response Engine
+    function handleEnter(e) { if(e.key === 'Enter') askAI(); }
+
+    function askAI() {
+      const input = document.getElementById('aiQuery').value.trim();
+      const res = document.getElementById('aiResponse');
+      if (!input) return;
+
+      res.style.display = 'block';
+      res.innerText = '🌸 NegOne AI туслах хариулт бэлдэж байна...';
+
+      setTimeout(() => {
+        const q = input.toLowerCase();
+        let answer = "";
+
+        if (q.includes('стресс') || q.includes('сэтгэл') || q.includes('гуниг')) {
+          answer = "🧠 **NegOne Сэтгэл Зүйн Зөвлөмж:** Сэтгэл санаа хүндрэх үед гүнзгий 4-7-8 амьсгалын дасгал хийж, дуртай дуугаа сонсон 10 минут агаарт алхаарай. Та ганцаараа биш шүү!";
+        } else if (q.includes('жина') || q.includes('дэглэм') || q.includes('турах') || q.includes('таргалах')) {
+          answer = "💖 **NegOne Эерэг Зөвлөмж:** Хоолоо хэт хорих эсвэл өөрийгөө буруутгахаас зайлсхий. Өдөр бүр хангалттай ус ууж, биедээ хэрэгцээтэй шим тэжээлийг хайрлаж өгөөрэй.";
+        } else if (q.includes('жор') || q.includes('хоол') || q.includes('калори')) {
+          answer = "🥗 **NegOne Хүнсний Зөвлөмж:** Өндөг (1 ширхэг ~70-80 kcal), Авокадо (1/2 ~120 kcal) байдаг. 'Жорууд' цэс рүү шилжин шинэхэн жоруудыг үзээрэй!";
+        } else if (q.includes('уса') || q.includes('ус')) {
+          answer = "💧 **Усны Хэрэглээ:** Өдөрт 1.5 - 2 литр цэвэр ус уух нь арьсны уянтан чанар, тархины үйл ажиллагааг жигд байлгана.";
+        } else if (q.includes('энххүслэн') || q.includes('холбоо') || q.includes('эзэн')) {
+          answer = "👤 **Үүсгэн байгуулагч:** Энэхүү платформыг Enkhkhuslen Munkhbayasgalan (Улаанбаатар, Монгол улс, +976 99663946, enhulenhuul@gmail.com) хөгжүүлсэн.";
+        } else {
+          answer = `✨ **NegOne AI Зөвлөмж ("${input}" асуултад):** Таны асуултад баярлалаа! Амьдралын дадлыг бага багаар сайжруулах нь хамгийн тогтвортой үр дүн өгдөг. Шим тэжээлтэй хооллож, унтаж амран, биеийн эерэг хандлагаа хадгалаарай.`;
+        }
+
+        res.innerHTML = answer;
+      }, 600);
+    }
+
+    // BMI Calculator with Body Dysmorphia Focus
+    function calculateBMI() {
+      const h = parseFloat(document.getElementById('userHeight').value) / 100;
+      const w = parseFloat(document.getElementById('userWeight').value);
+      const resBox = document.getElementById('bmiResult');
+      const score = document.getElementById('bmiScore');
+      const advice = document.getElementById('bmiAdvice');
+
+      if (!h || !w || h <= 0 || w <= 0) {
+        alert("Та өндөр ба жингээ зөв оруулна уу.");
+        return;
+      }
+
+      const bmi = (w / (h * h)).toFixed(1);
+      resBox.style.display = 'block';
+      score.innerText = `Таны BMI Индекс: ${bmi}`;
+
+      let text = "";
+      if (bmi < 18.5) {
+        text = "Биеийн жингийн индекс бага байна. Та биедээ хэрэгцээтэй чанартай уураг, эрүүл өөх тосыг хоол хүнсэндээ ахиу аван, дасгал хөдөлгөөнөөр булчингаа дэмжээрэй.";
+      } else if (bmi <= 24.9) {
+        text = "Таны жингийн индекс тэнцвэртэй дундаж хэмжээнд байна! Одоогийн эрүүл амьдралын хэв маягаа хадгалж, биедээ хэрэгцээтэй амин дэмүүдийг аваарай.";
+      } else {
+        text = "Таны индекс бага зэрэг өндөр байна. Гэвч энэ нь таны гоо сайхныг хязгаарлахгүй! Хөнгөн алхалт, идэвхтэй хөдөлгөөн хийж, биеэ хайрлан дэмжихэд анхаараарай.";
+      }
+
+      advice.innerText = text;
+    }
+
+    // Progress Log Local Storage
+    function saveProgressLog() {
+      const mood = document.getElementById('logMood').value;
+      const water = document.getElementById('logWater').value;
+      if (!mood && !water) return;
+
+      const log = { date: new Date().toLocaleDateString(), mood, water };
+      let logs = JSON.parse(localStorage.getItem('negone_logs') || '[]');
+      logs.push(log);
+      localStorage.setItem('negone_logs', JSON.stringify(logs));
+
+      displayLogs();
+      alert("Өдрийн тэмдэглэл хадгалагдлаа!");
+    }
+
+    function displayLogs() {
+      let logs = JSON.parse(localStorage.getItem('negone_logs') || '[]');
+      const container = document.getElementById('logHistory');
+      if (logs.length === 0) {
+        container.innerHTML = "<em>Одоогоор хадгалсан тэмдэглэл байхгүй байна.</em>";
+        return;
+      }
+      container.innerHTML = "<strong>Сүүлийн тэмдэглэлүүд:</strong><br>" + 
+        logs.slice(-3).map(l => `• [${l.date}] Сэтгэл санаа: ${l.mood || '-'}, Ус: ${l.water || '0'}L`).join('<br>');
+    }
+
+    // Google Login Simulator
     function simulateGoogleLogin() {
-      const email = prompt("Google / Gmail хаягаа оруулна уу:", "user@gmail.com");
+      const email = prompt("Gmail хаягаа оруулна уу:", "enhulenhuul@gmail.com");
       if (email) {
         const name = email.split('@')[0];
-        localStorage.setItem('negone_user', JSON.stringify({ name: name, email: email }));
+        localStorage.setItem('negone_user', JSON.stringify({ name, email }));
         updateUserUI();
         closeLoginModal();
-        alert("Амжилттай нэвтэрлээ! Тавтай морилно уу, " + name);
       }
     }
 
@@ -583,47 +824,17 @@
       updateUserUI();
     }
 
-    // AI Q&A Response Simulation
-    function askAI() {
-      const q = document.getElementById('aiQuery').value.trim();
-      const res = document.getElementById('aiResponse');
-      if (!q) return;
-
-      res.style.display = 'block';
-      res.innerText = 'NegOne AI бодож байна...';
-
-      setTimeout(() => {
-        if (q.includes('стресс')) {
-          res.innerText = '🧠 NegOne AI Зөвлөгөө: Стрессээ бууруулахын тулд 4-7-8 амьсгалын дасгал хийх, 15 минут агаарт алхах болон бүлээн ус уухыг зөвлөж байна.';
-        } else if (q.includes('хоол') || q.includes('жор')) {
-          res.innerText = '🥗 NegOne AI Зөвлөгөө: "Жорууд" хэсгээс амин дэмээр баялаг Ногоон Смути эсвэл Овъёостой өглөөний цайг сонгоод үзээрэй!';
-        } else {
-          res.innerText = '✨ NegOne AI Зөвлөгөө: Асуултад тань баярлалаа! Таны эрүүл мэнд, сэтгэл зүйн тэнцвэрийг хадгалахад өдөрт 8 аяга ус ууж, чанартай унтаж амрах нь чухал юм.';
-        }
-      }, 700);
-    }
-
-    // Recipe Search & Modal
     function filterRecipes() {
-      const query = document.getElementById('recipeSearch').value.toLowerCase();
+      const q = document.getElementById('recipeSearch').value.toLowerCase();
       document.querySelectorAll('.recipe-card').forEach(card => {
-        const text = card.innerText.toLowerCase();
-        card.style.display = text.includes(query) ? 'block' : 'none';
+        card.style.display = card.innerText.toLowerCase().includes(q) ? 'block' : 'none';
       });
     }
 
-    function openRecipeModal(title, ingredients, steps) {
-      document.getElementById('modalRecipeTitle').innerText = title;
-      document.getElementById('modalRecipeIngredients').innerText = "Орц: " + ingredients;
-      document.getElementById('modalRecipeSteps').innerText = steps;
-      document.getElementById('recipeModal').style.display = 'flex';
-    }
-    function closeRecipeModal() {
-      document.getElementById('recipeModal').style.display = 'none';
-    }
-
-    // Initialize UI on Load
-    window.onload = updateUserUI;
+    window.onload = function() {
+      updateUserUI();
+      displayLogs();
+    };
   </script>
 </body>
 </html>
