@@ -215,6 +215,7 @@ function HomePageChatbot() {
                     }`}
                   >
                     {message.text}
+              
                   </div>
                 </motion.div>
               ))}
