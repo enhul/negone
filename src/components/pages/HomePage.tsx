@@ -215,7 +215,7 @@ function HomePageChatbot() {
                     }`}
                   >
                     {message.text}
-              
+
                   </div>
                 </motion.div>
               ))}
@@ -230,6 +230,7 @@ function HomePageChatbot() {
                     <span className="text-sm">Хариулт бичиж байна...</span>
                   </div>
                 </motion.div>
+
               )}
               <div ref={messagesEndRef} />
             </div>
