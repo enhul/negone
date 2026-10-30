@@ -1,13 +1,13 @@
 // HPI 1.6-G
-import React, { useEffect, useRef, useState } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
-import { useMember } from '@/integrations';
 import { Button } from '@/components/ui/button';
-import { Heart, Target, Users, ArrowRight, BrainCircuit, Apple, Bot, Send, Loader } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Card } from '@/components/ui/card';
 import { Image } from '@/components/ui/image';
 import { Input } from '@/components/ui/input';
-import { Card } from '@/components/ui/card';
+import { useMember } from '@/integrations';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import { Apple, ArrowRight, Bot, BrainCircuit, Heart, Loader, Send, Target, Users } from 'lucide-react';
+import React, { useEffect, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 type AnimatedElementProps = {
   children: React.ReactNode;
