@@ -77,7 +77,7 @@ export interface HealthyRecipesandSnacks {
   caloriesPerServing?: number;
   /** @wixFieldType url */
   videoLink?: string;
-  /** @wixFieldType image */
+  /** @wixFieldType image - Contains image URL, render with <Image> component, NOT as text */
   dishImage?: string;
 }
 
@@ -98,7 +98,7 @@ export interface TeamMembers {
   role?: string;
   /** @wixFieldType text */
   bio?: string;
-  /** @wixFieldType image */
+  /** @wixFieldType image - Contains image URL, render with <Image> component, NOT as text */
   photo?: string;
   /** @wixFieldType url */
   socialLink?: string;
